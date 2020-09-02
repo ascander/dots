@@ -1,81 +1,74 @@
-# Main nix environment setup script.
-#
-# Based on https://github.com/nmattia/homies/blob/master/default.nix
+with { pkgs = import ./nix {}; };
 let
-
-  pkgs = pkgs-darwin;
-
-  pkgs-darwin = import (builtins.fetchTarball {
-    # Descriptive name to make the store path easier to identify
-    name = "nixpkgs-19.09-darwin";
-    # rev obtained with `git ls-remote https://github.com/nixos/nixpkgs-channels nixpkgs-darwin`
-    url = "https://github.com/nixos/nixpkgs/archive/bb7c495f2e74bf49c32b14051c74b3847e1e2be0.tar.gz";
-    # hash obtained with `nix-prefetch-url --unpack <url from above>`
-    sha256 = "0dm57i9cpyi55h519vc6bc9dlcmxr3aa4pf9pkff6lnkrywi30nm";
-  }) {};
-
-  hub = pkgs.gitAndTools.hub;
-
-  custom = rec {
-    inherit (pkgs) callPackage;
-
-    git = callPackage ./git {};
-    zshrc = callPackage ./zshrc {};
-    geometry-zsh = callPackage ./zshrc/geometry-zsh.nix {};
-    dircolors-solarized = callPackage ./zshrc/dircolors-solarized.nix {};
-    metals = pkgs.callPackage ./metals {};
-    fzf = pkgs.callPackage ./fzf {};
-
-    # Convert 'yarn.lock' files into Nix expressions
-    yarn2nix = pkgs.callPackage (pkgs.fetchFromGitHub {
-      owner = "moretea";
-      repo = "yarn2nix";
-      rev = "3cc020e384ce2a439813adb7a0cc772a034d90bb";
-      sha256 = "0h2kzdfiw43rbiiffpqq9lkhvdv8mgzz2w29pzrxgv8d39x67vr9";
-    }) {};
-
-    # The *other* editor
-    vim = pkgs-darwin.callPackage ./vim {
-      inherit metals yarn2nix;
-      inherit (pkgs.vimUtils) buildVimPluginFrom2Nix;
-    };
-  };
-
-  allPlatforms = with custom;
+  # The list of packages to be installed
+  packages = with pkgs;
     [
       # Customized packages
-      fzf
-      git
-      hub
-      metals
-      vim
       zshrc
-      geometry-zsh
-      dircolors-solarized
+      pure
+      git
+      pinentry
+      metals
+      fzf
+      emacs
 
       # Vernilla packages
       pkgs.bash
       pkgs.cacert
       pkgs.coreutils
-      pkgs.emacs
       pkgs.fasd
       pkgs.gawk
+      pkgs.gitAndTools.hub
+      pkgs.gnupg
       pkgs.jq
       pkgs.less
+      pkgs.libvterm-neovim
+      pkgs.niv.niv
       pkgs.nix
       pkgs.nix-zsh-completions
-      pkgs.nodejs               # TODO migrate globally installed node packages to Nix
+      pkgs.nodejs
       pkgs.openjdk
       pkgs.ripgrep
       pkgs.tree
       pkgs.zsh-completions
+      pkgs.zsh-syntax-highlighting
     ];
 
-  # The list of packages to be installed
-  tools = allPlatforms;
+  # A custom '.zshrc' (see './zshrc/default.nix')
+  zshrc = pkgs.callPackage ./zsh/zshrc.nix {};
+
+  # Use pinned version of 'pure' prompt from niv
+  pure = pkgs.callPackage ./zsh/pure.nix {
+    src = pkgs.sources.pure;
+  };
+
+  # A custom 'git' (see './git/default.nix')
+  git = import ./git ({
+    inherit (pkgs) makeWrapper symlinkJoin;
+    git = pkgs.git;
+  });
+
+  # The right 'pinentry' for macos
+  pinentry = if (pkgs.stdenv.isDarwin) then pkgs.pinentry_mac else pkgs.pinentry;
+
+  # Use pinned version of 'metals' from niv
+  metals = pkgs.callPackage pkgs.sources.metals {};
+
+  # A custom 'fzf' (see './fzf/default.nix')
+  fzf = pkgs.callPackage ./fzf { inherit (pkgs) fzf; };
+
+  # Unstable (27.1) version of Emacs, with packages
+  emacs27 = pkgs.emacsUnstable;
+  emacs = (pkgs.emacsPackagesGen emacs27).emacsWithPackages (epkgs:
+    with epkgs.melpaPackages; [
+      vterm
+    ]);
 
 in
   if pkgs.lib.inNixShell
   then pkgs.mkShell
-    { buildInputs = tools; }
-  else tools
+    {
+      buildInputs = packages;
+      shellHook = ''$(zshrc)'';
+    }
+  else packages
