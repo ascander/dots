@@ -17,5 +17,5 @@ let
     );
 in writeScriptBin "zshrc"
   ''
-    echo ". ${zshrc}"
+  echo ". ${zshrc}"
   ''
