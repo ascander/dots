@@ -12,6 +12,8 @@ let
       fzf
       emacs
       dircolors-solarized
+      vmd
+      bash-language-server
 
       # Vernilla packages
       pkgs.bash
@@ -27,7 +29,7 @@ let
       pkgs.niv.niv
       pkgs.nix
       pkgs.nix-zsh-completions
-      pkgs.nodejs
+      pkgs.nodejs-12_x
       pkgs.openjdk
       pkgs.ripgrep
       pkgs.tree
@@ -46,6 +48,16 @@ let
   # Use pinned version of 'dircolors-solarized'
   dircolors-solarized = pkgs.callPackage ./zsh/dircolors-solarized.nix {
     src = pkgs.sources.dircolors-solarized;
+  };
+
+  # Node2nix generated expression for 'vmd'
+  vmd = pkgs.callPackage ./npm/vmd {
+    inherit pkgs;
+  };
+
+  # Node2nix generated expression for 'bash-language-server'
+  bash-language-server = pkgs.callPackage ./npm/bash-language-server {
+    inherit pkgs;
   };
 
   # A custom 'git' (see './git/default.nix')
