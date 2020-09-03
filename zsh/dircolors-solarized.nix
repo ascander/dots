@@ -1,20 +1,16 @@
-{ stdenv, fetchgit }:
+{ stdenv, fetchgit, src }:
 
 stdenv.mkDerivation rec {
-  date = "01-28-2020";
-  name = "dircolors-solarized-${date}";
-  src = fetchgit {
-    url = "https://github.com/seebi/dircolors-solarized";
-    rev = "5fb86a3f947f0e8b3005871c2f97df80e80f3016";
-    sha256 = "1bcdnfdagwjfrkrwnmdy8p2dnhl9xrii7xg6pjwhgvfm4cak7fgy";
-  };
+  name = "dircolors-solarized";
+  inherit src;
 
-  buildPhase = ''
-    echo "ignoring Makefile, doing nothing"
-  '';
+  phases = [ "unpackPhase" "installPhase"];
 
   installPhase = ''
     mkdir -p "$out/share/zsh/dircolors-solarized"
-    for file in dircolors\.*; do cp "$file" "$out/share/zsh/dircolors-solarized/."; done
+    cp "dircolors.256dark" "$out/share/zsh/dircolors-solarized/dircolors.256dark"
+    cp "dircolors.ansi-dark" "$out/share/zsh/dircolors-solarized/dircolors.ansi-dark"
+    cp "dircolors.ansi-light" "$out/share/zsh/dircolors-solarized/dircolors.ansi-light"
+    cp "dircolors.ansi-universal" "$out/share/zsh/dircolors-solarized/dircolors.ansi-universal"
   '';
 }

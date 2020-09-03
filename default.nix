@@ -11,6 +11,7 @@ let
       metals
       fzf
       emacs
+      dircolors-solarized
 
       # Vernilla packages
       pkgs.bash
@@ -40,6 +41,11 @@ let
   # Use pinned version of 'pure' prompt from niv
   pure = pkgs.callPackage ./zsh/pure.nix {
     src = pkgs.sources.pure;
+  };
+
+  # Use pinned version of 'dircolors-solarized'
+  dircolors-solarized = pkgs.callPackage ./zsh/dircolors-solarized.nix {
+    src = pkgs.sources.dircolors-solarized;
   };
 
   # A custom 'git' (see './git/default.nix')
