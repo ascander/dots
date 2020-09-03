@@ -12,6 +12,7 @@ let
       fzf
       emacs
       dircolors-solarized
+      iosevka
 
       # Vernilla packages
       pkgs.bash
@@ -62,6 +63,27 @@ let
 
   # A custom 'fzf' (see './fzf/default.nix')
   fzf = pkgs.callPackage ./fzf { inherit (pkgs) fzf; };
+
+  # A custom 'iosevka' font
+  iosevka = pkgs.iosevka.override {
+    set = "custom";
+    privateBuildPlan = {
+      family = "Iosevka Custom";
+      design = [
+        "ss08"
+        "calt-center-ops"
+        "calt-arrow"
+        "calt-arrow2"
+        "calt-eqeq"
+        "calt-ineq"
+        "calt-exeq"
+        "calt-logic"
+        "calt-colons"
+        "calt-html-comment"
+      ];
+    };
+    extraParameters = builtins.readFile ./iosevka/parameters.toml;
+  };
 
   # Unstable (27.1) version of Emacs, with packages
   emacs27 = pkgs.emacsUnstable;
