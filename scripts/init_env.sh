@@ -16,3 +16,7 @@ if [ -d "${HOME}/Library/Preferences/"]; then
     echo "Copying iTerm2 preferences to: $HOME/Library/Preferences/"
     cp ./../resources/com.googlecode.iterm2.plist ${HOME}/Library/Preferences/.
 fi
+
+# Set faster key repeat rate
+defaults write -g InitialKeyRepeat -int 10 # normal minimum is 15 (225ms)
+defaults write -g KeyRepeat -int 1         # normal minimum is 2 (30ms)
