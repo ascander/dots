@@ -27,14 +27,6 @@ fail () {
   exit
 }
 
-setup_npmrc () {
-    info 'setup npmrc'
-    user ' - Where should npm install global packages?'
-    read -e npm_prefix
-    echo "prefix=$npm_prefix" > "$HOME/.npmrc"
-    success 'npmrc'
-}
-
 setup_zshrc () {
     info 'setup zshrc'
     zshrc=$(cat <<EOF
@@ -65,6 +57,5 @@ EOF
     success 'zshenv'
 }
 
-# setup_npmrc
 # setup_zshrc
 setup_zshenv
