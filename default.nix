@@ -8,7 +8,6 @@ let
       dircolors-solarized
       emacs
       fzf
-      git
       metals
       pinentry
       pure
@@ -21,6 +20,7 @@ let
       pkgs.coreutils
       pkgs.fasd
       pkgs.gawk
+      pkgs.git
       pkgs.gitAndTools.hub
       pkgs.gnupg
       pkgs.jq
@@ -60,12 +60,6 @@ let
   bash-language-server = pkgs.callPackage ./npm/bash-language-server {
     inherit pkgs;
   };
-
-  # A custom 'git' (see './git/default.nix')
-  git = import ./git ({
-    inherit (pkgs) makeWrapper symlinkJoin;
-    git = pkgs.git;
-  });
 
   # The right 'pinentry' for macos
   pinentry = if (pkgs.stdenv.isDarwin) then pkgs.pinentry_mac else pkgs.pinentry;
