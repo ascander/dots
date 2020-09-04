@@ -32,6 +32,7 @@ let
       pkgs.nodejs-12_x
       pkgs.openjdk
       pkgs.ripgrep
+      pkgs.stow
       pkgs.tree
       pkgs.zsh-completions
       pkgs.zsh-syntax-highlighting
