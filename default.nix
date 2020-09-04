@@ -4,16 +4,16 @@ let
   packages = with pkgs;
     [
       # Customized packages
-      zshrc
-      pure
-      git
-      pinentry
-      metals
-      fzf
-      emacs
-      dircolors-solarized
-      vmd
       bash-language-server
+      dircolors-solarized
+      emacs
+      fzf
+      git
+      metals
+      pinentry
+      pure
+      vmd
+      zshrc
 
       # Vernilla packages
       pkgs.bash
