@@ -4,16 +4,15 @@ let
   packages = with pkgs;
     [
       # Customized packages
-      zshrc
-      pure
-      git
-      pinentry
-      metals
-      fzf
-      emacs
-      dircolors-solarized
-      vmd
       bash-language-server
+      dircolors-solarized
+      emacs
+      fzf
+      metals
+      pinentry
+      pure
+      vmd
+      zshrc
 
       # Vernilla packages
       pkgs.bash
@@ -21,6 +20,7 @@ let
       pkgs.coreutils
       pkgs.fasd
       pkgs.gawk
+      pkgs.git
       pkgs.gitAndTools.hub
       pkgs.gnupg
       pkgs.jq
@@ -32,6 +32,7 @@ let
       pkgs.nodejs-12_x
       pkgs.openjdk
       pkgs.ripgrep
+      pkgs.stow
       pkgs.tree
       pkgs.zsh-completions
       pkgs.zsh-syntax-highlighting
@@ -59,12 +60,6 @@ let
   bash-language-server = pkgs.callPackage ./npm/bash-language-server {
     inherit pkgs;
   };
-
-  # A custom 'git' (see './git/default.nix')
-  git = import ./git ({
-    inherit (pkgs) makeWrapper symlinkJoin;
-    git = pkgs.git;
-  });
 
   # The right 'pinentry' for macos
   pinentry = if (pkgs.stdenv.isDarwin) then pkgs.pinentry_mac else pkgs.pinentry;
