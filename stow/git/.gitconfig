@@ -1,6 +1,7 @@
 [user]
   name = Ascander Dost
   email = 1815984+ascander@users.noreply.github.com
+  signingkey = 2AA4090A82FB6FA4
 [credential]
   helper = osxkeychain
 [alias]
@@ -25,14 +26,15 @@
 [rerere]
   enabled = true
 [includeIf "gitdir:~/code/work/"]
-	path = ~/.gitconfig-work
+	path = ~/.gitconfig.work
 [commit]
   verbose = true
+  gpgsign = true
+[tag]
+  gpgsign = true
 [push]
-  # See `git help config` (search for push.default)
-  # for more information on different options of the below setting
-  #
-  # Setting to git 2.0 default to suppress warning message
   default = simple
 [core]
-	excludesfile = /Users/adost/.gitignore-global
+  excludesfile = /Users/adost/.gitignore-global
+[gpg]
+  program = gpg
