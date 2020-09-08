@@ -6,3 +6,6 @@ known_hosts
 # Local-only files
 .zshrc.local
 .gitconfig.work
+
+# Local TODO list
+TODO.md
