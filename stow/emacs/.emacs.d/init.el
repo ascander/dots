@@ -87,6 +87,7 @@
 
 (use-package evil-collection
   :after evil
+  :init (gsetq evil-collection-company-use-tng nil)
   :config (evil-collection-init))
 
 ;; Swap/change default Evil bindings
@@ -771,7 +772,6 @@ and ':underline' the same value."
   :ghook 'prog-mode-hook)
 
 (use-package company
-  :commands global-company-mode company-tng-configure-default
   :config
   ;; Basic settings
   (gsetq company-idle-delay 0.2
