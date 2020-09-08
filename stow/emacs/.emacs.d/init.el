@@ -118,6 +118,14 @@
                minibuffer-local-isearch-map)
   "<escape>" #'keyboard-escape-quit)
 
+(use-package with-editor
+  :defer t
+  :gfhook #'evil-insert-state
+  :config
+  (general-def 'normal with-editor-mode-map
+    "RET" #'with-editor-finish
+    "q" #'with-editor-cancel))
+
 ;; MacOS specific packages/settings
 
 (when (eq system-type 'darwin)
