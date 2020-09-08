@@ -24,6 +24,10 @@
 
 ;;; Code:
 
+;; Constants
+
+(defconst ad:is-a-mac-p (eq system-type 'darwin) "Are we on a mac?")
+
 ;; Package initialization
 
 (require 'package)
@@ -405,6 +409,16 @@ and ':underline' the same value."
          aw-scope 'frame
          aw-dispatch-always t))
 
+(use-package windmove
+  :config (gsetq windmove-wrap-around t))
+
+(use-package winner
+  :general
+  (general-t
+    "u" #'winner-undo
+    "U" #'winner-redo)
+  :config (winner-mode))
+
 ;; (use-package beacon
 ;;   :init
 ;;   ;; When to blink
@@ -465,29 +479,529 @@ and ':underline' the same value."
   "q" #'ad:kill-this-buffer
   "d" #'delete-window
   "D" #'ad:kill-buffer-delete-window
-  "." #'ad:delete-other-windows
-  "u" #'winner-undo
-  "U" #'winner-redo)
+  "." #'ad:delete-other-windows)
 
-;; (use-package shackle
+(use-package shackle
+  :init
+  (gsetq shackle-rules
+         '(
+           ;; Org-mode buffers pop to the bottom
+           ("\\*Org Src.*"       :regexp t :align below :size 0.20 :select t)
+           ("CAPTURE\\-.*\\.org" :regexp t :align below :size 0.20 :select t)
+           ("*Org Select*"                 :align below :size 0.20 :select t)
+           (" *Org todo*"                  :align below :size 0.20 :select t)
+           ;; Everything else pops to the top
+           (magit-status-mode   :align above :size 0.33 :select t    :inhibit-window-quit t)
+           (magit-log-mode      :align above :size 0.33 :select t    :inhibit-window-quit t)
+           ("*Flycheck errors*" :align above :size 0.33 :select nil)
+           ("*Help*"            :align above :size 0.33 :select t)
+           ("*info*"            :align above :size 0.33 :select t)
+           ("*lsp-help*"        :align above :size 0.33 :select nil)
+           ("*xref*"            :align above :size 0.33 :select t)
+           (compilation-mode    :align above :size 0.33 :select nil))
+         shackle-default-rule '(:select t))
+  :config (shackle-mode t))
+
+;;; Version control
+
+(use-package magit
+  :defer t
+  :general
+  ('normal "S" #'magit-status)
+  (general-t
+    "g"  #'(:ignore t :which-key "Git")
+    "gs" #'magit-status
+    "gl" #'magit-log-all
+    "gL" #'magit-log-buffer-file
+    "gc" #'magit-commit
+    "gp" #'magit-push
+    "gf" #'magit-pull
+    "gb" #'magit-blame)
+  :config
+  ;; Basic settings
+  (gsetq magit-save-repository-buffers 'dontask
+         magit-refs-show-commit-count 'all
+         magit-branch-prefer-remote-upstream '("master")
+         magit-branch-adjust-remote-upstream-alist '(("origin/master" "master"))
+         magit-revision-show-gravatars nil)
+
+  ;; Show fine-grained diffs in hunks
+  (gsetq-default magit-diff-refine-hunk t)
+
+  ;; Set Magit's repository directories for `magit-list-repositories', based on
+  ;; Projectile's known projects. This also has effects on `magit-status' in
+  ;; "potentially surprising ways". Initialize after Projectile loads, and every
+  ;; time we switch projects (we may switch to a previously unknown project).
+  (defun ad:set-magit-repository-directories-from-projectile-known-projects ()
+    "Set `magit-repository-directories' from known Projectile projects."
+    (let ((project-dirs (bound-and-true-p projectile-known-projects)))
+      (setq magit-repository-directories
+            ;; Strip trailing slashes from project-dirs, since Magit adds them
+            ;; again. Double trailing slashes break presentation in Magit
+            (mapcar #'directory-file-name project-dirs))))
+
+  (with-eval-after-load 'projectile
+    (ad:set-magit-repository-directories-from-projectile-known-projects))
+
+  (general-add-hook 'projectile-switch-project-hook
+                    #'ad:set-magit-repository-directories-from-projectile-known-projects)
+
+  ;; Disable auto-fill-mode in git commit buffers
+  (general-remove-hook 'git-commit-setup-hook
+                       #'git-commit-turn-on-auto-fill))
+
+(use-package evil-magit
+  :after evil magit)
+
+(use-package git-timemachine
+  :general (general-t "gt" #'git-timemachine))
+
+;;; Completion and search
+
+(use-package flx)                       ; used by ivy
+(use-package smex)                      ; used by counsel
+
+(use-package ivy
+  :general (general-spc "f" #'ivy-switch-buffer)
+  :config
+  ;; Basic settings
+  (gsetq ivy-use-virtual-buffers t
+         ivy-initial-inputs-alist nil
+         ivy-count-format "")
+
+  ;; Enable fuzzy searching everywhere*
+  ;;
+  ;; *not everywhere
+  (gsetq ivy-re-builders-alist
+         '((swiper            . ivy--regex-plus)    ; convert spaces to '.*' for swiper
+           (ivy-switch-buffer . ivy--regex-plus)    ; and buffer switching
+           (counsel-rg        . ivy--regex-plus)    ; and ripgrep
+           (t                 . ivy--regex-fuzzy))) ; go fuzzy everywhere else
+
+  ;; Keybindings
+  (general-def ivy-minibuffer-map
+    "<escape>" #'minibuffer-keyboard-quit ; the natural choice
+    "<next>" #'ivy-scroll-up-command      ; default, here for documentation
+    "<prior>" #'ivy-scroll-down-command   ; same here
+    "C-j" #'ivy-next-history-element      ; repeat command with next element
+    "C-k" #'ivy-previous-history-element  ; repeat command with prev element
+    "C-'" #'ivy-avy)                      ; pick a candidate using avy
+
+  ;; Swap "?" for 'ivy-resume'
+  (general-def 'normal "?" #'ivy-resume)
+  (general-r "?" #'evil-search-backward)
+
+  (ivy-mode 1))
+
+(use-package counsel
+  :general
+  ;; Replace standard 'evil-ex-search-forward' with swiper
+  ('normal "/" #'counsel-grep-or-swiper)
+  ;; Remap standard commands to their counsel analogs
+  (general-def
+    [remap execute-extended-command] #'counsel-M-x
+    [remap find-file]                #'counsel-find-file
+    [remap describe-bindings]        #'counsel-descbinds
+    [remap describe-face]            #'counsel-describe-face
+    [remap describe-function]        #'counsel-describe-function
+    [remap describe-variable]        #'counsel-describe-variable
+    [remap info-lookup-symbol]       #'counsel-info-lookup-symbol
+    [remap completion-at-point]      #'counsel-company
+    [remap org-goto]                 #'counsel-org-goto)
+  ;; Goto org headings
+  (general-m org-mode-map
+    "j" #'counsel-org-goto)
+  ;; For, eg. switching to a newly created project
+  (general-spc "F" #'counsel-find-file)
+  ;; Load themes
+  (general-t
+    "t" #'counsel-load-theme)
+  :config (counsel-mode 1))
+
+(use-package swiper
+  :general ([remap isearch-forward] #'swiper)
+  :init (gsetq swiper-goto-start-of-match t))
+
+(use-package avy
+  :general (general-spc "s" #'avy-goto-char-timer)
+  :init (gsetq avy-all-windows nil
+               avy-timeout-seconds 0.25))
+
+;; TODO debug wrong type argument error when using ivy-avy immediately after
+;; starting Emacs and choosing a file from projectile's known files
+(use-package ivy-avy
+  :after ivy avy)
+
+(use-package prescient
+  :config (prescient-persist-mode))
+
+(use-package ivy-prescient
+  :after ivy
+  :demand t
+  :config (ivy-prescient-mode))
+
+(use-package ivy-rich
+  :after ivy counsel
+  :init
+  ;; Align virtual buffers, and abbreviate paths
+  (gsetq ivy-virtual-abbreviate 'full
+         ivy-rich-path-style 'abbrev
+         ivy-rich-switch-buffer-align-virtual-buffer t)
+  :config (ivy-rich-mode 1))
+
+;; (use-package all-the-icons-ivy
+;;   :after ivy counsel counsel-projectile
+;;   :config (all-the-icons-ivy-setup))
+
+(use-package yasnippet
+  :defer t
+  :general
+  (general-def help-map
+    "y" #'yas-describe-tables)
+  :ghook ('prog-mode-hook #'yas-minor-mode)
+  :config
+  ;; Never expand snippets in normal state
+  (general-def 'normal yas-minor-mode-map
+    [remap yas-expand] #'ignore)
+
+  (yas-reload-all))
+
+(use-package yasnippet-snippets
+  :after yasnippet)
+
+;;; Project management
+
+(use-package projectile
+  :general
+  (general-spc
+    "P" #'projectile-find-file-in-known-projects
+    "r" #'projectile-switch-project
+    "v" #'projectile-invalidate-cache
+    "D" #'projectile-dired)
+  :config
+  ;; Basic settings
+  (gsetq projectile-enable-caching t
+         projectile-find-dir-includes-top-level t
+         projectile-switch-project-action #'projectile-dired
+         projectile-indexing-method 'alien
+         projectile-completion-system 'ivy)
+
+  ;; Cleanup dead projects when idle
+  (run-with-idle-timer 10 nil #'projectile-cleanup-known-projects)
+
+  (projectile-mode))
+
+;; Advise some functions to additionally trigger `projectile-invalidate-cache'.
+;; This is useful for magit branching commands as well as moving files in dired.
+(general-with-package 'projectile
+  (defun ad:projectile-invalidate-cache (&rest _args)
+    "Runs `projectile-invalidate-cache'."
+    (projectile-invalidate-cache nil))
+
+  (general-add-advice '(magit-checkout
+                        magit-branch-and-checkout
+                        dired-do-rename
+                        dired-do-rename-regexp)
+                      :after #'ad:projectile-invalidate-cache))
+
+(use-package counsel-projectile
+  :general
+  (general-spc
+    "/" #'ad:counsel-projectile-rg
+    "p" #'counsel-projectile-find-file)
+  :config
+  (gsetq counsel-projectile-sort-files t)
+
+  ;; Make 'counsel-projectile-rg' work outside projects
+  (defun ad:counsel-projectile-rg ()
+    "Call `counsel-projectile-rg' if in a project, and `counsel-rg' otherwise."
+    (interactive)
+    (if (projectile-project-p)
+        (counsel-projectile-rg)
+      (counsel-rg)))
+
+  (counsel-projectile-mode))
+
+;; General programming
+
+(use-package electric
+  :init
+  ;; Disable pairing in minibuffer
+  (gsetq electric-pair-inhibit-predicate #'(lambda (_) (minibufferp)))
+  :config (electric-pair-mode))
+
+(use-package paren
+  :config (show-paren-mode))
+
+(use-package evil-surround
+  :init
+  ;; Swap the default bindings for padded/non-padded delimiters
+  (gsetq evil-surround-pairs-alist
+         '(
+           ;; Left pair triggers no-spaces version
+           (?\( . ("(" . ")"))
+           (?\[ . ("[" . "]"))
+           (?\{ . ("{" . "}"))
+           ;; Right pair triggers padded version
+           (?\) . ("( " . " )"))
+           (?\] . ("[ " . " ]"))
+           (?\} . ("{ " . " }"))
+           ;; Everything else
+           (?# . ("#{" . "}"))
+           (?b . ("(" . ")"))
+           (?B . ("{" . "}"))
+           (?> . ("<" . ">"))
+           (?t . evil-surround-read-tag)
+           (?< . evil-surround-read-tag)
+           (?f . evil-surround-function)))
+  :config (global-evil-surround-mode))
+
+(use-package rainbow-delimiters
+  :ghook 'prog-mode-hook 'text-mode-hook)
+
+(use-package rainbow-mode
+  :ghook 'prog-mode-hook)
+
+(use-package company
+  :commands global-company-mode company-tng-configure-default
+  :config
+  ;; Basic settings
+  (gsetq company-idle-delay 0.2
+         company-minimum-prefix-length 2
+         company-tooltip-align-annotations t
+         company-show-numbers t)
+
+  ;; Complete, using the current selection
+  (general-def company-active-map
+    "C-;" #'company-complete-selection)
+
+  ;; Add YASnippet support for all company backends
+  ;; See: https://github.com/syl20bnr/spacemacs/pull/179
+  (defun ad:company-backend-with-yas (backends)
+    (if (and (listp backends) (memq 'company-yasnippet backends))
+        backends
+      (append (if (consp backends)
+                  backends
+                (list backends))
+              '(:with company-yasnippet))))
+
+  ;; Add YASnippet to all backends
+  (gsetq company-backends
+         (mapcar #'ad:company-backend-with-yas company-backends))
+
+  (global-company-mode))
+
+;; Use prescient instead of company-statistics for smrts
+(use-package company-prescient
+  :after company
+  :config (company-prescient-mode))
+
+(use-package company-emoji
+  :after company
+  :if (version< "27.0" emacs-version)
+  :config
+  ;; Adjust the font settings for the frame
+  (defun ad:set-emoji-font (frame)
+    "Adjust the font settings of FRAME so Emacs can display emoji properly."
+    (if (eq system-type 'darwin)
+        ;; For MacOS
+        (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji") frame 'prepend)
+      ;; For Linux/GNU
+      (set-fontset-font t 'symbol (font-spec :family "Symbola") frame 'prepend)))
+
+  (general-add-hook 'after-make-frame-functions #'ad:set-emoji-font)
+  ;; Add emjoi completion backend
+  (add-to-list 'company-backends 'company-emoji))
+
+;; (use-package flycheck
+;;   :ghook ('after-init-hook #'global-flycheck-mode)
+;;   :config
+;;   ;; Basic settings
+;;   (gsetq flycheck-display-errors-delay 0.4)
+
+;;   ;; Remove background colors for fringe indicators
+;;   (custom-set-faces
+;;    '(flycheck-fringe-error ((t :background nil)))
+;;    '(flycheck-fringe-warning ((t :background nil)))
+;;    '(flycheck-fringe-info ((t :background nil))))
+
+;;   ;; Get me outta here
+;;   (general-def 'normal flycheck-error-list-mode
+;;     "q" #'quit-window))
+
+;; (general-with-package 'prog-mode
+;;   (general-m prog-mode-map
+;;     "j" #'flycheck-next-error
+;;     "k" #'flycheck-previous-error
+;;     "E" #'flycheck-list-errors))
+
+(use-package lsp-mode
+  :init
+  ;; Performance tuning per: https://emacs-lsp.github.io/lsp-mode/page/performance/
+  (gsetq lsp-idle-delay 0.5
+         lsp-completion-provider :capf
+         read-process-output-max (* 1024 1024))
+  :config
+  (general-def 'normal lsp-mode-map
+    "N" #'lsp-describe-thing-at-point
+    "RET" #'lsp-find-definition)
+
+  (gsetq lsp-keymap-prefix "mm")
+  (general-add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+
+  (general-m lsp-mode-map
+    "m" lsp-command-map
+    "i" #'lsp-goto-implementation
+    "D" #'lsp-find-declaration
+    "x" #'lsp-find-references
+    "r" #'lsp-rename
+    "R" #'lsp-workspace-restart
+    "=" #'lsp-format-buffer
+    "l" #'lsp-workspace-show-log))
+
+(use-package lsp-metals
+  :init (gsetq lsp-metals-server-command "metals-emacs"))
+
+(use-package lsp-ui
+  :ghook ('lsp-mode-hook #'lsp-ui-mode)
+  :commands lsp-ui-mode
+  ;; :init (general-add-hook 'lsp-ui-doc-frame-hook)
+  )
+
+(use-package lsp-ivy
+  :commands lsp-ivy-workspace-symbol)
+
+(use-package term
+  :init
+  ;; Disable line numbers and current line highlighting in terminal buffers
+  (general-add-hook 'term-mode-hook
+                    #'(lambda ()
+                        (ad:disable-line-numbers-local)
+                        (gsetq-local global-hl-line-mode nil))))
+
+(use-package vterm
+  :init
+  (gsetq vterm-kill-buffer-on-exit t
+         vterm-max-scrollback 10000))
+
+(use-package shell-pop
+  :general (general-m "t" #'shell-pop)
+  :init (gsetq shell-pop-window-size 40
+               shell-pop-window-position 'top
+               shell-pop-full-span t)
+  :config
+  ;; Set shell type to term
+  (gsetq shell-pop-shell-type
+         '("vterm" "vterm" #'(lambda () (vterm)))))
+
+;; Git specific modes
+
+(use-package git-commit
+  :defer t
+  :init
+  (gsetq
+   git-commit-usage-message
+   "Type 'RET' to finish, 'q' to cancel, and \\[git-commit-prev-message] and \\[git-commit-next-message] to recover older messages")
+  :config
+  ;; Remove style conventions
+  (general-remove-hook 'git-commit-finish-query-functions
+                       #'git-commit-check-style-conventions))
+
+(use-package gitconfig-mode
+  :defer t)
+
+(use-package gitignore-mode
+  :defer t)
+
+(use-package gitattributes-mode
+  :defer t)
+
+;; Lisp/Emacs Lisp
+
+(use-package elisp-mode
+  :general
+  (general-m emacs-lisp-mode-map
+    "b" #'eval-buffer
+    "r" #'eval-region
+    "f" #'eval-defun)
+
+  (general-def 'normal emacs-lisp-mode-map
+    "RET" #'xref-find-definitions
+    "<S-return>" #'pop-tag-mark)
+  :config
+  (gsetq emacs-lisp-docstring-fill-column 80))
+
+;; Markdown
+
+(use-package vmd-mode)
+
+(use-package markdown-mode
+  :general
+  (general-m markdown-mode-map
+    "p" #'vmd-mode))
+
+;; Scala
+
+(use-package scala-mode
+  :mode ("\\.scala\\'" "\\.sbt\\'" "\\.worksheet\\.sc\\'")
+  :gfhook #'lsp-deferred
+  :general
+  (general-m scala-mode-map
+    "b" #'lsp-metals-build-import
+    "c" #'lsp-metals-build-connect
+    "d" #'lsp-metals-doctor-run)
+  :config
+  ;; Indentation preferences
+  (gsetq scala-indent:default-run-on-strategy
+         scala-indent:operator-strategy
+         scala-indent:use-javadoc-style t)
+
+  ;; Insert newline in a multiline comment should insert an asterisk
+  (defun ad|scala-mode-newline-comments ()
+    "Insert a leading asterisk in multiline comments, when hitting 'RET'."
+    (interactive)
+    (newline-and-indent)
+    (scala-indent:insert-asterisk-on-multiline-comment))
+  (define-key scala-mode-map (kbd "RET") #'ad|scala-mode-newline-comments))
+
+(use-package sbt-mode
+  :after scala-mode
+  :commands sbt-start sbt-command
+  :config
+  ;; Don't pop up SBT buffers automatically
+  (gsetq sbt:display-command-buffer nil)
+
+  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+  ;; allows using SPACE when in the minibuffer
+  (substitute-key-definition
+   'minibuffer-complete-word
+   'self-insert-command
+   minibuffer-local-completion-map))
+
+;; Python
+
+;; (use-package lsp-python-ms
 ;;   :init
-;;   (gsetq shackle-rules
-;;          '(
-;;            ;; Org-mode buffers pop to the bottom
-;;            ("\\*Org Src.*"       :regexp t :align below :size 0.20 :select t)
-;;            ("CAPTURE\\-.*\\.org" :regexp t :align below :size 0.20 :select t)
-;;            ("*Org Select*"                 :align below :size 0.20 :select t)
-;;            (" *Org todo*"                  :align below :size 0.20 :select t)
-;;            ;; Everything else pops to the top
-;;            (magit-status-mode   :align above :size 0.33 :select t    :inhibit-window-quit t)
-;;            (magit-log-mode      :align above :size 0.33 :select t    :inhibit-window-quit t)
-;;            ("*Flycheck errors*" :align above :size 0.33 :select nil)
-;;            ("*Help*"            :align above :size 0.33 :select t)
-;;            ("*info*"            :align above :size 0.33 :select t)
-;;            ("*lsp-help*"        :align above :size 0.33 :select nil)
-;;            ("*xref*"            :align above :size 0.33 :select t)
-;;            (compilation-mode    :align above :size 0.33 :select nil))
-;;          shackle-default-rule '(:select t))
-;;   :config (shackle-mode t))
+;;   (gsetq lsp-python-ms-executable (executable-find "python-language-server"))
+;;   :ghook ('python-mode-hook #'(lambda ()
+;;                                 (require 'lsp-python-ms)
+;;                                 (lsp-deferred))))
+
+(use-package conda
+  :defer t
+  :init
+  (gsetq conda-anaconda-home (expand-file-name "~/miniconda3")
+         conda-env-home-directory (expand-file-name "~/miniconda3")))
+
+;; YAML
+
+(use-package yaml-mode
+  :mode ("\\.yaml\\'" "\\.yml\\'" "MLproject\\'"))
+
+;; Nix
+
+(use-package nix-mode
+  :mode "\\.nix\\'")
+
 (provide 'init)
 ;;; init.el ends here
