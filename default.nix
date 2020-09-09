@@ -8,6 +8,7 @@ let
       dircolors-solarized
       emacs
       fzf
+      iosevka
       metals
       pinentry
       pure
@@ -69,6 +70,9 @@ let
 
   # A custom 'fzf' (see './fzf/default.nix')
   fzf = pkgs.callPackage ./fzf { inherit (pkgs) fzf; };
+
+  # A custom font build
+  iosevka = import ./iosevka { inherit pkgs; };
 
   # Unstable (27.1) version of Emacs, with packages
   emacs27 = pkgs.emacsUnstable;
