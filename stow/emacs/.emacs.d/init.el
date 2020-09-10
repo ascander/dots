@@ -159,9 +159,9 @@
     "RET" #'with-editor-finish
     "q" #'with-editor-cancel))
 
-;; MacOS specific packages/settings
+;; MacOS specific
 
-(when (eq system-type 'darwin)
+(when ad:is-a-mac-p
   (use-package exec-path-from-shell
     :init (gsetq exec-path-from-shell-check-startup-files nil)
     :config (exec-path-from-shell-initialize))
@@ -527,7 +527,7 @@ and ':underline' the same value."
          global-auto-revert-non-file-buffers t) ; and in dired, too
 
   ;; Notifications aren't used on OSX
-  (when (eq system-type 'darwin)
+  (when ad:is-a-mac-p
     (gsetq auto-revert-use-notify nil))
   :config (global-auto-revert-mode))
 
@@ -1138,7 +1138,7 @@ Redefined to allow pop-up windows."
   ;; Adjust the font settings for the frame
   (defun ad:set-emoji-font (frame)
     "Adjust the font settings of FRAME so Emacs can display emoji properly."
-    (if (eq system-type 'darwin)
+    (if ad:is-a-mac-p
         ;; For MacOS
         (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji") frame 'prepend)
       ;; For Linux/GNU
