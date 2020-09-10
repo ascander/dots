@@ -62,6 +62,7 @@ emacsWithPackages (epkgs: (
     yaml-mode
     nix-mode
     which-key
+    lsp-python-ms
   ]
 ) ++ (
   with epkgs.elpaPackages; [

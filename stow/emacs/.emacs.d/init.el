@@ -1096,12 +1096,11 @@ and ':underline' the same value."
 
 ;; Python
 
-;; (use-package lsp-python-ms
-;;   :init
-;;   (gsetq lsp-python-ms-executable (executable-find "python-language-server"))
-;;   :ghook ('python-mode-hook #'(lambda ()
-;;                                 (require 'lsp-python-ms)
-;;                                 (lsp-deferred))))
+(use-package lsp-python-ms
+  :init (gsetq lsp-python-ms-auto-install-server t)
+  :ghook ('python-mode-hook #'(lambda ()
+                                (require 'lsp-python-ms)
+                                (lsp-deferred))))
 
 (use-package conda
   :defer t
