@@ -63,6 +63,9 @@ emacsWithPackages (epkgs: (
     nix-mode
     which-key
     lsp-python-ms
+    all-the-icons
+    all-the-icons-dired
+    all-the-icons-ivy
   ]
 ) ++ (
   with epkgs.elpaPackages; [

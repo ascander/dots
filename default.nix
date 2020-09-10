@@ -19,6 +19,7 @@ let
       pkgs.bash
       pkgs.cacert
       pkgs.coreutils
+      pkgs.emacs-all-the-icons-fonts
       pkgs.fasd
       pkgs.gawk
       pkgs.git

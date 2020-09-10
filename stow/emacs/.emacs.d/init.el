@@ -373,6 +373,12 @@
 ;; Unprettify at right edge
 (gsetq prettify-symbols-unprettify-at-point 'right-edge)
 
+(use-package all-the-icons)
+(use-package all-the-icons-dired
+  :ghook 'dired-mode-hook)
+(use-package all-the-icons-ivy
+  :after ivy counsel counsel-projectile
+  :config (all-the-icons-ivy-setup))
 
 ;;; Colors & Themes
 
