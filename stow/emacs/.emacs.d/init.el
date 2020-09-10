@@ -1176,6 +1176,11 @@ Redefined to allow pop-up windows."
   (gsetq lsp-idle-delay 0.5
          lsp-completion-provider :capf
          read-process-output-max (* 1024 1024))
+
+  ;; Disable the following settings that lead to 'void-function' warnings during LSP startup;
+  (gsetq lsp-enable-dap-auto-configure nil
+         lsp-modeline-diagnostics-enable nil
+         lsp-modeline-code-actions-enable nil)
   :config
   (general-def 'normal lsp-mode-map
     "N" #'lsp-describe-thing-at-point
