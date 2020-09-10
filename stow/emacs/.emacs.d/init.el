@@ -620,6 +620,23 @@ and ':underline' the same value."
          shackle-default-rule '(:select t))
   :config (shackle-mode t))
 
+(use-package beacon
+  :init
+  ;; When to blink
+  (gsetq beacon-blink-when-point-moves-vertically nil
+         beacon-blink-when-point-moves-horizontally nil
+         beacon-blink-when-window-scrolls nil
+         beacon-blink-when-buffer-changes t
+         beacon-blink-when-window-changes t
+         beacon-blink-when-focused t)
+  ;; How to blink
+  (gsetq beacon-size 30
+         beacon-color "#d33682")        ; Emacs/Visual state color
+  :config
+  ;; Not for terminal modes
+  (add-to-list 'beacon-dont-blink-major-modes 'term-mode)
+  (beacon-mode 1))
+
 ;;; Org
 
 (use-package org
@@ -1131,27 +1148,27 @@ Redefined to allow pop-up windows."
   ;; Add emjoi completion backend
   (add-to-list 'company-backends 'company-emoji))
 
-;; (use-package flycheck
-;;   :ghook ('after-init-hook #'global-flycheck-mode)
-;;   :config
-;;   ;; Basic settings
-;;   (gsetq flycheck-display-errors-delay 0.4)
+(use-package flycheck
+  :ghook ('after-init-hook #'global-flycheck-mode)
+  :config
+  ;; Basic settings
+  (gsetq flycheck-display-errors-delay 0.4)
 
-;;   ;; Remove background colors for fringe indicators
-;;   (custom-set-faces
-;;    '(flycheck-fringe-error ((t :background nil)))
-;;    '(flycheck-fringe-warning ((t :background nil)))
-;;    '(flycheck-fringe-info ((t :background nil))))
+  ;; Remove background colors for fringe indicators
+  (custom-set-faces
+   '(flycheck-fringe-error ((t :background nil)))
+   '(flycheck-fringe-warning ((t :background nil)))
+   '(flycheck-fringe-info ((t :background nil))))
 
-;;   ;; Get me outta here
-;;   (general-def 'normal flycheck-error-list-mode
-;;     "q" #'quit-window))
+  ;; Get me outta here
+  (general-def 'normal flycheck-error-list-mode
+    "q" #'quit-window))
 
-;; (general-with-package 'prog-mode
-;;   (general-m prog-mode-map
-;;     "j" #'flycheck-next-error
-;;     "k" #'flycheck-previous-error
-;;     "E" #'flycheck-list-errors))
+(general-with-package 'prog-mode
+  (general-m prog-mode-map
+    "j" #'flycheck-next-error
+    "k" #'flycheck-previous-error
+    "E" #'flycheck-list-errors))
 
 (use-package lsp-mode
   :init

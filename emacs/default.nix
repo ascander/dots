@@ -1,7 +1,7 @@
 { pkgs }:
 
 let
-  emacsBase = pkgs.emacsUnstable; # Emacs 27.1
+  emacsBase = pkgs.emacsGit; # Emacs 28.0.50
   emacsWithPackages = (pkgs.emacsPackagesGen emacsBase).emacsWithPackages;
 in
 emacsWithPackages (epkgs: (
@@ -69,6 +69,8 @@ emacsWithPackages (epkgs: (
     org-ql
     org-bullets
     evil-org
+    flycheck
+    beacon
   ]
 ) ++ (
   with epkgs.elpaPackages; [
