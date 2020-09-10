@@ -61,6 +61,7 @@ emacsWithPackages (epkgs: (
     conda
     yaml-mode
     nix-mode
+    which-key
   ]
 ) ++ (
   with epkgs.elpaPackages; [

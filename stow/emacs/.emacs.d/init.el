@@ -119,6 +119,23 @@
                minibuffer-local-isearch-map)
   "<escape>" #'keyboard-escape-quit)
 
+(use-package which-key
+  :init
+  (gsetq which-key-idle-delay 0.4
+         which-key-idle-secondary-delay 0.2
+         which-key-sort-order 'which-key-prefix-then-key-order-reverse
+         which-key-max-display-columns 6
+         which-key-add-column-padding 2)
+  :config
+  ;; Set which-key replacements
+  (gsetq which-key-replacement-alist '(((nil . "Prefix Command") . (nil . "prefix"))
+                                       ((nil . "\\`\\?\\?\\'")   . (nil . "λ"))
+                                       ((nil . "magit-")         . (nil . "git-"))))
+
+  ;; Disable line numbers in which-key buffers
+  (general-add-hook 'which-key-init-buffer-hook #'ad:disable-line-numbers-local)
+  (which-key-mode))
+
 (use-package with-editor
   :defer t
   :gfhook #'evil-insert-state
