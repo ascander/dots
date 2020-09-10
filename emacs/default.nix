@@ -66,6 +66,9 @@ emacsWithPackages (epkgs: (
     all-the-icons
     all-the-icons-dired
     all-the-icons-ivy
+    org-ql
+    org-bullets
+    evil-org
   ]
 ) ++ (
   with epkgs.elpaPackages; [
@@ -73,5 +76,6 @@ emacsWithPackages (epkgs: (
   ]
 ) ++ (
   with epkgs.orgPackages; [
+    org-plus-contrib
   ]
 ))

@@ -496,9 +496,6 @@ and ':underline' the same value."
   :ghook ('dired-mode-hook #'dired-omit-mode)
   :config (gsetq dired-omit-verbose nil))
 
-;; (use-package all-the-icons-dired
-;;   :ghook 'dired-mode-hook)
-
 (use-package ignoramus
   :config
   ;; Ignore a few additional things
@@ -541,23 +538,6 @@ and ':underline' the same value."
     "u" #'winner-undo
     "U" #'winner-redo)
   :config (winner-mode))
-
-;; (use-package beacon
-;;   :init
-;;   ;; When to blink
-;;   (gsetq beacon-blink-when-point-moves-vertically nil
-;;          beacon-blink-when-point-moves-horizontally nil
-;;          beacon-blink-when-window-scrolls nil
-;;          beacon-blink-when-buffer-changes t
-;;          beacon-blink-when-window-changes t
-;;          beacon-blink-when-focused t)
-;;   ;; How to blink
-;;   (gsetq beacon-size 30
-;;          beacon-color "#d33682")        ; Emacs/Visual state color
-;;   :config
-;;   ;; Not for terminal modes
-;;   (add-to-list 'beacon-dont-blink-major-modes 'term-mode)
-;;   (beacon-mode 1))
 
 (defun ad:kill-this-buffer ()
   "Call `kill-this-buffer' without menu bar interaction."
@@ -624,6 +604,211 @@ and ':underline' the same value."
            (compilation-mode    :align above :size 0.33 :select nil))
          shackle-default-rule '(:select t))
   :config (shackle-mode t))
+
+;;; Org
+
+(use-package org
+  :general
+  (general-spc
+    "c" #'org-capture
+    "a" #'org-agenda)
+  :config
+  ;; Set locations of org directory, agenda files, default notes file
+  (defun ad:expand-org-file (file)
+    (concat (file-name-as-directory org-directory) file))
+
+  (gsetq org-directory (expand-file-name "~/org")
+         org-default-notes-file (ad:expand-org-file "refile.org")
+         org-archive-location (concat (ad:expand-org-file "archive.org") "::* From %s")
+         org-agenda-files (mapcar #'ad:expand-org-file
+                                  '("work.org"
+                                    "home.org"
+                                    "refile.org"
+                                    "reminders.org"
+                                    "emacs.org")))
+
+  ;; Default settings
+  (gsetq org-src-window-setup 'other-window
+         org-src-fontify-natively t
+         org-log-done 'time
+         org-use-fast-todo-selection t
+         org-startup-truncated nil
+         org-tags-column -80
+         org-enable-priority-commands nil
+         org-reverse-note-order t)
+
+  ;; Don't try to be intelligent about inserting blank lines
+  (gsetq org-blank-before-new-entry '((heading . nil) (plain-list-item . nil)))
+
+  ;; Re-define org-switch-to-buffer-other-window to NOT use org-no-popups.
+  ;; Primarily for compatibility with shackle.
+  ;; See: https://emacs.stackexchange.com/a/31634
+  (defun org-switch-to-buffer-other-window (args)
+    "Switch to buffer in a second window on the current frame.
+In particular, do not allow pop-up frames. Returns the newly created buffer.
+Redefined to allow pop-up windows."
+    ;;  (org-no-popups
+    ;;     (apply 'switch-to-buffer-other-window args)))
+    (switch-to-buffer-other-window args))
+
+  ;; Navigate by headings, using Ivy
+  (gsetq org-goto-interface 'outline-path-completion
+         org-outline-path-complete-in-steps nil)
+
+  ;; Enable easy templates for src blocks
+  (require 'org-tempo)
+
+  ;; Enable habits
+  (require 'org-habit)
+
+  ;; TODO task states
+  (gsetq org-todo-keywords
+         '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+           (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "MEETING")))
+
+  ;; Task state settings
+  (gsetq org-enforce-todo-dependencies t
+         org-enforce-todo-checkbox-dependencies t
+         org-treat-S-cursor-todo-selection-as-state-change nil)
+
+  ;; Tags based on state triggers; used for filtering tasks in agenda views
+  ;;
+  ;; Triggers break down into the following rules:
+  ;;
+  ;;   - moving a task to CANCELLED adds the CANCELLED tag
+  ;;   - moving a task to WAITING adds the WAITING tag
+  ;;   - moving a task to HOLD adds the WAITING and HOLD tags
+  ;;   - moving a task to a done state removes the WAITING and HOLD tags
+  ;;   - moving a task to TODO removes WAITING, CANCELLED, and HOLD tags
+  ;;   - moving a task to NEXT removes WAITING, CANCELLED, and HOLD tags
+  ;;   - moving a task to DONE removes WAITING, CANCELLED, and HOLD tags
+  (gsetq org-todo-state-tags-triggers
+         '(("CANCELLED" ("CANCELLED" . t))
+           ("WAITING" ("WAITING" . t))
+           ("HOLD" ("WAITING" . t) ("HOLD" . t))
+           (done ("WAITING") ("HOLD"))
+           ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+           ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+           ("DONE" ("WAITING") ("CANCELLED") ("HOLD"))))
+
+  ;; Org capture templates
+  (gsetq org-capture-templates
+         '(("t" "TODO" entry (file+headline org-default-notes-file "Tasks")
+            "* TODO %i%?" :empty-lines 1)
+           ("s" "Scheduled" entry (file "~/org/reminders.org")
+            "* TODO %i%?\n SCHEDULED:%^{Scheduled}T" :empty-lines 1)
+           ("d" "Deadline" entry (file "~/org/reminders.org")
+            "* TODO %i%?\n DEADLINE:%^{Deadline}t" :empty-lines 1)
+           ("m" "Meeting" entry (file+headline org-default-notes-file "Meetings")
+            "* MEETING %? :MEETING:\n %U" :empty-lines 1)))
+
+  ;; Use sensible keybindings for capture buffers
+  (general-def 'normal org-capture-mode-map
+    "RET" #'org-capture-finalize
+    "q" #'org-capture-kill
+    "r" #'org-capture-refile)
+
+  ;; Display the right `header-line-format' as well
+  (general-add-hook
+   'org-capture-mode-hook
+   #'(lambda () (gsetq-local header-line-format
+                        "Capture buffer. Finish 'RET', refile 'r', abort 'q'.")))
+
+  ;; Refile targets include this file and any agenda file - up to 5 levels deep
+  (gsetq org-refile-targets '((nil :maxlevel . 5)
+                              (org-agenda-files :maxlevel . 5)))
+
+  ;; Switch to insert state when capturing
+  (general-add-hook 'org-capture-mode-hook #'evil-insert-state)
+  (general-add-hook 'org-log-buffer-setup-hook #'evil-insert-state)
+
+  ;; Include the filename in refile target paths; this allows refiling to the
+  ;; top level of a target
+  (gsetq org-refile-use-outline-path 'file)
+
+  ;; Allow refiling to create parent tasks with confirmation
+  (gsetq org-refile-allow-creating-parent-nodes 'confirm)
+
+  ;; Do not use hierarchical steps in completion, since we use Ivy
+  (gsetq org-outline-path-complete-in-steps nil)
+
+  ;; Display agenda as the only window, but restore the previous configuration
+  ;; afterwards; let's be polite.
+  (gsetq org-agenda-window-setup 'only-window
+         org-agenda-restore-windows-after-quit t)
+
+  ;; Setting `org-agenda-tags-column' to 'auto' doesn't take line numbers into
+  ;; account, so if you have line numbers enabled in an org agenda buffer, the
+  ;; tags wrap and make things look very ugly.
+  (general-add-hook 'org-agenda-mode-hook #'ad:disable-line-numbers-local)
+
+  ;; Do not dim blocked tasks
+  (gsetq org-agenda-dim-blocked-tasks nil)
+
+  ;; Just use a newline to separate blocks
+  (gsetq org-agenda-block-separator "")
+
+  ;; Advise `org-agenda-quit' to save all existing org buffers, so things don't
+  ;; get lost. Ask how I know.
+  (general-add-advice 'org-agenda-quit :after #'org-save-all-org-buffers))
+
+(use-package org-ql
+  :after org)
+
+;; Custom Org agenda building commands. This is listed separately for a couple
+;; of reasons:
+;;
+;;   1. To break up a long ':config' section for org-mode
+;;   2. To force loading of functions in 'org-ql-search.el'
+;;
+;; Startup time is not adversely impacted, since loading of 'org' + 'org-ql' is
+;; deferred until eg. invoking `org-capture' or `org-agenda'. I'd love a better
+;; solution here, but a working setup is .9 of the law.
+(general-with-package 'org
+  ;; Enable agenda building commands
+  (require 'org-ql-search)
+
+  ;; Test building an agenda
+  (gsetq org-agenda-custom-commands
+         '(("w" "Work Agenda"
+            ((agenda)
+             (org-ql-block '(and (todo "NEXT")
+                                 (not (scheduled))
+                                 (not (parent (todo "HOLD" "WAITING")))
+                                 (tags "@work"))
+                           ((org-ql-block-header "Next Tasks:")))
+             (org-ql-block '(and (todo)
+                                 (not (todo "HOLD" "WAITING"))
+                                 (tags "@work")
+                                 (or (children (todo))
+                                     (children (done)))
+                                 (not (children (todo "NEXT"))))
+                           ((org-ql-block-header "Stuck Projects:")))
+             (org-ql-block '(and (todo "WAITING")
+                                 (not (scheduled))
+                                 (tags "@work"))
+                           ((org-ql-block-header "Waiting on:")))
+             (org-ql-block '(and (todo)
+                                 (not (scheduled))
+                                 (not (todo "WAITING"))
+                                 (tags "@work")
+                                 (tags "charliework"))
+                           ((org-ql-block-header "Charlie work:")))
+             (org-ql-block '(and (todo)
+                                 (tags "REFILE"))
+                           ((org-ql-block-header "Refile:"))))))))
+
+(use-package org-bullets
+  :ghook 'org-mode-hook)
+
+(use-package evil-org
+  :after evil org
+  :ghook 'org-mode-hook
+  :gfhook #'(lambda () (evil-org-set-key-theme))
+  :config
+  ;; Evil bindings in org agenda
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
 
 ;;; Version control
 
@@ -771,10 +956,6 @@ and ':underline' the same value."
          ivy-rich-path-style 'abbrev
          ivy-rich-switch-buffer-align-virtual-buffer t)
   :config (ivy-rich-mode 1))
-
-;; (use-package all-the-icons-ivy
-;;   :after ivy counsel counsel-projectile
-;;   :config (all-the-icons-ivy-setup))
 
 (use-package yasnippet
   :defer t
@@ -1055,7 +1236,8 @@ and ':underline' the same value."
 
 ;; Markdown
 
-(use-package vmd-mode)
+(use-package vmd-mode
+  :defer t)
 
 (use-package markdown-mode
   :general
