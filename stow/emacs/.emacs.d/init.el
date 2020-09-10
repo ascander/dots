@@ -28,6 +28,21 @@
 
 (defconst ad:is-a-mac-p (eq system-type 'darwin) "Are we on a mac?")
 
+;; Preliminaries
+
+(setq debug-on-error t)                 ; Enter debugger on error
+(setq message-log-max 10000)            ; Keep more log messages
+
+;; Set GC threshold as high as possible for fast startup
+(setq gc-cons-threshold most-positive-fixnum)
+
+;; Set GC threshold back to default value when idle
+(run-with-idle-timer
+ 10 nil
+ (lambda ()
+   (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value)))
+   (message "GC threshold restored to %S" gc-cons-threshold)))
+
 ;; Package initialization
 
 (require 'package)
