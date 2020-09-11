@@ -24,33 +24,103 @@
 
 ;;; Code:
 
-;; Constants
+;;; Constants
 
 (defconst ad:is-a-mac-p (eq system-type 'darwin) "Are we on a mac?")
 
-;; Preliminaries
+;;; Startup tuning
 
-(setq debug-on-error t)                 ; Enter debugger on error
-(setq message-log-max 10000)            ; Keep more log messages
+(setq debug-on-error t                  ; Debug on errors
+      message-log-max 10000)            ; Keep more log messages
 
-;; Set GC threshold as high as possible for fast startup
-(setq gc-cons-threshold most-positive-fixnum)
+(defvar gc-cons-threshold-default gc-cons-threshold "Default value of `gc-cons-threshold'.")
+(defvar file-name-handler-alist-default file-name-handler-alist "Default value of `file-name-handler-alist'.")
 
-;; Set GC threshold back to default value when idle
+(setq gc-cons-threshold most-positive-fixnum
+      file-name-handler-alist nil)
+
 (run-with-idle-timer
- 10 nil
+ 5 nil
  (lambda ()
-   (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value)))
-   (message "GC threshold restored to %S" gc-cons-threshold)))
+   (setq gc-cons-threshold gc-cons-threshold-default
+         file-name-handler-alist file-name-handler-alist-default)
+   (message "GC threshold restored to %S" gc-cons-threshold)
+   (message "File name handler restored")))
 
-;; Package initialization
+;; Display timing information after startup
+(add-hook 'emacs-startup-hook
+          #'(lambda () (message "Emacs ready in %s with %d garbage collections."
+                           (format "%.2f seconds"
+                                   (float-time
+                                    (time-subtract after-init-time before-init-time))) gcs-done)))
+
+;;; Package initialization
+
+;; Because packages are installed and managed via Nix, this only loads
+;; `use-package' so that it can be used for package configuration throughout the
+;; rest of this file.
+;;
+;; See '../../../emacs/default.nix' for details on which packages are installed
 
 (require 'package)
 (package-initialize 'noactivate)
 (eval-when-compile
   (require 'use-package))
 
-;; General and Evil
+;;; Sensible defaults
+
+(gsetq-default
+ blink-cursor-mode -1                   ; no blinking
+ ring-bell-function #'ignore            ; no ringing
+ inhibit-startup-screen t               ; no startup screen
+ initial-scratch-message ""             ; no message in the scratch buffer
+ cursor-in-non-selected-windows nil     ; hide the cursor in inactive windows
+ delete-by-moving-to-trash t            ; delete files to trash
+ fill-column 120                        ; set width for modern displays
+ help-window-select t                   ; focus new help windows when opened
+ indent-tabs-mode nil                   ; stop using tabs to indent
+ tab-width 4                            ; but set their width properly
+ left-margin-width 0                    ; no left margin
+ right-margin-width 0                   ; no right margin
+ recenter-positions '(0.33 top bottom)  ; set re-centering positions
+ scroll-conservatively 1000             ; never recenter point while scrolling
+ sentence-end-double-space nil          ; single space after a sentence end
+ require-final-newline t                ; require a newline at file end
+ show-trailing-whitespace nil           ; don't display trailing whitespaces by default
+ uniquify-buffer-name-style 'forward    ; uniquify buffer names correctly
+ window-combination-resize t            ; resize windows proportionally
+ frame-resize-pixelwise t               ; resize frames by pixel (don't snap to char)
+ history-length 1000                    ; store more history
+ use-dialog-box nil)                    ; don't use dialogues for mouse imput
+
+;; Miscellaneous
+(fset 'yes-or-no-p 'y-or-n-p)                      ; replace yes/no prompts with y/n
+(fset 'display-startup-echo-area-message #'ignore) ; no startup message in the echo area
+(delete-selection-mode 1)                          ; replace region when inserting text
+(put 'downcase-region 'disabled nil)               ; enable downcase-region
+(put 'upcase-region 'disabled nil)                 ; enable upcase-region
+(global-hl-line-mode)                              ; highlight the current line
+(line-number-mode)                                 ; display line number in the mode line
+(column-number-mode)                               ; display column number in the mode line
+
+;;; MacOS settings
+
+(use-package exec-path-from-shell
+  :if ad:is-a-mac-p
+  :init (gsetq exec-path-from-shell-check-startup-files nil)
+  :config (exec-path-from-shell-initialize))
+
+(use-package osx-trash
+  :if ad:is-a-mac-p
+  :config (osx-trash-setup))
+
+(when ad:is-a-mac-p
+  (gsetq mac-command-modifier 'meta
+         mac-option-modifier 'super
+         mac-function-modifier 'none))
+
+;; Keys and keybinding
+
 (use-package general
   :config
   ;; aliases
@@ -85,7 +155,6 @@
     :prefix "r"))
 
 (use-package evil
-  :demand t
   :init
   (gsetq evil-want-keybinding nil     ; don't load evil bindings for other modes
          evil-overriding-maps nil     ; no maps should override evil maps
@@ -151,62 +220,13 @@
   (general-add-hook 'which-key-init-buffer-hook #'ad:disable-line-numbers-local)
   (which-key-mode))
 
-(use-package with-editor
-  :defer t
-  :gfhook #'evil-insert-state
-  :config
-  (general-def 'normal with-editor-mode-map
-    "RET" #'with-editor-finish
-    "q" #'with-editor-cancel))
-
-;; MacOS specific
-
-(when ad:is-a-mac-p
-  (use-package exec-path-from-shell
-    :init (gsetq exec-path-from-shell-check-startup-files nil)
-    :config (exec-path-from-shell-initialize))
-
-  (use-package osx-trash
-    :config (osx-trash-setup))
-
-  (gsetq mac-command-modifier 'meta     ; Command is meta
-         mac-option-modifier 'super     ; Alt/Option is super
-         mac-function-modifier 'none))  ; Reserve function for macOS
-
-;; Default settings
-(gsetq-default
- blink-cursor-mode -1            ; no blinking
- ring-bell-function #'ignore         ; no ringing
- inhibit-startup-screen t            ; no startup screen
- initial-scratch-message ""          ; no message in the scratch buffer
- cursor-in-non-selected-windows nil  ; hide the cursor in inactive windows
- delete-by-moving-to-trash t         ; delete files to trash
- fill-column 80                      ; set width for modern displays
- help-window-select t                ; focus new help windows when opened
- indent-tabs-mode nil                ; stop using tabs to indent
- tab-width 4                         ; but set their width properly
- left-margin-width 0                 ; no left margin
- right-margin-width 0                ; no right margin
- recenter-positions '(12 top bottom) ; set re-centering positions
- scroll-conservatively 1000          ; never recenter point while scrolling
- sentence-end-double-space nil       ; single space after a sentence end
- require-final-newline t             ; require a newline at file end
- show-trailing-whitespace nil        ; don't display trailing whitespaces by default
- uniquify-buffer-name-style 'forward ; uniquify buffer names correctly
- window-combination-resize t         ; resize windows proportionally
- frame-resize-pixelwise t            ; resize frames by pixel (don't snap to char)
- history-length 1000                 ; store more history
- use-dialog-box nil)                 ; don't use dialogues for mouse imput
-
-;; Miscellaneous
-(fset 'yes-or-no-p 'y-or-n-p)                      ; replace yes/no prompts with y/n
-(fset 'display-startup-echo-area-message #'ignore) ; no startup message in the echo area
-(delete-selection-mode 1)                          ; replace region when inserting text
-(put 'downcase-region 'disabled nil)               ; enable downcase-region
-(put 'upcase-region 'disabled nil)                 ; enable upcase-region
-(global-hl-line-mode)                              ; highlight the current line
-(line-number-mode)                                 ; display line number in the mode line
-(column-number-mode)                               ; display column number in the mode line
+;; (use-package with-editor
+;;   :defer t
+;;   :gfhook #'evil-insert-state
+;;   :config
+;;   (general-def 'normal with-editor-mode-map
+;;     "RET" #'with-editor-finish
+;;     "q" #'with-editor-cancel))
 
 ;;; Basic UI settings
 
@@ -932,7 +952,7 @@ Redefined to allow pop-up windows."
   (general-def 'normal "?" #'ivy-resume)
   (general-r "?" #'evil-search-backward)
 
-  (ivy-mode 1))
+  (ivy-mode))
 
 (use-package counsel
   :demand t
@@ -1104,8 +1124,8 @@ Redefined to allow pop-up windows."
 (use-package company
   :config
   ;; Basic settings
-  (gsetq company-idle-delay 0.2
-         company-minimum-prefix-length 2
+  (gsetq company-idle-delay 0.15
+         company-minimum-prefix-length 1
          company-tooltip-align-annotations t
          company-show-numbers t)
 
@@ -1115,17 +1135,17 @@ Redefined to allow pop-up windows."
 
   ;; Add YASnippet support for all company backends
   ;; See: https://github.com/syl20bnr/spacemacs/pull/179
-  (defun ad:company-backend-with-yas (backends)
-    (if (and (listp backends) (memq 'company-yasnippet backends))
-        backends
-      (append (if (consp backends)
-                  backends
-                (list backends))
-              '(:with company-yasnippet))))
+  ;; (defun ad:company-backend-with-yas (backends)
+  ;;   (if (and (listp backends) (memq 'company-yasnippet backends))
+  ;;       backends
+  ;;     (append (if (consp backends)
+  ;;                 backends
+  ;;               (list backends))
+  ;;             '(:with company-yasnippet))))
 
-  ;; Add YASnippet to all backends
-  (gsetq company-backends
-         (mapcar #'ad:company-backend-with-yas company-backends))
+  ;; ;; Add YASnippet to all backends
+  ;; (gsetq company-backends
+  ;;        (mapcar #'ad:company-backend-with-yas company-backends))
 
   (global-company-mode))
 
@@ -1174,8 +1194,9 @@ Redefined to allow pop-up windows."
     "E" #'flycheck-list-errors))
 
 (use-package lsp-mode
+  :commands lsp
   :init
-  ;; Performance tuning per: https://emacs-lsp.github.io/lsp-mode/page/performance/
+  ;; See: https://emacs-lsp.github.io/lsp-mode/page/performance/
   (gsetq lsp-idle-delay 0.5
          lsp-completion-provider :capf
          read-process-output-max (* 1024 1024))
@@ -1189,11 +1210,10 @@ Redefined to allow pop-up windows."
     "N" #'lsp-describe-thing-at-point
     "RET" #'lsp-find-definition)
 
-  (gsetq lsp-keymap-prefix "mm")
-  (general-add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+  ;; (gsetq lsp-keymap-prefix "mm")
+  ;; (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
 
   (general-m lsp-mode-map
-    "m" lsp-command-map
     "i" #'lsp-goto-implementation
     "D" #'lsp-find-declaration
     "x" #'lsp-find-references
@@ -1207,12 +1227,13 @@ Redefined to allow pop-up windows."
 
 (use-package lsp-ui
   :ghook ('lsp-mode-hook #'lsp-ui-mode)
-  :commands lsp-ui-mode
-  ;; :init (general-add-hook 'lsp-ui-doc-frame-hook)
-  )
+  :config (gsetq lsp-ui-sideline-ignore-duplicate t))
 
 (use-package lsp-ivy
-  :commands lsp-ivy-workspace-symbol)
+  :after lsp-mode
+  :general
+  (general-m lsp-mode-map
+    "y" #'lsp-ivy-workspace-symbol))
 
 (use-package term
   :init
@@ -1288,7 +1309,7 @@ Redefined to allow pop-up windows."
 
 (use-package scala-mode
   :mode ("\\.scala\\'" "\\.sbt\\'" "\\.worksheet\\.sc\\'")
-  :gfhook #'lsp-deferred
+  :gfhook #'lsp
   :general
   (general-m scala-mode-map
     "b" #'lsp-metals-build-import
@@ -1324,15 +1345,18 @@ Redefined to allow pop-up windows."
 
 ;; Python
 
-(use-package lsp-python-ms
-  :init (gsetq lsp-python-ms-auto-install-server t)
-  :ghook ('python-mode-hook #'(lambda ()
-                                (require 'lsp-python-ms)
-                                (lsp-deferred))))
-
-(use-package conda
-  :defer t
+(use-package lsp-python-ms                          ; MS Python language server
   :init
+  (gsetq lsp-python-ms-auto-install-server t ; TODO install server via Nix
+         lsp-python-ms-guess-env t)          ; default - necessary for setting the correct env
+  :ghook
+  ('python-mode-hook #'(lambda ()
+                         (require 'lsp-python-ms)
+                         (lsp))))
+
+(use-package conda                      ; For manual switching of Conda environments
+  :defer t
+  :config
   (gsetq conda-anaconda-home (expand-file-name "~/miniconda3")
          conda-env-home-directory (expand-file-name "~/miniconda3")))
 
