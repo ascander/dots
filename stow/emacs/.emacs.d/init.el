@@ -902,6 +902,7 @@ Redefined to allow pop-up windows."
 (use-package smex)                      ; used by counsel
 
 (use-package ivy
+  :demand t
   :general (general-spc "f" #'ivy-switch-buffer)
   :config
   ;; Basic settings
@@ -934,6 +935,7 @@ Redefined to allow pop-up windows."
   (ivy-mode 1))
 
 (use-package counsel
+  :demand t
   :general
   ;; Replace standard 'evil-ex-search-forward' with swiper
   ('normal "/" #'counsel-grep-or-swiper)
@@ -959,6 +961,7 @@ Redefined to allow pop-up windows."
   :config (counsel-mode 1))
 
 (use-package swiper
+  :demand t
   :general ([remap isearch-forward] #'swiper)
   :init (gsetq swiper-goto-start-of-match t))
 
