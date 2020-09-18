@@ -213,20 +213,12 @@
     (gsetq lsp-keymap-prefix "mm")
     (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
 
-    ;; Bind some additional LSP commands; note "mm" should still bring
-    ;; up the 'which-key' enabled `lsp-command-map'
+    ;; Bind some "always available" LSP commands
     (general-m lsp-mode-map
       "m" lsp-command-map
-      "a" #'lsp-execute-code-action
-      "v" #'lsp-avy-lens
-      "i" #'lsp-goto-implementation
-      "D" #'lsp-find-declaration
-      "T" #'lsp-find-type-definition
-      ;; cross (x) references
-      "x" #'lsp-find-references
-      "r" #'lsp-rename
       "R" #'lsp-restart-workspace
-      "=" #'lsp-format-buffer
+      "Q" #'lsp-workspace-shutdown
+      "d" #'lsp-describe-session
       "l" #'lsp-workspace-show-log))
 
 (use-package lsp-ui
@@ -245,7 +237,34 @@
 ;; Scala
 
 (use-package scala-mode
-  :mode ("\\.scala\\'" "\\.sbt\\'"))
+  :mode ("\\.scala\\'" "\\.sbt\\'")
+  :general
+  ;; Bind available 'lsp-metals' actions
+  (general-m scala-mode-map
+    ;; LSP metals session functionality
+    "i" #'lsp-metals-build-import
+    "c" #'lsp-metals-build-connect
+    "d" #'lsp-metals-doctor-run
+    ;; Supported LSP actions 
+    "g" #'lsp-find-definition
+    "x" #'lsp-find-references
+    "r" #'lsp-rename
+    "=" #'lsp-format-buffer)
+  :config
+  ;; Indentation preferences
+  (gsetq scala-indent:default-run-on-strategy
+	 scala-indent:operator-strategy
+	 scala-indent:use-javadoc-style t)
+
+  ;; Inserting newline in a multiline comment should do what I mean
+  (defun ad:scala-mode-newline-in-multiline-comment ()
+    "Insert a leading asterisk in Scala multiline comments, when hitting 'RET'."
+    (interactive)
+    (newline-and-indent)
+    (scala-indent:insert-asterisk-on-multiline-comment))
+
+  (general-def 'insert scala-mode-map
+    "RET" #'ad:scala-mode-newline-in-multiline-comment))
 
 (use-package sbt-mode
   :after scala-mode
