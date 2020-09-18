@@ -27,6 +27,25 @@
 (setq debug-on-error t)                 ; Enter debugger on error
 (setq message-log-max 10000)            ; Keep more log messages
 
+;; Startup tuning
+
+;; Set GC threshold as high as possible for fast startup
+(setq gc-cons-threshold most-positive-fixnum)
+
+;; Set GC threshold back to default value when Emacs is idle
+(run-with-idle-timer 5 nil
+		     (lambda ()
+		       (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value)))
+		       (message "GC threshold restored to %S" gc-cons-threshold)))
+
+;; Print a message after startup
+(add-hook 'after-init-hook
+	  (lambda ()
+	    (message "Emacs ready in %s with %d garbage collections."
+		     (format "%.2f seconds"
+			     (float-time (time-subtract after-init-time before-init-time)))
+		     gcs-done)))
+
 ;; Package initialization
 
 (require 'package)
