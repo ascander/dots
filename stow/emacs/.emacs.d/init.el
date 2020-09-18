@@ -231,8 +231,11 @@
 
 (use-package lsp-ui
   :commands lsp-ui-mode
+  :init
+  ;; Disable LSP sideline UI
+  (gsetq lsp-ui-sideline-enable nil)
   :config
-  ;; Style 'lsp-ui' documentation on hover
+  ;; Style settings for LSP doc UI
   (gsetq lsp-ui-doc-enable t
      lsp-ui-doc-position 'top
      lsp-ui-doc-max-width 120
