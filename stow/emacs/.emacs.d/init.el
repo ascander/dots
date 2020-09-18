@@ -24,6 +24,27 @@
 
 ;;; Code:
 
+;; Constants
+
+(defconst is-a-mac-p (eq system-type 'darwin) "Are we on MacOS?")
+
+(defconst minibuffer-maps
+  '(minibuffer-local-map
+    minibuffer-local-ns-map
+    minibuffer-local-completion-map
+    minibuffer-local-must-match-map
+    minibuffer-local-isearch-map
+    evil-ex-completion-map)
+  "List of minibuffer keymaps.")
+
+;; Functions
+
+(defun ad:disable-line-numbers ()
+  "Disable line numbers."
+  (display-line-numbers-mode -1))
+
+;; Preliminaries
+
 (setq debug-on-error t)                 ; Enter debugger on error
 (setq message-log-max 10000)            ; Keep more log messages
 
@@ -34,17 +55,17 @@
 
 ;; Set GC threshold back to default value when Emacs is idle
 (run-with-idle-timer 5 nil
-		     (lambda ()
-		       (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value)))
-		       (message "GC threshold restored to %S" gc-cons-threshold)))
+             (lambda ()
+               (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value)))
+               (message "GC threshold restored to %S" gc-cons-threshold)))
 
 ;; Print a message after startup
 (add-hook 'after-init-hook
-	  (lambda ()
-	    (message "Emacs ready in %s with %d garbage collections."
-		     (format "%.2f seconds"
-			     (float-time (time-subtract after-init-time before-init-time)))
-		     gcs-done)))
+      (lambda ()
+        (message "Emacs ready in %s with %d garbage collections."
+             (format "%.2f seconds"
+                 (float-time (time-subtract after-init-time before-init-time)))
+             gcs-done)))
 
 ;; Package initialization
 
@@ -67,21 +88,35 @@
 ;; General bindings take precedence
 (general-auto-unbind-keys)
 
-;; Leaders
+;; Leader keys
 
-(general-create-definer general-m
+(general-create-definer general-spc	; Buffer/file/group management
+  :states 'normal
+  :keymaps 'override
+  :prefix "SPC")
+
+(general-create-definer general-t	; Window navigation/management
+  :states 'normal
+  :keymaps 'override
+  :prefix "t")
+
+(general-create-definer general-m	; Major mode functionality
   :states 'normal
   :prefix "m")
+
+(general-create-definer general-r	; Remapped bindings
+  :states 'normal
+  :prefix "r")
 
 ;; Evil & Evil Collection
 
 (use-package evil
   :init
-  (gsetq evil-want-keybinding nil
-     evil-overriding-maps nil
-     evil-search-module 'evil-search
-     evil-exsearch-persistent-highlight nil
-     evil-want-Y-yank-to-eol t)
+  (gsetq evil-want-keybinding nil ; don't load evil bindings for other modes
+     evil-overriding-maps nil ; no maps should override evil maps
+     evil-search-module 'evil-search ; use evil-search instead of isearch (remapped)
+     evil-exsearch-persistent-highlight nil ; no persistent highlighting of search matches
+     evil-want-Y-yank-to-eol t)		; make 'Y' behave like 'D'
   :config (evil-mode))
 
 (use-package evil-collection
@@ -89,6 +124,57 @@
   :after evil
   :init (gsetq evil-collection-company-use-tng nil)
   :config (evil-collection-init))
+
+;; Default Evil Bindings
+
+;; Swap some default Evil bindings
+(general-def 'normal
+  "a" #'evil-append-line
+  "A" #'evil-append
+  ";" #'evil-ex)
+
+;; Move lost bindings to 'r' leader
+(general-r
+ ";" #'evil-repeat-find-char
+ "/" #'evil-ex-search-forward)
+
+;; Default Evil states
+
+;; Exit emacs state with "ESC"
+(general-def 'emacs
+  "<escape>" #'evil-normal-state)
+
+;; Use normal state as the default state for all modes
+(general-with 'evil
+  (gsetq evil-normal-state-modes (append evil-emacs-state-modes
+                     evil-normal-state-modes)
+     evil-emacs-state-modes nil
+     evil-motion-state-modes nil))
+
+;; Bind "ESC" to quit minibuffers as often as possible
+
+(general-def :keymaps minibuffer-maps
+  "<escape>" #'keyboard-escape-quit)
+
+;; Which-key
+
+(use-package which-key
+  :init
+  (gsetq which-key-idle-delay 0.3
+     which-key-idle-secondary-delay 0.2
+     which-key-sort-order 'which-key-prefix-then-key-order-reverse
+     which-key-max-display-columns 6
+     which-key-add-column-padding 2)
+  :config
+  ;; Set replacements for the 'which-key' UI
+  (gsetq which-key-replacement-alist '((( nil . "Prefix Command") . (nil . "prefix"))
+                       ((nil . "\\`\\?\\?\\'")    . (nil . "λ"))
+                       ((nil . "magit-")          . (nil . "git-"))))
+
+  ;; Disable line numbers in which-key buffers
+  (general-add-hook 'which-key-init-buffer-hook #'ad:disable-line-numbers)
+
+  (which-key-mode))
 
 ;; Company
 
@@ -152,11 +238,6 @@
      lsp-ui-doc-max-width 120
      lsp-ui-doc-max-height 40
      lsp-ui-doc-use-webkit t))
-
-;; Which-key
-
-(use-package which-key
-    :config (which-key-mode))
 
 ;; Scala
 
