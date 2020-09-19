@@ -51,6 +51,38 @@
   "Toggle absolute line numbers."
   (setq-local display-line-numbers 'absolute))
 
+(defun ad:kill-this-buffer ()
+  "Call `kill-this-buffer' without menu bar interaction."
+  (interactive)
+  (if (minibufferp)
+      (abort-recursive-edit)
+    (kill-buffer (current-buffer))))
+
+(defun ad:kill-buffer-delete-window ()
+  "Kill the current buffer and delete its window."
+  (interactive)
+  (ad:kill-this-buffer)
+  (delete-window))
+
+(defun ad:delete-other-windows ()
+  "Make the current window the only one."
+  (interactive)
+  (if (eq (count-windows) 1)
+      (winner-undo)
+    (delete-other-windows)))
+
+(defun ad:vsplit ()
+  "Split the window vertically and switch to the new window."
+  (interactive)
+  (split-window-vertically)
+  (other-window 1))
+
+(defun ad:hsplit ()
+  "Split the window horizontally and switch to the new window."
+  (interactive)
+  (split-window-horizontally)
+  (other-window 1))
+
 ;; Preliminaries
 
 (setq debug-on-error t)                 ; Enter debugger on error
@@ -177,8 +209,8 @@
 
 (when is-a-mac-p
   (gsetq mac-command-modifier 'meta	; command is meta
-	 mac-option-modifier 'super	; alt/option is super
-	 mac-function-modifier 'none))	; reserve 'function' for macOS
+     mac-option-modifier 'super	; alt/option is super
+     mac-function-modifier 'none))	; reserve 'function' for macOS
 
 ;; Emacs Defaults
 
@@ -311,6 +343,80 @@
 ;; Clean up whitespace on file save
 (general-add-hook 'before-save-hook #'whitespace-cleanup)
 
+;; Window/buffer management
+
+(use-package ace-window
+  :general (general-t "w" #'ace-window)
+  :config
+  (gsetq aw-keys '(?a ?s ?d ?d ?f ?g ?h ?k ?l)
+         aw-scope 'frame
+         aw-dispatch-always t))
+
+(use-package windmove
+  :config (gsetq windmove-wrap-around t))
+
+(use-package winner
+  :general
+  (general-t
+    "u" #'winner-undo
+    "U" #'winner-redo)
+  :config (winner-mode))
+
+(general-t
+  "f" #'toggle-frame-fullscreen
+  "h" #'windmove-left
+  "j" #'windmove-down
+  "k" #'windmove-up
+  "l" #'windmove-right
+  "-" #'ad:vsplit
+  "'" #'ad:hsplit
+  "q" #'ad:kill-this-buffer
+  "d" #'delete-window
+  "D" #'ad:kill-buffer-delete-window
+  "." #'ad:delete-other-windows)
+
+;; Pop up buffer management
+
+(use-package shackle
+  :init
+  (gsetq shackle-rules
+         '(
+           ;; Org-mode buffers pop to the bottom
+           ("\\*Org Src.*"       :regexp t :align below :size 0.20 :select t)
+           ("CAPTURE\\-.*\\.org" :regexp t :align below :size 0.20 :select t)
+           ("*Org Select*"                 :align below :size 0.20 :select t)
+           (" *Org todo*"                  :align below :size 0.20 :select t)
+           ;; Everything else pops to the top
+           (magit-status-mode   :align above :size 0.33 :select t    :inhibit-window-quit t)
+           (magit-log-mode      :align above :size 0.33 :select t    :inhibit-window-quit t)
+           ("*Flycheck errors*" :align above :size 0.33 :select nil)
+           ("*Help*"            :align above :size 0.33 :select t)
+           ("*info*"            :align above :size 0.33 :select t)
+           ("*lsp-help*"        :align above :size 0.33 :select nil)
+           ("*xref*"            :align above :size 0.33 :select t)
+           (compilation-mode    :align above :size 0.33 :select nil))
+         shackle-default-rule '(:select t))
+  :config (shackle-mode t))
+
+;; Bedazzle the window I just focused, pleaase
+
+(use-package beacon
+  :init
+  ;; When to blink
+  (gsetq beacon-blink-when-point-moves-vertically nil
+         beacon-blink-when-point-moves-horizontally nil
+         beacon-blink-when-window-scrolls nil
+         beacon-blink-when-buffer-changes t
+         beacon-blink-when-window-changes t
+         beacon-blink-when-focused t)
+  ;; How to blink
+  (gsetq beacon-size 30
+         beacon-color "#d33682")        ; Emacs/Visual state color
+  :config
+  ;; Not for terminal modes
+  (add-to-list 'beacon-dont-blink-major-modes 'term-mode)
+  (beacon-mode 1))
+
 ;; Which-key
 
 (use-package which-key
@@ -400,7 +506,7 @@
     "i" #'lsp-metals-build-import
     "c" #'lsp-metals-build-connect
     "d" #'lsp-metals-doctor-run
-    ;; Supported LSP actions 
+    ;; Supported LSP actions
     "g" #'lsp-find-definition
     "x" #'lsp-find-references
     "r" #'lsp-rename
@@ -408,8 +514,8 @@
   :config
   ;; Indentation preferences
   (gsetq scala-indent:default-run-on-strategy
-	 scala-indent:operator-strategy
-	 scala-indent:use-javadoc-style t)
+     scala-indent:operator-strategy
+     scala-indent:use-javadoc-style t)
 
   ;; Inserting newline in a multiline comment should do what I mean
   (defun ad:scala-mode-newline-in-multiline-comment ()
