@@ -228,6 +228,33 @@
 (custom-set-faces
  '(line-number-current-line ((t :inherit warning))))
 
+;; Emacs file management
+
+(use-package no-littering
+  :demand t
+  :config
+  ;; Exclude no-littering files from 'recentf'
+  (require 'recentf)
+  (add-to-list 'recentf-exclude no-littering-var-directory)
+  (add-to-list 'recentf-exclude no-littering-etc-directory)
+
+  ;; Version backups
+  (gsetq create-lockfiles nil           ; no lockfiles
+         delete-old-versions t          ; don't ask before deleting old backups
+         version-control t              ; use version control
+         kept-new-versions 10           ; keep the 10 newest
+         kept-old-versions 4            ; and the 4 oldest
+         vc-make-backup-files)          ; backup files under vc, too
+
+  ;; Don't let customizations use my init.el file
+  (gsetq custom-file (no-littering-expand-etc-file-name "custom.el"))
+  (general-add-hook 'after-init-hook
+                    (lambda () (load custom-file 'noerror 'nomessage)))
+
+  ;; Store auto-save files in `no-littering-var-directory'
+  (gsetq auto-save-file-name-transforms
+         `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+
 ;; Which-key
 
 (use-package which-key
