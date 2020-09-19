@@ -255,6 +255,62 @@
   (gsetq auto-save-file-name-transforms
          `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
+;; Directory handling
+
+(use-package dired
+  :general ('normal "-" #'counsel-dired-jump)
+  :gfhook (nil #'auto-revert-mode)
+  :config
+  ;; Basic preferences
+  (gsetq dired-auto-revert-buffer t
+         dired-listing-switches "-lha --group-directories-first" ; assumes GNU 'ls'
+         dired-recursive-copies 'always
+         dired-dwim-target t)
+
+  (general-spc
+    "d" #'dired-jump
+    "D" #'dired-jump-other-window))
+
+(use-package dired-x
+  :after dired
+  :ghook ('dired-mode-hook #'dired-omit-mode)
+  :config (gsetq dired-omit-verbose nil))
+
+(general-with-package 'dired
+                       (put 'dired-find-alternate-file 'disabled nil)
+                       (general-def 'normal dired-mode-map
+                         ;; navigation
+                         "h" #'dired-up-directory
+                         "j" #'dired-next-line
+                         "k" #'dired-previous-line
+                         ;; magit
+                         "S" #'magit-status))
+
+;; Ignore settings
+
+(use-package ignoramus
+  :config
+  (dolist (name '("company-statistics-cache.el"
+                  ".metals"
+                  ".bloop"))
+    (add-to-list 'ignoramus-file-basename-exact-names name))
+
+  (ignoramus-setup))
+
+;; File handling
+
+(use-package autorevert
+  :init
+  (gsetq auto-revert-verbose nil
+         global-auto-revert-non-file-buffers t)
+
+  ;; MacOS doesn't use notifications
+  (when is-a-mac-p (gsetq auto-revert-use-notify nil))
+  :ghook ('after-init-hook #'global-auto-revert-mode))
+
+;; Clean up whitespace on file save
+(general-add-hook 'before-save-hook #'whitespace-cleanup)
+
 ;; Which-key
 
 (use-package which-key
