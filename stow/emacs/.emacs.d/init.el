@@ -40,8 +40,16 @@
 ;; Functions
 
 (defun ad:disable-line-numbers ()
-  "Disable line numbers."
+  "Unequivocally disable line numbers."
   (display-line-numbers-mode -1))
+
+(defun ad:relative-line-numbers ()
+  "Toggle relative line numbers."
+  (setq-local display-line-numbers 'visual))
+
+(defun ad:absolute-line-numbers ()
+  "Toggle absolute line numbers."
+  (setq-local display-line-numbers 'absolute))
 
 ;; Preliminaries
 
@@ -155,6 +163,70 @@
 
 (general-def :keymaps minibuffer-maps
   "<escape>" #'keyboard-escape-quit)
+
+;; MacOS
+
+(use-package exec-path-from-shell
+  :if is-a-mac-p
+  :init (gsetq exec-path-from-shell-check-startup-files nil)
+  :config (exec-path-from-shell-initialize))
+
+(use-package osx-trash
+  :if is-a-mac-p
+  :config (osx-trash-setup))
+
+(when is-a-mac-p
+  (gsetq mac-command-modifier 'meta	; command is meta
+	 mac-option-modifier 'super	; alt/option is super
+	 mac-function-modifier 'none))	; reserve 'function' for macOS
+
+;; Emacs Defaults
+
+(gsetq-default blink-cursor-mode -1                  ; no blinking
+               ring-bell-function #'ignore           ; no ringing
+               inhibit-startup-screen t              ; no startup screen
+               initial-scratch-message ""            ; no scratch message
+               cursor-in-non-selected-windows nil    ; cursors only in selected windows
+               delete-by-moving-to-trash t           ; delete to trash
+               fill-column 100                       ; set fill column for modern displays
+               help-window-select t                  ; focus new help windows
+               indent-tabs-mode nil                  ; don't use tabs
+               tab-width 4                           ; but set their width anyway
+               left-margin-width 0                   ; no left margins
+               right-margin-width 0                  ; no right margins
+               recenter-positions '(0.33 top bottom) ; recentering positions
+               sentence-end-double-space nil         ; single space after sentences
+               require-final-newline t               ; require final newline
+               show-trailing-whitespace nil          ; don't show trailing whitespace
+               uniquify-buffer-name-style 'forward   ; uniquify buffer names
+               window-combination-resize t           ; resize windows proportionally
+               frame-resize-pixelwise t              ; resize frames by pixel
+               history-length 1000                   ; more history
+               use-dialog-box nil)                   ; don't use dialogs for mouse input
+
+(fset 'yes-or-no-p 'y-or-n-p)                        ; replace yes/no prompts with y/n
+(fset 'display-startup-echo-area-message #'ignore)   ; no startup message in the minibuffer
+(delete-selection-mode 1)                            ; replace region when inserting text
+(put 'downcase-region 'disabled nil)                 ; enable `downcase-region'
+(put 'upcase-region 'disabled nil)                   ; enable `upcase-region'
+(global-hl-line-mode)                                ; highlight the current line
+(line-number-mode)                                   ; display line number in modeline
+(column-number-mode)                                 ; display column number in modeline
+
+;; Line numbers
+
+;; Use Vim-style visual line numbers, with an absolute line number for the current line
+(gsetq-default display-line-numbers 'visual
+               display-line-numbers-widen t
+               display-line-numbers-current-absolute t)
+
+;; Switch to absolute line numbers in 'insert' state
+(general-add-hook 'evil-insert-state-entry-hook #'ad:absolute-line-numbers)
+(general-add-hook 'evil-insert-state-exit-hook #'ad:relative-line-numbers)
+
+;; Bedazzle the current line number for kicks
+(custom-set-faces
+ '(line-number-current-line ((t :inherit warning))))
 
 ;; Which-key
 
