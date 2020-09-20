@@ -321,6 +321,81 @@
   (gsetq auto-save-file-name-transforms
          `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
+;;; Color themes
+
+;; Distinguish evil state by cursor shape/color
+;; TODO advise `load-theme' to set cursor colors per theme
+(gsetq evil-mode-line-format nil
+       evil-normal-state-cursor '(box "#839496")
+       evil-motion-state-cursor '(box "#b58900")
+       evil-insert-state-cursor '(bar "#268bd2")
+       evil-emacs-state-cursor  '(bar "#d33682")
+       evil-visual-state-cursor '(box "#d33682"))
+
+;; Disable old color theme when switching to new color theme
+(defun ad:disable-themes (&rest _)
+  "Disable all currently active color themes."
+  (mapc #'disable-theme custom-enabled-themes))
+
+(general-add-advice 'load-theme :before #'ad:disable-themes)
+
+(use-package solarized-theme            ; I always come back to you
+  :init
+  ;; Basic settings - disprefer bold and italics, use high contrast
+  (gsetq solarized-use-variable-pitch nil
+         solarized-use-less-bold t
+         solarized-use-more-italic nil
+         solarized-distinct-doc-face t
+         solarized-emphasize-indicators t
+         solarized-high-contrast-mode-line nil)
+  ;; Avoid all font size changes
+  (gsetq solarized-height-minus-1 1.0
+         solarized-height-plus-1 1.0
+         solarized-height-plus-2 1.0
+         solarized-height-plus-3 1.0
+         solarized-height-plus-4 1.0)
+  :config
+  ;; Conditionally load the default theme based on whether we're
+  ;; running the Emacs daemon.
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions
+                (lambda (frame)
+                  (select-frame frame)
+                  (load-theme 'solarized-dark t)))
+    (load-theme 'solarized-dark t)))
+
+;;; Mode line
+
+(use-package moody
+  :init
+  ;; Advise `load-theme' to set mode-line face attributes correctly.
+  (defun ad:set-mode-line-attributes (&rest _)
+    "Unset the ':box' attribute for the `mode-line' face, and
+make ':overline' and ':underline' the same value."
+    (let ((line (face-attribute 'mode-line :underline)))
+      (set-face-attribute 'mode-line          nil :overline  line)
+      (set-face-attribute 'mode-line-inactive nil :overline  line)
+      (set-face-attribute 'mode-line-inactive nil :underline line)
+      (set-face-attribute 'mode-line          nil :box       nil)
+      (set-face-attribute 'mode-line-inactive nil :box       nil)))
+
+  (general-add-advice #'load-theme :after #'ad:set-mode-line-attributes)
+  :config
+  (gsetq x-underline-at-descent-line t
+         moody-slant-function #'moody-slant-apple-rgb
+         moody-mode-line-height 28)
+
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode))
+
+(use-package minions
+  :demand t
+  :after moody
+  :init
+  (gsetq minions-mode-line-lighter "ʕ•ᴥ•ʔ"
+         minions-mode-line-delimiters '("" . ""))
+  :config (minions-mode))
+
 ;;; Directory handling
 
 (use-package dired
@@ -530,7 +605,7 @@
   (general-spc "F" #'counsel-find-file)
   ;; Load themes
   (general-t
-    "t" #'counsel-load-theme)
+    "T" #'counsel-load-theme)
   :config (counsel-mode 1))
 
 (use-package swiper
