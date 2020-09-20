@@ -19,7 +19,6 @@ emacsWithPackages (epkgs: (
     counsel
     counsel-projectile
     default-text-scale
-    doom-themes
     evil
     evil-collection
     evil-magit
