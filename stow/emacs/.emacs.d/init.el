@@ -427,6 +427,9 @@ make ':overline' and ':underline' the same value."
                          ;; magit
                          "S" #'magit-status))
 
+(use-package all-the-icons-dired
+  :ghook 'dired-mode-hook)
+
 ;;; Ignore settings
 
 (use-package ignoramus
@@ -644,6 +647,11 @@ make ':overline' and ':underline' the same value."
          ivy-rich-path-style 'abbrev
          ivy-rich-switch-buffer-align-virtual-buffer t)
   :config (ivy-rich-mode 1))
+
+(use-package all-the-icons-ivy
+  :after counsel-projectile
+  :config (all-the-icons-ivy-setup))
+
 
 ;;; Company
 
