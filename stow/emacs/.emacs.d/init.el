@@ -504,7 +504,12 @@
 (use-package swiper
   :demand t
   :general ([remap isearch-forward] #'swiper)
-  :init (gsetq swiper-goto-start-of-match t))
+  :init (gsetq swiper-goto-start-of-match t)
+  :config
+  ;; Advise swiper to destroy highlighting after search. Use 'evil-ex-search-forward' for more fine
+  ;; grained control of persistent highlighting.
+  (general-add-advice 'swiper :after #'(lambda (&rest _)
+                                         (evil-ex-nohighlight))))
 
 (use-package avy
   :general (general-spc "s" #'avy-goto-char-timer)
