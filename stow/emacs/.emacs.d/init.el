@@ -437,6 +437,100 @@
 
   (which-key-mode))
 
+;; Completion and Search
+
+(use-package flx)                       ; used by ivy
+(use-package smex)                      ; used by counsel
+
+(use-package ivy
+  :demand t
+  :general (general-spc "f" #'ivy-switch-buffer)
+  :config
+  ;; Basic settings
+  (gsetq ivy-use-virtual-buffers t
+         ivy-initial-inputs-alist nil
+         ivy-count-format "")
+
+  ;; Enable fuzzy searching everywhere*
+  ;;
+  ;; *not everywhere
+  (gsetq ivy-re-builders-alist
+         '((swiper            . ivy--regex-plus)    ; convert spaces to '.*' for swiper
+           (ivy-switch-buffer . ivy--regex-plus)    ; and buffer switching
+           (counsel-rg        . ivy--regex-plus)    ; and ripgrep
+           (t                 . ivy--regex-fuzzy))) ; go fuzzy everywhere else
+
+  ;; Keybindings
+  (general-def ivy-minibuffer-map
+    "<escape>" #'minibuffer-keyboard-quit ; the natural choice
+    "<next>" #'ivy-scroll-up-command      ; default, here for documentation
+    "<prior>" #'ivy-scroll-down-command   ; same here
+    "C-j" #'ivy-next-history-element      ; repeat command with next element
+    "C-k" #'ivy-previous-history-element  ; repeat command with prev element
+    "C-'" #'ivy-avy)                      ; pick a candidate using avy
+
+  ;; Swap "?" for 'ivy-resume'
+  (general-def 'normal "?" #'ivy-resume)
+  (general-r "?" #'evil-search-backward)
+  (ivy-mode 1))
+
+(use-package counsel
+  :demand t
+  :general
+  ;; Replace standard 'evil-ex-search-forward' with swiper
+  ('normal "/" #'counsel-grep-or-swiper)
+  ;; Remap standard commands to their counsel analogs
+  (general-def
+    [remap execute-extended-command] #'counsel-M-x
+    [remap find-file]                #'counsel-find-file
+    [remap describe-bindings]        #'counsel-descbinds
+    [remap describe-face]            #'counsel-describe-face
+    [remap describe-function]        #'counsel-describe-function
+    [remap describe-variable]        #'counsel-describe-variable
+    [remap info-lookup-symbol]       #'counsel-info-lookup-symbol
+    [remap completion-at-point]      #'counsel-company
+    [remap org-goto]                 #'counsel-org-goto)
+  ;; Goto org headings
+  (general-m org-mode-map
+    "j" #'counsel-org-goto)
+  ;; For, eg. switching to a newly created project
+  (general-spc "F" #'counsel-find-file)
+  ;; Load themes
+  (general-t
+    "t" #'counsel-load-theme)
+  :config (counsel-mode 1))
+
+(use-package swiper
+  :demand t
+  :general ([remap isearch-forward] #'swiper)
+  :init (gsetq swiper-goto-start-of-match t))
+
+(use-package avy
+  :general (general-spc "s" #'avy-goto-char-timer)
+  :init (gsetq avy-all-windows nil
+               avy-timeout-seconds 0.25))
+
+;; TODO debug wrong type argument error when using ivy-avy immediately after
+;; starting Emacs and choosing a file from projectile's known files
+(use-package ivy-avy
+  :after ivy avy)
+
+(use-package prescient
+  :config (prescient-persist-mode))
+
+(use-package ivy-prescient
+  :after ivy
+  :demand t
+  :config (ivy-prescient-mode))
+
+(use-package ivy-rich
+  :after ivy counsel
+  :init
+  ;; Align virtual buffers, and abbreviate paths
+  (gsetq ivy-virtual-abbreviate 'full
+         ivy-rich-path-style 'abbrev
+         ivy-rich-switch-buffer-align-virtual-buffer t)
+  :config (ivy-rich-mode 1))
 ;; Company
 
 (use-package company
@@ -556,100 +650,58 @@
     "RET" #'with-editor-finish
     "q" #'with-editor-cancel))
 
-;; Completion and Search
-
-(use-package flx)                       ; used by ivy
-(use-package smex)                      ; used by counsel
-
-(use-package ivy
-  :demand t
-  :general (general-spc "f" #'ivy-switch-buffer)
+;; Project management lol
+(use-package projectile
+  :general
+  (general-spc
+    "P" #'projectile-find-file-in-known-projects
+    "r" #'projectile-switch-project
+    "v" #'projectile-invalidate-cache
+    "D" #'projectile-dired)
   :config
   ;; Basic settings
-  (gsetq ivy-use-virtual-buffers t
-         ivy-initial-inputs-alist nil
-         ivy-count-format "")
+  (gsetq projectile-enable-caching t
+         projectile-find-dir-includes-top-level t
+         projectile-switch-project-action #'projectile-dired
+         projectile-indexing-method 'alien
+         projectile-completion-system 'ivy)
 
-  ;; Enable fuzzy searching everywhere*
-  ;;
-  ;; *not everywhere
-  (gsetq ivy-re-builders-alist
-         '((swiper            . ivy--regex-plus)    ; convert spaces to '.*' for swiper
-           (ivy-switch-buffer . ivy--regex-plus)    ; and buffer switching
-           (counsel-rg        . ivy--regex-plus)    ; and ripgrep
-           (t                 . ivy--regex-fuzzy))) ; go fuzzy everywhere else
+  ;; Cleanup dead projects when idle
+  (run-with-idle-timer 10 nil #'projectile-cleanup-known-projects)
 
-  ;; Keybindings
-  (general-def ivy-minibuffer-map
-    "<escape>" #'minibuffer-keyboard-quit ; the natural choice
-    "<next>" #'ivy-scroll-up-command      ; default, here for documentation
-    "<prior>" #'ivy-scroll-down-command   ; same here
-    "C-j" #'ivy-next-history-element      ; repeat command with next element
-    "C-k" #'ivy-previous-history-element  ; repeat command with prev element
-    "C-'" #'ivy-avy)                      ; pick a candidate using avy
+  (projectile-mode))
 
-  ;; Swap "?" for 'ivy-resume'
-  (general-def 'normal "?" #'ivy-resume)
-  (general-r "?" #'evil-search-backward)
-  (ivy-mode 1))
+;; Advise some functions to additionally trigger `projectile-invalidate-cache'.
+;; This is useful for magit branching commands as well as moving files in dired.
+(general-with-package 'projectile
+  (defun ad:projectile-invalidate-cache (&rest _args)
+    "Runs `projectile-invalidate-cache'."
+    (projectile-invalidate-cache nil))
 
-(use-package counsel
-  :demand t
+  (general-add-advice '(magit-checkout
+                        magit-branch-and-checkout
+                        dired-do-rename
+                        dired-do-rename-regexp)
+                      :after #'ad:projectile-invalidate-cache))
+
+(use-package counsel-projectile
+  :after counsel projectile
   :general
-  ;; Replace standard 'evil-ex-search-forward' with swiper
-  ('normal "/" #'counsel-grep-or-swiper)
-  ;; Remap standard commands to their counsel analogs
-  (general-def
-    [remap execute-extended-command] #'counsel-M-x
-    [remap find-file]                #'counsel-find-file
-    [remap describe-bindings]        #'counsel-descbinds
-    [remap describe-face]            #'counsel-describe-face
-    [remap describe-function]        #'counsel-describe-function
-    [remap describe-variable]        #'counsel-describe-variable
-    [remap info-lookup-symbol]       #'counsel-info-lookup-symbol
-    [remap completion-at-point]      #'counsel-company
-    [remap org-goto]                 #'counsel-org-goto)
-  ;; Goto org headings
-  (general-m org-mode-map
-    "j" #'counsel-org-goto)
-  ;; For, eg. switching to a newly created project
-  (general-spc "F" #'counsel-find-file)
-  ;; Load themes
-  (general-t
-    "t" #'counsel-load-theme)
-  :config (counsel-mode 1))
+  (general-spc
+    "/" #'ad:counsel-projectile-rg
+    "p" #'counsel-projectile-find-file)
+  :config
+  (gsetq counsel-projectile-sort-files t)
 
-(use-package swiper
-  :demand t
-  :general ([remap isearch-forward] #'swiper)
-  :init (gsetq swiper-goto-start-of-match t))
+  ;; Make 'counsel-projectile-rg' work outside projects
+  (defun ad:counsel-projectile-rg ()
+    "Call `counsel-projectile-rg' if in a project, and `counsel-rg' otherwise."
+    (interactive)
+    (if (projectile-project-p)
+        (counsel-projectile-rg)
+      (counsel-rg)))
 
-(use-package avy
-  :general (general-spc "s" #'avy-goto-char-timer)
-  :init (gsetq avy-all-windows nil
-               avy-timeout-seconds 0.25))
-
-;; TODO debug wrong type argument error when using ivy-avy immediately after
-;; starting Emacs and choosing a file from projectile's known files
-(use-package ivy-avy
-  :after ivy avy)
-
-(use-package prescient
-  :config (prescient-persist-mode))
-
-(use-package ivy-prescient
-  :after ivy
-  :demand t
-  :config (ivy-prescient-mode))
-
-(use-package ivy-rich
-  :after ivy counsel
-  :init
-  ;; Align virtual buffers, and abbreviate paths
-  (gsetq ivy-virtual-abbreviate 'full
-         ivy-rich-path-style 'abbrev
-         ivy-rich-switch-buffer-align-virtual-buffer t)
-  :config (ivy-rich-mode 1))
+  (counsel-projectile-mode))
 
 ;; Scala
 
