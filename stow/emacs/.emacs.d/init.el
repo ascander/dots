@@ -45,11 +45,13 @@
 
 (defun ad:relative-line-numbers ()
   "Toggle relative line numbers."
-  (setq-local display-line-numbers 'visual))
+  (when (bound-and-true-p display-line-numbers-mode)
+    (setq-local display-line-numbers 'visual)))
 
 (defun ad:absolute-line-numbers ()
   "Toggle absolute line numbers."
-  (setq-local display-line-numbers 'absolute))
+  (when (bound-and-true-p display-line-numbers-mode)
+    (setq-local display-line-numbers 'absolute)))
 
 (defun ad:kill-this-buffer ()
   "Call `kill-this-buffer' without menu bar interaction."
