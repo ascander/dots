@@ -262,6 +262,38 @@
 (custom-set-faces
  '(line-number-current-line ((t :inherit warning))))
 
+;; Toggle various modes
+(general-def
+  :prefix-command 'ad:toggle
+  :prefix-map 'ad:toggle-map
+  "d" #'toggle-debug-on-error
+  "o" #'dired-omit-mode
+  "q" #'toggle-debug-on-quit
+  "A" #'auto-fill-mode
+  "t" #'toggle-truncate-lines)
+
+(general-t "o" #'ad:toggle)
+
+;;; Fonts and font sizing
+
+(use-package default-text-scale
+  :general
+  ("C--" #'default-text-scale-decrease
+   "C-=" #'default-text-scale-increase
+   "C-0" #'default-text-scale-reset)
+  :init
+  (general-unbind default-text-scale-mode-map
+    "C-M--"
+    "C-M-="
+    "C-M-0")
+  :config (default-text-scale-mode))
+
+;; Default variable pitch font
+(set-face-attribute 'variable-pitch nil
+                    :family "Helvetica Neue"
+                    :height 140
+                    :weight 'regular)
+
 ;;; Emacs file management
 
 (use-package no-littering
