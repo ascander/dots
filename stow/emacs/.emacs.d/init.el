@@ -587,6 +587,16 @@
                                          (ad:disable-line-numbers)
                                          (global-hl-line-mode -1))))
 
+(use-package shell-pop
+  :general (general-t "t" #'shell-pop)
+  :init
+  (gsetq shell-pop-window-size 40
+         shell-pop-window-position 'top
+         shell-pop-full-span t)
+  :config
+  ;; Set shell type to term
+  (gsetq shell-pop-shell-type '("vterm" "vterm" #'(lambda () (vterm)))))
+
 ;;; LSP
 
 (use-package lsp-mode
