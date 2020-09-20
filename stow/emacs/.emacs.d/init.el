@@ -294,6 +294,9 @@
                     :height 140
                     :weight 'regular)
 
+;; For icons used in various places
+(use-package all-the-icons)
+
 ;;; Emacs file management
 
 (use-package no-littering
@@ -914,6 +917,21 @@ make ':overline' and ':underline' the same value."
 
 (use-package rainbow-mode
   :ghook 'prog-mode-hook)
+
+;;; Git flavored modes
+
+(use-package git-commit
+  :defer t
+  :init
+  (gsetq git-commit-usage-message
+         "Type 'RET' to finish, 'q' to cancel, and \\[git-commit-prev-message] and \\[git-commit-next-message] to recover older messages.")
+  :config
+  ;; Remove style conventions
+  (general-remove-hook 'git-commit-finish-query-functions #'git-commit-check-style-conventions))
+
+(use-package gitconfig-mode :defer t)
+(use-package gitignore-mode :defer t)
+(use-package gitattributes_mode :defer t)
 
 ;;; Scala
 
