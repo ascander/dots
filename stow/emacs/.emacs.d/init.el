@@ -732,7 +732,7 @@
                       :after #'ad:projectile-invalidate-cache))
 
 (use-package counsel-projectile
-  :after counsel projectile
+  :after counsel
   :general
   (general-spc
     "/" #'ad:counsel-projectile-rg
