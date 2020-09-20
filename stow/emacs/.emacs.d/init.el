@@ -24,7 +24,7 @@
 
 ;;; Code:
 
-;; Constants
+;;; Constants
 
 (defconst is-a-mac-p (eq system-type 'darwin) "Are we on MacOS?")
 
@@ -37,7 +37,7 @@
     evil-ex-completion-map)
   "List of minibuffer keymaps.")
 
-;; Functions
+;;; Functions
 
 (defun ad:disable-line-numbers ()
   "Unequivocally disable line numbers."
@@ -83,12 +83,12 @@
   (split-window-horizontally)
   (other-window 1))
 
-;; Preliminaries
+;;; Preliminaries
 
 (setq debug-on-error t)                 ; Enter debugger on error
 (setq message-log-max 10000)            ; Keep more log messages
 
-;; Startup tuning
+;;; Startup tuning
 
 ;; Set GC threshold as high as possible for fast startup
 (setq gc-cons-threshold most-positive-fixnum)
@@ -107,14 +107,14 @@
                  (float-time (time-subtract after-init-time before-init-time)))
              gcs-done)))
 
-;; Package initialization
+;;; Package initialization
 
 (require 'package)
 (package-initialize 'noactivate)
 (eval-when-compile
   (require 'use-package))
 
-;; General
+;;; General
 
 (use-package general
   :demand t)
@@ -148,7 +148,7 @@
   :states 'normal
   :prefix "r")
 
-;; Evil & Evil Collection
+;;; Evil & Evil Collection
 
 (use-package evil
   :init
@@ -196,7 +196,7 @@
 (general-def :keymaps minibuffer-maps
   "<escape>" #'keyboard-escape-quit)
 
-;; MacOS
+;;; MacOS
 
 (use-package exec-path-from-shell
   :if is-a-mac-p
@@ -212,7 +212,7 @@
      mac-option-modifier 'super	; alt/option is super
      mac-function-modifier 'none))	; reserve 'function' for macOS
 
-;; Emacs Defaults
+;;; Emacs Defaults
 
 (gsetq-default blink-cursor-mode -1                  ; no blinking
                ring-bell-function #'ignore           ; no ringing
@@ -245,7 +245,7 @@
 (line-number-mode)                                   ; display line number in modeline
 (column-number-mode)                                 ; display column number in modeline
 
-;; Line numbers
+;;; Line numbers
 
 ;; Use Vim-style visual line numbers, with an absolute line number for the current line
 (gsetq-default display-line-numbers 'visual
@@ -260,7 +260,7 @@
 (custom-set-faces
  '(line-number-current-line ((t :inherit warning))))
 
-;; Emacs file management
+;;; Emacs file management
 
 (use-package no-littering
   :demand t
@@ -287,7 +287,7 @@
   (gsetq auto-save-file-name-transforms
          `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
-;; Directory handling
+;;; Directory handling
 
 (use-package dired
   :general ('normal "-" #'counsel-dired-jump)
@@ -318,7 +318,7 @@
                          ;; magit
                          "S" #'magit-status))
 
-;; Ignore settings
+;;; Ignore settings
 
 (use-package ignoramus
   :config
@@ -329,7 +329,7 @@
 
   (ignoramus-setup))
 
-;; File handling
+;;; File handling
 
 (use-package autorevert
   :init
@@ -343,7 +343,7 @@
 ;; Clean up whitespace on file save
 (general-add-hook 'before-save-hook #'whitespace-cleanup)
 
-;; Window/buffer management
+;;; Window/buffer management
 
 (use-package ace-window
   :general (general-t "w" #'ace-window)
@@ -375,7 +375,7 @@
   "D" #'ad:kill-buffer-delete-window
   "." #'ad:delete-other-windows)
 
-;; Pop up buffer management
+;;; Pop up buffer management
 
 (use-package shackle
   :init
@@ -399,7 +399,6 @@
   :config (shackle-mode t))
 
 ;; Bedazzle the window I just focused, pleaase
-
 (use-package beacon
   :init
   ;; When to blink
@@ -417,7 +416,7 @@
   (add-to-list 'beacon-dont-blink-major-modes 'term-mode)
   (beacon-mode 1))
 
-;; Which-key
+;;; Which-key
 
 (use-package which-key
   :init
@@ -437,7 +436,7 @@
 
   (which-key-mode))
 
-;; Completion and Search
+;;; Completion and Search
 
 (use-package flx)                       ; used by ivy
 (use-package smex)                      ; used by counsel
@@ -531,7 +530,8 @@
          ivy-rich-path-style 'abbrev
          ivy-rich-switch-buffer-align-virtual-buffer t)
   :config (ivy-rich-mode 1))
-;; Company
+
+;;; Company
 
 (use-package company
   :init
@@ -542,7 +542,7 @@
         company-tooltip-align-annotations t)
   :hook (after-init . global-company-mode))
 
-;; LSP
+;;; LSP
 
 (use-package lsp-mode
     :hook ((scala-mode . lsp-deferred)
@@ -589,7 +589,7 @@
      lsp-ui-doc-max-height 40
      lsp-ui-doc-use-webkit t))
 
-;; Version control
+;;; Version control
 
 (use-package magit
   :commands magit-status
@@ -650,7 +650,8 @@
     "RET" #'with-editor-finish
     "q" #'with-editor-cancel))
 
-;; Project management lol
+;;; Project management lol
+
 (use-package projectile
   :general
   (general-spc
@@ -703,7 +704,7 @@
 
   (counsel-projectile-mode))
 
-;; Scala
+;;; Scala
 
 (use-package scala-mode
   :mode ("\\.scala\\'" "\\.sbt\\'")
