@@ -704,6 +704,46 @@
 
   (counsel-projectile-mode))
 
+;;; General programming
+
+(use-package electric
+  :init
+  ;; Disable pairing in minibuffers
+  (gsetq electric-pair-inhibit-predicate #'(lambda (_) (minibufferp)))
+  :config (electric-pair-mode))
+
+(use-package paren
+  :config (show-paren-mode))
+
+(use-package evil-surround
+  :init
+  ;; Swap the default bindings for padded/non-padded delimiters
+  (gsetq evil-surround-pairs-alist
+         '(
+           ;; Left pair triggers no-spaces version
+           (?\( . ("(" . ")"))
+           (?\[ . ("[" . "]"))
+           (?\{ . ("{" . "}"))
+           ;; Right pair triggers padded version
+           (?\) . ("( " . " )"))
+           (?\] . ("[ " . " ]"))
+           (?\} . ("{ " . " }"))
+           ;; Everything else
+           (?# . ("#{" . "}"))
+           (?b . ("(" . ")"))
+           (?B . ("{" . "}"))
+           (?> . ("<" . ">"))
+           (?t . evil-surround-read-tag)
+           (?< . evil-surround-read-tag)
+           (?f . evil-surround-function)))
+  :config (global-evil-surround-mode))
+
+(use-package rainbow-delimiters
+  :ghook 'prog-mode-hook 'text-mode-hook)
+
+(use-package rainbow-mode
+  :ghook 'prog-mode-hook)
+
 ;;; Scala
 
 (use-package scala-mode
