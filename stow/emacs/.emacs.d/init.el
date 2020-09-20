@@ -495,6 +495,59 @@
      lsp-ui-doc-max-height 40
      lsp-ui-doc-use-webkit t))
 
+;; Version control
+
+(use-package magit
+  :commands magit-status
+  :general ('normal "S" #'magit-status)
+  (general-t
+    "g" #'(:ignore t :which-key "Git")
+    "gs" #'magit-status
+    "gl" #'magit-log-all
+    "gL" #'magit-log-bufer-file
+    "gc" #'magit-commit
+    "gp" #'magit-push
+    "gf" #'magit-pull
+    "gb" #'magit-blame)
+  :config
+  ;; Basic settings
+  (gsetq magit-save-repository-buffers 'dontask
+         magit-refs-show-commit-count 'all
+         magit-branch-prefer-remote-upstream '("master")
+         magit-branch-adjust-remote-upstream-alist '(("origin/master" "master"))
+         magit-revision-show-gravatars nil)
+
+  ;; Show fine-grained diffs in hunks
+  (gsetq-default magit-diff-refine-hunk t)
+
+  ;; Set Magit's repository directories for `magit-list-repositories', based on
+  ;; Projectile's known projects. This also has effects on `magit-status' in
+  ;; "potentially surprising ways". Initialize after Projectile loads, and every
+  ;; time we switch projects (we may switch to a previously unknown project).
+  (defun ad:set-magit-repository-directories-from-projectile-known-projects ()
+    "Set `magit-repository-directories' from known Projectile projects."
+    (let ((project-dirs (bound-and-true-p projectile-known-projects)))
+      (setq magit-repository-directories
+            ;; Strip trailing slashes from project-dirs, since Magit adds them
+            ;; again. Double trailing slashes break presentation in Magit
+            (mapcar #'directory-file-name project-dirs))))
+
+  (with-eval-after-load 'projectile
+    (ad:set-magit-repository-directories-from-projectile-known-projects))
+
+  (general-add-hook 'projectile-switch-project-hook
+                    #'ad:set-magit-repository-directories-from-projectile-known-projects)
+
+  ;; Disable auto-fill-mode in git commit buffers
+  (general-remove-hook 'git-commit-setup-hook
+                       #'git-commit-turn-on-auto-fill))
+
+(use-package evil-magit
+  :after evil magit)
+
+(use-package git-timemachine
+  :general (general-t "gt" #'git-timemachine))
+
 ;; Scala
 
 (use-package scala-mode
