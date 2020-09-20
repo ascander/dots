@@ -350,7 +350,7 @@
 (use-package ace-window
   :general (general-t "w" #'ace-window)
   :config
-  (gsetq aw-keys '(?a ?s ?d ?d ?f ?g ?h ?k ?l)
+  (gsetq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
          aw-scope 'frame
          aw-dispatch-always t))
 
