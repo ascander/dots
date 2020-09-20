@@ -518,7 +518,7 @@
   :config (prescient-persist-mode))
 
 (use-package ivy-prescient
-  :after ivy
+  :after counsel
   :demand t
   :config (ivy-prescient-mode))
 
@@ -542,11 +542,33 @@
         company-tooltip-align-annotations t)
   :hook (after-init . global-company-mode))
 
+(use-package company-prescient
+  :after company
+  :config (company-prescient-mode))
+
+(use-package company-emoji
+  :after company
+  :if (version<= "27.0" emacs-version)
+  :config
+  ;; Adjust the font settings for the frame
+  (defun ad:set-emoji-font (frame)
+    "Adjust the font settings of FRAME so Emacs can display emoji properly."
+    (if is-a-mac-p
+        ;; for macOS
+        (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji") frame 'prepend)
+      ;; for GNU/Linux
+      (set-fontset-font t 'symbol (font-spec :family "Symbola") frame 'prepend)))
+
+  (general-add-hook 'after-make-frame-functions #'ad:set-emoji-font)
+  ;; Add emoji completion backend to company
+  (add-to-list 'company-backends 'company-emoji))
+
 ;;; LSP
 
 (use-package lsp-mode
-    :hook ((scala-mode . lsp-deferred)
-       (lsp-mode   . lsp-enable-which-key-integration))
+  :hook (
+         (scala-mode . lsp)
+         (lsp-mode   . lsp-enable-which-key-integration))
     :commands lsp lsp-deferred
     :init
     ;; Disable automatic modes that throw errors on lazy loading
