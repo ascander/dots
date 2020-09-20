@@ -570,6 +570,23 @@
   ;; Add emoji completion backend to company
   (add-to-list 'company-backends 'company-emoji))
 
+;;; Terminal
+
+(use-package term
+  :gfhook #'(lambda ()
+              (ad:disable-line-numbers)
+              (global-hl-line-mode -1)))
+
+(use-package vterm
+  :commands vterm
+  :init
+  (gsetq vterm-kill-buffer-on-exit t
+         vterm-max-scrollback 10000)
+
+  (general-add-hook 'vterm-mode-hook #'(lambda ()
+                                         (ad:disable-line-numbers)
+                                         (global-hl-line-mode -1))))
+
 ;;; LSP
 
 (use-package lsp-mode
