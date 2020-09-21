@@ -733,22 +733,23 @@ make ':overline' and ':underline' the same value."
        lsp-idle-delay 0.5
        read-process-output-max (* 1024 1024))
     :config
-    ;; Bind the most commonly used LSP commands directly
-    (general-def 'normal lsp-mode-map
+
+    ;; TODO debug why these don't appear for minutes if 'lsp-mode-map' is specified
+    (general-def 'normal
       "N" #'lsp-describe-thing-at-point
       "RET" #'lsp-find-definition)
 
-    ;; Bind LSP command map to our major mode leader
-    (gsetq lsp-keymap-prefix "mm")
-    (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-
-    ;; Bind some "always available" LSP commands
-    (general-m lsp-mode-map
+    ;; TODO debug why these don't appear for minutes if 'lsp-mode-map' is specified
+    (general-m
       "m" lsp-command-map
       "R" #'lsp-restart-workspace
       "Q" #'lsp-workspace-shutdown
       "d" #'lsp-describe-session
-      "l" #'lsp-workspace-show-log))
+      "l" #'lsp-workspace-show-log)
+
+    ;; Bind LSP command map to our major mode leader
+    (gsetq lsp-keymap-prefix "mm")
+    (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
 
 (use-package lsp-ui
   :commands lsp-ui-mode
@@ -943,7 +944,7 @@ make ':overline' and ':underline' the same value."
     ;; LSP metals session functionality
     "i" #'lsp-metals-build-import
     "c" #'lsp-metals-build-connect
-    "d" #'lsp-metals-doctor-run
+    "D" #'lsp-metals-doctor-run
     ;; Supported LSP actions
     "g" #'lsp-find-definition
     "x" #'lsp-find-references
