@@ -934,6 +934,16 @@ make ':overline' and ':underline' the same value."
 (use-package gitignore-mode :defer t)
 (use-package gitattributes_mode :defer t)
 
+;;; Markdown
+
+(use-package vmd-mode
+  :commands vmd-mode)
+
+(use-package markdown-mode
+  :mode ("\\.md\\'" "\\.markdown\\'")
+  :general (general-m markdown-mode-map
+             "p" #'vmd-mode))
+
 ;;; Scala
 
 (use-package scala-mode
