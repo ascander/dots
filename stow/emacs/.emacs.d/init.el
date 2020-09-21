@@ -718,38 +718,36 @@ make ':overline' and ':underline' the same value."
 ;;; LSP
 
 (use-package lsp-mode
-  :hook (
-         (scala-mode . lsp)
+  :hook ((scala-mode . lsp-deferred)
          (lsp-mode   . lsp-enable-which-key-integration))
-    :commands lsp lsp-deferred
-    :init
-    ;; Disable automatic modes that throw errors on lazy loading
-    (setq lsp-enable-dap-auto-configure nil
+  :commands lsp lsp-deferred
+  :init
+  ;; Disable automatic modes that throw errors on lazy loading
+  (setq lsp-enable-dap-auto-configure nil
         lsp-modeline-diagnostics-enable nil
         lsp-modeline-code-actions-enable nil)
 
-    ;; Performance tuning
-    (gsetq lsp-completion-provider :capf
-       lsp-idle-delay 0.5
-       read-process-output-max (* 1024 1024))
-    :config
+  ;; Performance tuning
+  (gsetq lsp-completion-provider :capf
+         lsp-idle-delay 0.5
+         read-process-output-max (* 1024 1024))
+  :config
+  ;; TODO debug why these don't appear for minutes if 'lsp-mode-map' is specified
+  (general-def 'normal
+    "N" #'lsp-describe-thing-at-point
+    "RET" #'lsp-find-definition)
 
-    ;; TODO debug why these don't appear for minutes if 'lsp-mode-map' is specified
-    (general-def 'normal
-      "N" #'lsp-describe-thing-at-point
-      "RET" #'lsp-find-definition)
+  ;; TODO debug why these don't appear for minutes if 'lsp-mode-map' is specified
+  (general-m
+    "m" lsp-command-map
+    "R" #'lsp-restart-workspace
+    "Q" #'lsp-workspace-shutdown
+    "d" #'lsp-describe-session
+    "l" #'lsp-workspace-show-log)
 
-    ;; TODO debug why these don't appear for minutes if 'lsp-mode-map' is specified
-    (general-m
-      "m" lsp-command-map
-      "R" #'lsp-restart-workspace
-      "Q" #'lsp-workspace-shutdown
-      "d" #'lsp-describe-session
-      "l" #'lsp-workspace-show-log)
-
-    ;; Bind LSP command map to our major mode leader
-    (gsetq lsp-keymap-prefix "mm")
-    (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
+  ;; Bind LSP command map to our major mode leader
+  (gsetq lsp-keymap-prefix "mm")
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
 
 (use-package lsp-ui
   :commands lsp-ui-mode
