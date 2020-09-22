@@ -42,7 +42,6 @@ emacsWithPackages (epkgs: (
     lsp-metals
     lsp-mode
     lsp-python-ms
-    lsp-python-ms
     lsp-ui
     magit
     markdown-mode
