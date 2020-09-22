@@ -38,6 +38,7 @@ emacsWithPackages (epkgs: (
     ivy-avy
     ivy-prescient
     ivy-rich
+    json-mode
     lsp-ivy
     lsp-metals
     lsp-mode

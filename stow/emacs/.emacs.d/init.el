@@ -748,8 +748,9 @@ make ':overline' and ':underline' the same value."
 ;;; LSP
 
 (use-package lsp-mode
-  :hook ((scala-mode . lsp-deferred)
-         (lsp-mode   . lsp-enable-which-key-integration))
+  :hook ((scala-mode  . lsp-deferred)
+         (python-mode . (lambda () (require 'lsp-python-ms)(lsp-deferred)))
+         (lsp-mode    . lsp-enable-which-key-integration))
   :commands lsp lsp-deferred
   :init
   ;; Disable automatic modes that throw errors on lazy loading
@@ -1021,6 +1022,43 @@ make ':overline' and ':underline' the same value."
    'minibuffer-complete-word
    'self-insert-command
    minibuffer-local-completion-map))
+
+;;; Nix
+
+(use-package nix-mode
+  :mode "\\.nix\\'")
+
+(use-package nix-shell
+  :ensure nil
+  :commands nix-shell nix-unpack)
+
+(use-package nix-drv-mode
+  :ensure nil
+  :mode "\\.drv\\'")
+
+;;; Python
+
+(use-package lsp-python-ms
+  ;; TODO don't auto-install server once you can build it via Nix
+  :init (gsetq lsp-python-ms-auto-install-server t))
+
+(use-package conda
+  :defer t
+  :init
+  ;; WARNING: do NOT set `conda-anaconda-home' instead, as it breaks automatic discovery and use of
+  ;; Conda environments. It's annoyingly brittle, but using the appropriate conda environment
+  ;; depends on having this set and NOT `conda-anaconda-home'.
+  (gsetq conda-env-home-directory (expand-file-name "~/miniconda3")))
+
+;;; YAML
+
+(use-package yaml-mode
+  :mode ("\\.yaml\\'" "\\.yml\\'" "MLproject\\'"))
+
+;;; JSON
+
+;; TODO switch to lsp-json (https://emacs-lsp.github.io/lsp-mode/page/lsp-json/)
+(use-package json-mode)
 
 (provide 'init)
 ;;; init.el ends here
