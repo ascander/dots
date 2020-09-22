@@ -586,6 +586,10 @@ make ':overline' and ':underline' the same value."
   ;; Swap "?" for 'ivy-resume'
   (general-def 'normal "?" #'ivy-resume)
   (general-r "?" #'evil-search-backward)
+
+  ;; Advise `ivy-resume' to destroy highlighting after completion. See also `swiper'
+  (general-add-advice 'ivy-resume :after #'(lambda (&rest _)
+                                             (evil-ex-nohighlight)))
   (ivy-mode 1))
 
 (use-package counsel
