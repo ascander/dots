@@ -635,8 +635,7 @@ make ':overline' and ':underline' the same value."
 
 ;; TODO debug wrong type argument error when using ivy-avy immediately after
 ;; starting Emacs and choosing a file from projectile's known files
-(use-package ivy-avy
-  :after ivy avy)
+(use-package ivy-avy :commands ivy-avy)
 
 (use-package prescient
   :config (prescient-persist-mode))
