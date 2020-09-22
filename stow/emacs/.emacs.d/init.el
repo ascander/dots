@@ -792,6 +792,10 @@ make ':overline' and ':underline' the same value."
      lsp-ui-doc-max-height 40
      lsp-ui-doc-use-webkit t))
 
+(use-package lsp-ivy
+  :after lsp-mode
+  :commands lsp-ivy-workplace-symbol)
+
 ;;; Version control
 
 (use-package magit
