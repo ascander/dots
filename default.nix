@@ -21,6 +21,7 @@ let
       pkgs.coreutils
       pkgs.emacs-all-the-icons-fonts
       pkgs.fasd
+      pkgs.fd
       pkgs.gawk
       pkgs.git
       pkgs.gitAndTools.hub
