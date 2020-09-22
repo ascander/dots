@@ -658,9 +658,6 @@ make ':overline' and ':underline' the same value."
   :after counsel-projectile
   :config (all-the-icons-ivy-setup))
 
-
-;;; Company
-
 (use-package company
   :init
   (setq company-idle-delay 0.2
@@ -668,7 +665,21 @@ make ':overline' and ':underline' the same value."
         company-tooltip-limit 12
         company-show-numbers t
         company-tooltip-align-annotations t)
-  :hook (after-init . global-company-mode))
+  :hook (after-init . global-company-mode)
+  :config
+  ;; Update a company backend with yasnippet; see https://github.com/syl20bnr/spacemacs/pull/179
+  (defun ad:company-backend-with-yasnippet (backends)
+    "Adds YASnippet support to existing company backends."
+    (if (and (listp backends) (memq 'company-yasnippet backends))
+        backends
+      (append (if (consp backends)
+                  backends
+                (list backends))
+              '(:with company-yasnippet))))
+
+  ;; Add YASnippet support to company backends
+  (gsetq company-backends
+         (mapcar #'ad:company-backend-with-yasnippet company-backends)))
 
 (use-package company-prescient
   :after company
@@ -690,6 +701,22 @@ make ':overline' and ':underline' the same value."
   (general-add-hook 'after-make-frame-functions #'ad:set-emoji-font)
   ;; Add emoji completion backend to company
   (add-to-list 'company-backends 'company-emoji))
+
+(use-package yasnippet
+  :defer t
+  :general
+  (general-def help-map
+    "y" #'yas-describe-tables)
+  :ghook ('prog-mode-hook #'yas-minor-mode)
+  :config
+  ;; Never expand snippets in normal mode
+  (general-def 'normal yas-minor-mode-map
+    [remap yas-expand] #'ignore)
+
+  (yas-reload-all))
+
+(use-package yasnippet-snippets
+  :after yasnippet)
 
 ;;; Terminal
 
