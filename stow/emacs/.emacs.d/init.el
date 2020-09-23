@@ -987,16 +987,15 @@ Redefined to allow pop-up windows."
 
 (use-package lsp-ui
   :commands lsp-ui-mode
-  :init
-  ;; Disable LSP sideline UI
-  (gsetq lsp-ui-sideline-enable nil)
+  :gfhook ('lsp-ui-doc-frame-mode-hook #'ad:disable-line-numbers)
+  :init (gsetq lsp-ui-sideline-enable nil)
   :config
   ;; Style settings for LSP doc UI
   (gsetq lsp-ui-doc-enable t
      lsp-ui-doc-position 'top
-     lsp-ui-doc-max-width 120
+     lsp-ui-doc-max-width 160
      lsp-ui-doc-max-height 40
-     lsp-ui-doc-use-webkit t))
+     lsp-ui-doc-use-webkit nil))
 
 (use-package lsp-ivy
   :after lsp-mode
