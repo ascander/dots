@@ -367,6 +367,14 @@
                   (load-theme 'solarized-dark t)))
     (load-theme 'solarized-dark t)))
 
+(use-package doom-themes
+  :init
+  (gsetq doom-themes-enable-bold nil
+         doom-themes-enable-italic nil)
+  :config
+  (require 'doom-themes-ext-org)
+  (doom-themes-org-config))
+
 ;;; Mode line
 
 (use-package moody
