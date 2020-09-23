@@ -970,14 +970,15 @@ Redefined to allow pop-up windows."
   ;; TODO debug why these don't appear for minutes if 'lsp-mode-map' is specified
   (general-def 'normal
     "N" #'lsp-describe-thing-at-point
-    "RET" #'lsp-find-definition)
+    "RET" #'lsp-find-definition
+    "<S-return>" #'pop-tag-mark)
 
   ;; TODO debug why these don't appear for minutes if 'lsp-mode-map' is specified
   (general-m
     "m" lsp-command-map
     "R" #'lsp-restart-workspace
     "Q" #'lsp-workspace-shutdown
-    "d" #'lsp-describe-session
+    "s" #'lsp-describe-session
     "l" #'lsp-workspace-show-log)
 
   ;; Bind LSP command map to our major mode leader
