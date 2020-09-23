@@ -1181,6 +1181,21 @@ Redefined to allow pop-up windows."
   :general (general-m markdown-mode-map
              "p" #'vmd-mode))
 
+;;; Emacs Lisp
+
+(use-package elisp-mode
+  :general
+  (general-m emacs-lisp-mode-map
+    "b" #'eval-buffer
+    "r" #'eval-region
+    "f" #'eval-defun)
+
+  (general-def 'normal emacs-lisp-mode-map
+    "RET" #'xref-find-definitions
+    "<S-return>" #'pop-tag-mark)
+  :init
+  (gsetq emacs-lisp-docstring-fill-column 100))
+
 ;;; Scala
 
 (use-package scala-mode
