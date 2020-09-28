@@ -375,36 +375,21 @@
   (require 'doom-themes-ext-org)
   (doom-themes-org-config))
 
-;;; Mode line
+;;; Modeline
 
-(use-package moody
+(use-package doom-modeline
   :init
-  ;; Advise `load-theme' to set mode-line face attributes correctly.
-  (defun ad:set-mode-line-attributes (&rest _)
-    "Unset the ':box' attribute for the `mode-line' face, and
-make ':overline' and ':underline' the same value."
-    (let ((line (face-attribute 'mode-line :underline)))
-      (set-face-attribute 'mode-line          nil :overline  line)
-      (set-face-attribute 'mode-line-inactive nil :overline  line)
-      (set-face-attribute 'mode-line-inactive nil :underline line)
-      (set-face-attribute 'mode-line          nil :box       nil)
-      (set-face-attribute 'mode-line-inactive nil :box       nil)))
-
-  (general-add-advice #'load-theme :after #'ad:set-mode-line-attributes)
-  :config
-  (gsetq x-underline-at-descent-line t
-         moody-slant-function #'moody-slant-apple-rgb
-         moody-mode-line-height 28)
-
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode))
+  (gsetq doom-modeline-height 30
+         doom-modeline-icon t
+         doom-modeline-minor-modes t)
+  :config (doom-modeline-mode))
 
 (use-package minions
   :demand t
-  :after moody
+  :after doom-modeline
   :init
-  (gsetq minions-mode-line-lighter "ʕ•ᴥ•ʔ"
-         minions-mode-line-delimiters '("" . ""))
+  ;; (gsetq minions-mode-line-lighter "ʕ•ᴥ•ʔ"
+  ;;        minions-mode-line-delimiters '("" . ""))
   :config (minions-mode))
 
 ;;; Directory handling

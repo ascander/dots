@@ -20,6 +20,7 @@ emacsWithPackages (epkgs: (
     counsel-projectile
     default-text-scale
     doom-themes
+    doom-modeline
     evil
     evil-collection
     evil-magit
@@ -48,7 +49,6 @@ emacsWithPackages (epkgs: (
     magit
     markdown-mode
     minions
-    moody
     nix-mode
     no-littering
     org-bullets
