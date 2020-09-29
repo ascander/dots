@@ -20,6 +20,7 @@ emacsWithPackages (epkgs: (
     counsel-projectile
     default-text-scale
     doom-themes
+    doom-modeline
     evil
     evil-collection
     evil-magit
@@ -39,16 +40,15 @@ emacsWithPackages (epkgs: (
     ivy-avy
     ivy-prescient
     ivy-rich
+    json-mode
     lsp-ivy
     lsp-metals
     lsp-mode
-    lsp-python-ms
     lsp-python-ms
     lsp-ui
     magit
     markdown-mode
     minions
-    moody
     nix-mode
     no-littering
     org-bullets

@@ -24,255 +24,257 @@
 
 ;;; Code:
 
-;; Constants
+;;; Constants
 
-(defconst ad:is-a-mac-p (eq system-type 'darwin) "Are we on a mac?")
+(defconst is-a-mac-p (eq system-type 'darwin) "Are we on MacOS?")
 
-;; Preliminaries
+(defconst minibuffer-maps
+  '(minibuffer-local-map
+    minibuffer-local-ns-map
+    minibuffer-local-completion-map
+    minibuffer-local-must-match-map
+    minibuffer-local-isearch-map
+    evil-ex-completion-map)
+  "List of minibuffer keymaps.")
+
+;;; Functions
+
+(defun ad:disable-line-numbers ()
+  "Unequivocally disable line numbers."
+  (display-line-numbers-mode -1))
+
+(defun ad:relative-line-numbers ()
+  "Toggle relative line numbers."
+  (when (bound-and-true-p display-line-numbers-mode)
+    (setq-local display-line-numbers 'visual)))
+
+(defun ad:absolute-line-numbers ()
+  "Toggle absolute line numbers."
+  (when (bound-and-true-p display-line-numbers-mode)
+    (setq-local display-line-numbers 'absolute)))
+
+(defun ad:kill-this-buffer ()
+  "Call `kill-this-buffer' without menu bar interaction."
+  (interactive)
+  (if (minibufferp)
+      (abort-recursive-edit)
+    (kill-buffer (current-buffer))))
+
+(defun ad:kill-buffer-delete-window ()
+  "Kill the current buffer and delete its window."
+  (interactive)
+  (ad:kill-this-buffer)
+  (delete-window))
+
+(defun ad:delete-other-windows ()
+  "Make the current window the only one."
+  (interactive)
+  (if (eq (count-windows) 1)
+      (winner-undo)
+    (delete-other-windows)))
+
+(defun ad:vsplit ()
+  "Split the window vertically and switch to the new window."
+  (interactive)
+  (split-window-vertically)
+  (other-window 1))
+
+(defun ad:hsplit ()
+  "Split the window horizontally and switch to the new window."
+  (interactive)
+  (split-window-horizontally)
+  (other-window 1))
+
+;;; Preliminaries
 
 (setq debug-on-error t)                 ; Enter debugger on error
 (setq message-log-max 10000)            ; Keep more log messages
 
+;;; Startup tuning
+
 ;; Set GC threshold as high as possible for fast startup
 (setq gc-cons-threshold most-positive-fixnum)
 
-;; Set GC threshold back to default value when idle
-(run-with-idle-timer
- 10 nil
- (lambda ()
-   (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value)))
-   (message "GC threshold restored to %S" gc-cons-threshold)))
+;; Set GC threshold back to default value when Emacs is idle
+(run-with-idle-timer 5 nil
+             (lambda ()
+               (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value)))
+               (message "GC threshold restored to %S" gc-cons-threshold)))
 
-;; Package initialization
+;; Print a message after startup
+(add-hook 'after-init-hook
+      (lambda ()
+        (message "Emacs ready in %s with %d garbage collections."
+             (format "%.2f seconds"
+                 (float-time (time-subtract after-init-time before-init-time)))
+             gcs-done)))
+
+;;; Package initialization
 
 (require 'package)
 (package-initialize 'noactivate)
 (eval-when-compile
   (require 'use-package))
 
-;; General and Evil
+;;; General
+
 (use-package general
-  :config
-  ;; aliases
-  (eval-and-compile
-    (defalias 'gsetq #'general-setq)
-    (defalias 'gsetq-local #'general-setq-local)
-    (defalias 'gsetq-default #'general-setq-default))
+  :demand t)
 
-  ;; Unbind keys when necessary - General should take precedence
-  (general-auto-unbind-keys)
+;; Set aliases for General.el versions
+(eval-and-compile
+  (defalias 'gsetq #'general-setq)
+  (defalias 'gsetq-default #'general-setq-default)
+  (defalias 'gsetq-local #'general-setq-local))
 
-  ;; General leader key
-  (general-create-definer general-spc
-    :states 'normal
-    :keymaps 'override
-    :prefix "SPC")
+;; General bindings take precedence
+(general-auto-unbind-keys)
 
-  ;; Window navigation/management, Version control, etc.
-  (general-create-definer general-t
-    :states 'normal
-    :keymaps 'override
-    :prefix "t")
+;; Leader keys
 
-  ;; Major mode functionality
-  (general-create-definer general-m
-    :states 'normal
-    :prefix "m")
+(general-create-definer general-spc	; Buffer/file/group management
+  :states 'normal
+  :keymaps 'override
+  :prefix "SPC")
 
-  ;; Re-mapped bindings from standard Evil
-  (general-create-definer general-r
-    :states 'normal
-    :prefix "r"))
+(general-create-definer general-t	; Window navigation/management
+  :states 'normal
+  :keymaps 'override
+  :prefix "t")
+
+(general-create-definer general-m	; Major mode functionality
+  :states 'normal
+  :prefix "m")
+
+(general-create-definer general-r	; Remapped bindings
+  :states 'normal
+  :prefix "r")
+
+;;; Evil & Evil Collection
 
 (use-package evil
-  :demand t
   :init
-  (gsetq evil-want-keybinding nil     ; don't load evil bindings for other modes
-         evil-overriding-maps nil     ; no maps should override evil maps
-         evil-search-module 'evil-search ; use evil-search instead of isearch
-         ;; This setting is not respected for 'n/N' searches.
-         ;;
-         ;; NOTE: persistent highlighting after a search can be cleared with the
-         ;; ':nohlsearch' (evil-ex-nohighlight) command.
-         ;;
-         ;; See: https://github.com/emacs-evil/evil/pull/1128/commits/68d4eb382fe25db74dd1c5f4ddea00ff249ca254
-         evil-ex-search-persistent-highlight nil ; no persistent highlighting after search
-         evil-want-Y-yank-to-eol t)              ; Y like D
+  (gsetq evil-want-keybinding nil ; don't load evil bindings for other modes
+     evil-overriding-maps nil ; no maps should override evil maps
+     evil-search-module 'evil-search ; use evil-search instead of isearch (remapped)
+     evil-exsearch-persistent-highlight nil ; no persistent highlighting of search matches
+     evil-want-Y-yank-to-eol t)		; make 'Y' behave like 'D'
   :config (evil-mode))
 
 (use-package evil-collection
+  :demand t
   :after evil
   :init (gsetq evil-collection-company-use-tng nil)
   :config (evil-collection-init))
 
-;; Swap/change default Evil bindings
+;; Default Evil Bindings
+
+;; Swap some default Evil bindings
 (general-def 'normal
-  "a" #'evil-append-line                ; append line without holding shift
-  "A" #'evil-append                     ; append here for a bit more
-  ";" #'evil-ex)                        ; evil-ex without holding shift
+  "a" #'evil-append-line
+  "A" #'evil-append
+  ";" #'evil-ex)
 
-;; Replace lost bindings with 'r' prefix
+;; Move lost bindings to 'r' leader
 (general-r
-  ";" #'evil-repeat-find-char           ; from new 'evil-ex'
-  "/" #'evil-ex-search-forward)         ; from swiper
+ ";" #'evil-repeat-find-char
+ "/" #'evil-ex-search-forward)
 
-;; Exit emacs state with ESC
+;; Default Evil states
+
+;; Exit emacs state with "ESC"
 (general-def 'emacs
   "<escape>" #'evil-normal-state)
 
 ;; Use normal state as the default state for all modes
-(gsetq evil-normal-state-modes
-       (append evil-emacs-state-modes evil-normal-state-modes)
-       evil-emacs-state-modes nil
-       evil-motion-state-modes nil)
+(general-with 'evil
+  (gsetq evil-normal-state-modes (append evil-emacs-state-modes
+                     evil-normal-state-modes)
+     evil-emacs-state-modes nil
+     evil-motion-state-modes nil))
 
-;; Bind ESC to quit minibuffers as often as possible
-(general-def '(minibuffer-local-map
-               minibuffer-local-ns-map
-               minibuffer-local-completion-map
-               minibuffer-local-must-match-map
-               minibuffer-local-isearch-map)
+;; Bind "ESC" to quit minibuffers as often as possible
+
+(general-def :keymaps minibuffer-maps
   "<escape>" #'keyboard-escape-quit)
 
-(use-package which-key
-  :init
-  (gsetq which-key-idle-delay 0.4
-         which-key-idle-secondary-delay 0.2
-         which-key-sort-order 'which-key-prefix-then-key-order-reverse
-         which-key-max-display-columns 6
-         which-key-add-column-padding 2)
-  :config
-  ;; Set which-key replacements
-  (gsetq which-key-replacement-alist '(((nil . "Prefix Command") . (nil . "prefix"))
-                                       ((nil . "\\`\\?\\?\\'")   . (nil . "λ"))
-                                       ((nil . "magit-")         . (nil . "git-"))))
+;;; MacOS
 
-  ;; Disable line numbers in which-key buffers
-  (general-add-hook 'which-key-init-buffer-hook #'ad:disable-line-numbers-local)
-  (which-key-mode))
+(use-package exec-path-from-shell
+  :if is-a-mac-p
+  :init (gsetq exec-path-from-shell-check-startup-files nil)
+  :config (exec-path-from-shell-initialize))
 
-(use-package with-editor
-  :defer t
-  :gfhook #'evil-insert-state
-  :config
-  (general-def 'normal with-editor-mode-map
-    "RET" #'with-editor-finish
-    "q" #'with-editor-cancel))
+(use-package osx-trash
+  :if is-a-mac-p
+  :config (osx-trash-setup))
 
-;; MacOS specific
+(when is-a-mac-p
+  (gsetq mac-command-modifier 'meta	; command is meta
+     mac-option-modifier 'super	; alt/option is super
+     mac-function-modifier 'none))	; reserve 'function' for macOS
 
-(when ad:is-a-mac-p
-  (use-package exec-path-from-shell
-    :init (gsetq exec-path-from-shell-check-startup-files nil)
-    :config (exec-path-from-shell-initialize))
+;;; Emacs Defaults
 
-  (use-package osx-trash
-    :config (osx-trash-setup))
+(gsetq-default blink-cursor-mode -1                  ; no blinking
+               ring-bell-function #'ignore           ; no ringing
+               inhibit-startup-screen t              ; no startup screen
+               initial-scratch-message ""            ; no scratch message
+               cursor-in-non-selected-windows nil    ; cursors only in selected windows
+               delete-by-moving-to-trash t           ; delete to trash
+               fill-column 100                       ; set fill column for modern displays
+               help-window-select t                  ; focus new help windows
+               indent-tabs-mode nil                  ; don't use tabs
+               tab-width 4                           ; but set their width anyway
+               left-margin-width 0                   ; no left margins
+               right-margin-width 0                  ; no right margins
+               recenter-positions '(0.33 top bottom) ; recentering positions
+               sentence-end-double-space nil         ; single space after sentences
+               require-final-newline t               ; require final newline
+               show-trailing-whitespace nil          ; don't show trailing whitespace
+               uniquify-buffer-name-style 'forward   ; uniquify buffer names
+               window-combination-resize t           ; resize windows proportionally
+               frame-resize-pixelwise t              ; resize frames by pixel
+               history-length 1000                   ; more history
+               use-dialog-box nil)                   ; don't use dialogs for mouse input
 
-  (gsetq mac-command-modifier 'meta     ; Command is meta
-         mac-option-modifier 'super     ; Alt/Option is super
-         mac-function-modifier 'none))  ; Reserve function for macOS
+(fset 'yes-or-no-p 'y-or-n-p)                        ; replace yes/no prompts with y/n
+(fset 'display-startup-echo-area-message #'ignore)   ; no startup message in the minibuffer
+(delete-selection-mode 1)                            ; replace region when inserting text
+(put 'downcase-region 'disabled nil)                 ; enable `downcase-region'
+(put 'upcase-region 'disabled nil)                   ; enable `upcase-region'
+(global-hl-line-mode)                                ; highlight the current line
+(line-number-mode)                                   ; display line number in modeline
+(column-number-mode)                                 ; display column number in modeline
 
-;; Default settings
-(gsetq-default
- blink-cursor-mode -1            ; no blinking
- ring-bell-function #'ignore         ; no ringing
- inhibit-startup-screen t            ; no startup screen
- initial-scratch-message ""          ; no message in the scratch buffer
- cursor-in-non-selected-windows nil  ; hide the cursor in inactive windows
- delete-by-moving-to-trash t         ; delete files to trash
- fill-column 80                      ; set width for modern displays
- help-window-select t                ; focus new help windows when opened
- indent-tabs-mode nil                ; stop using tabs to indent
- tab-width 4                         ; but set their width properly
- left-margin-width 0                 ; no left margin
- right-margin-width 0                ; no right margin
- recenter-positions '(12 top bottom) ; set re-centering positions
- scroll-conservatively 1000          ; never recenter point while scrolling
- sentence-end-double-space nil       ; single space after a sentence end
- require-final-newline t             ; require a newline at file end
- show-trailing-whitespace nil        ; don't display trailing whitespaces by default
- uniquify-buffer-name-style 'forward ; uniquify buffer names correctly
- window-combination-resize t         ; resize windows proportionally
- frame-resize-pixelwise t            ; resize frames by pixel (don't snap to char)
- history-length 1000                 ; store more history
- use-dialog-box nil)                 ; don't use dialogues for mouse imput
+;;; Line numbers
 
-;; Miscellaneous
-(fset 'yes-or-no-p 'y-or-n-p)                      ; replace yes/no prompts with y/n
-(fset 'display-startup-echo-area-message #'ignore) ; no startup message in the echo area
-(delete-selection-mode 1)                          ; replace region when inserting text
-(put 'downcase-region 'disabled nil)               ; enable downcase-region
-(put 'upcase-region 'disabled nil)                 ; enable upcase-region
-(global-hl-line-mode)                              ; highlight the current line
-(line-number-mode)                                 ; display line number in the mode line
-(column-number-mode)                               ; display column number in the mode line
+;; Use Vim-style visual line numbers, with an absolute line number for the current line
+(gsetq-default display-line-numbers 'visual
+               display-line-numbers-widen t
+               display-line-numbers-current-absolute t)
 
-;;; Basic UI settings
-
-;; Use Emacs' builtin line numbering
-(gsetq-default display-line-numbers 'visual ; vim-style line numbers
-               display-line-numbers-widen t ; disregard any narrowing
-               display-line-numbers-current-absolute t) ; display absolute number of current line
-
-(defun ad:relative-line-numbers ()
-  "Toggle relative line numbers."
-  (when (bound-and-true-p display-line-numbers)
-    (setq-local display-line-numbers 'visual)))
-
-(defun ad:absolute-line-numbers ()
-  "Toggle absolute line numbers."
-  (when (bound-and-true-p display-line-numbers)
-    (setq-local display-line-numbers t)))
-
-(defun ad:disable-line-numbers-local ()
-  "Locally disable line numbers."
-  (setq-local display-line-numbers nil))
-
-;; Switch to absolute line numbers in insert state
+;; Switch to absolute line numbers in 'insert' state
 (general-add-hook 'evil-insert-state-entry-hook #'ad:absolute-line-numbers)
 (general-add-hook 'evil-insert-state-exit-hook #'ad:relative-line-numbers)
 
-;; Disable line numbers in terminal-ish modes
-(general-add-hook 'comint-mode-hook #'ad:disable-line-numbers-local)
-(general-add-hook 'vterm-mode-hook #'ad:disable-line-numbers-local)
-
-;; Go ahead and disable global line highlighting in terminal-ish modes, too
-(general-add-hook 'vterm-mode-hook #'(lambda () (gsetq-local global-hl-line-mode nil)))
-
-;; Bedazzle the current line number
-;; TODO handle this for dark/light themes
+;; Bedazzle the current line number for kicks
 (custom-set-faces
- '(line-number-current-line ((t :weight bold :foreground "#b58900"))))
+ '(line-number-current-line ((t :inherit warning))))
 
-(use-package no-littering
-  :config
-  ;; Exclude no-littering files from 'recentf'
-  (require 'recentf)
-  (add-to-list 'recentf-exclude no-littering-var-directory)
-  (add-to-list 'recentf-exclude no-littering-etc-directory)
-  ;; Version backups
-  (gsetq create-lockfiles nil           ; don't create lockfiles
-         delete-old-versions t          ; don't ask before deleting old backups
-         version-control t              ; use version control for backups
-         kept-new-versions 10           ; keep 10 newest versions
-         kept-old-versions 4            ; keep 4 oldest versions
-         vc-make-backup-files)          ; backup files under vc too
-  ;; Don't let customization use my init.el file
-  (gsetq custom-file (no-littering-expand-etc-file-name "custom.el"))
-  (general-add-hook 'after-init-hook
-                    (lambda () (load custom-file 'noerror 'nomessage)))
+;; Toggle various modes
+(general-def
+  :prefix-command 'ad:toggle
+  :prefix-map 'ad:toggle-map
+  "d" #'toggle-debug-on-error
+  "o" #'dired-omit-mode
+  "q" #'toggle-debug-on-quit
+  "A" #'auto-fill-mode
+  "t" #'toggle-truncate-lines)
 
-  ;; Store auto-save files in `no-littering-var-directory'.
-  (gsetq auto-save-file-name-transforms
-         `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+(general-t "o" #'ad:toggle)
 
-;;; Font & font sizing packages and settings
-
-(set-face-attribute 'variable-pitch nil
-                    :family "Fira Sans"
-                    :height 140
-                    :weight 'regular)
+;;; Fonts and font sizing
 
 (use-package default-text-scale
   :general
@@ -286,116 +288,43 @@
     "C-M-0")
   :config (default-text-scale-mode))
 
-;; Toggle minor modes
-(general-def
-  :prefix-command 'ad:toggle
-  :prefix-map 'ad:toggle-map
-  "d" #'toggle-debug-on-error
-  "o" #'dired-omit-mode
-  "q" #'toggle-debug-on-quit
-  "A" #'auto-fill-mode
-  "t" #'toggle-truncate-lines)
+;; Default variable pitch font
+(set-face-attribute 'variable-pitch nil
+                    :family "Helvetica Neue"
+                    :height 140
+                    :weight 'regular)
 
-(general-t "o" #'ad:toggle)
-
-;; Set up ligatures by way of `prettify-symbols-alist'
-(defun ad:setup-ligatures ()
-  "Append Iosevka ligatures to `prettify-symbols-alist'."
-  (gsetq prettify-symbols-alist
-         (append prettify-symbols-alist
-                 '(
-                   ;; Rightwards arrows
-                   ("->"   . ?)
-                   ("=>"   . ?)
-                   ("->>"  . ?)
-                   ("=>>"  . ?)
-                   ("-->"  . ?)
-                   ("==>"  . ?)
-                   ("--->" . ?)
-                   ("===>" . ?)
-                   ("->-"  . ?)
-                   ("=>="  . ?)
-                   (">-"   . ?)
-                   (">>-"  . ?)
-                   (">>="  . ?)
-                   ("~>"   . ?⤳)
-
-                   ;; Leftwards arrows
-                   ("<-"   . ?)
-                   ("<<-"  . ?)
-                   ("<<="  . ?)
-                   ("<--"  . ?)
-                   ("<=="  . ?)
-                   ("<---" . ?)
-                   ("<===" . ?)
-                   ("-<-"  . ?)
-                   ("=<="  . ?)
-                   ("-<"   . ?)
-                   ("=<"   . ?)
-                   ("-<<"  . ?)
-                   ("=<<"  . ?)
-
-                   ;; Bidirectional arrows
-                   ("<->"    . ?)
-                   ("<=>"    . ?)
-                   ("<-->"   . ?)
-                   ("<==>"   . ?)
-                   ("<--->"  . ?)
-                   ("<===>"  . ?)
-                   ("<---->" . ?)
-                   ("<====>" . ?)
-
-                   ;; Colons
-                   ("::"  . ?)
-                   (":::" . ?)
-
-                   ;; Logical
-                   ("/\\" . ?)
-                   ("\\/" . ?)
-
-                   ;; Comparison operators
-                   (">="  . ?)
-                   ("<="  . ?)
-
-                   ;; Equality/inequality
-                   ("=="    . ?)
-                   ("!="    . ?)
-                   ("==="   . ?)
-                   ("!=="   . ?)
-                   ("!=="   . ?)
-                   ("=!="   . ?)        ; Cats uses a different sequence
-
-                   ;; HTML comments
-                   ("<!--"  . ?)
-                   ("<!---" . ?)))))
-
-(defun ad:refresh-prettify-symbols-mode ()
-  "Toggle prettify symbols mode explicitly."
-  (prettify-symbols-mode -1)
-  (prettify-symbols-mode +1))
-
-;; Hooks for modes in which to use ligatures
-(mapc (lambda (hook)
-        (general-add-hook hook (lambda ()
-                                 (ad:setup-ligatures)
-                                 (ad:refresh-prettify-symbols-mode))))
-      '(text-mode-hook
-        prog-mode-hook))
-
-;; Enable `prettify-symbols-mode'
-(global-prettify-symbols-mode +1)
-
-;; Unprettify at right edge
-(gsetq prettify-symbols-unprettify-at-point 'right-edge)
-
+;; For icons used in various places
 (use-package all-the-icons)
-(use-package all-the-icons-dired
-  :ghook 'dired-mode-hook)
-(use-package all-the-icons-ivy
-  :after ivy counsel counsel-projectile
-  :config (all-the-icons-ivy-setup))
 
-;;; Colors & Themes
+;;; Emacs file management
+
+(use-package no-littering
+  :demand t
+  :config
+  ;; Exclude no-littering files from 'recentf'
+  (require 'recentf)
+  (add-to-list 'recentf-exclude no-littering-var-directory)
+  (add-to-list 'recentf-exclude no-littering-etc-directory)
+
+  ;; Version backups
+  (gsetq create-lockfiles nil           ; no lockfiles
+         delete-old-versions t          ; don't ask before deleting old backups
+         version-control t              ; use version control
+         kept-new-versions 10           ; keep the 10 newest
+         kept-old-versions 4            ; and the 4 oldest
+         vc-make-backup-files)          ; backup files under vc, too
+
+  ;; Don't let customizations use my init.el file
+  (gsetq custom-file (no-littering-expand-etc-file-name "custom.el"))
+  (general-add-hook 'after-init-hook
+                    (lambda () (load custom-file 'noerror 'nomessage)))
+
+  ;; Store auto-save files in `no-littering-var-directory'
+  (gsetq auto-save-file-name-transforms
+         `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+
+;;; Color themes
 
 ;; Distinguish evil state by cursor shape/color
 ;; TODO advise `load-theme' to set cursor colors per theme
@@ -439,81 +368,68 @@
     (load-theme 'solarized-dark t)))
 
 (use-package doom-themes
-  :defer t
   :init
   (gsetq doom-themes-enable-bold nil
-         doom-themes-enable-italic t)
+         doom-themes-enable-italic nil)
   :config
-  ;; Correct org-mode's native fontification
+  (require 'doom-themes-ext-org)
   (doom-themes-org-config))
 
-;; Mode line
+;;; Modeline
 
-(use-package moody
+(use-package doom-modeline
   :init
-  ;; Advise `load-theme' to set mode-line face attributes correctly.
-  (defun ad:set-mode-line-attributes (&rest _)
-    "Unset the ':box' attribute for the `mode-line' face, and make ':overline'
-and ':underline' the same value."
-    (let ((line (face-attribute 'mode-line :underline)))
-      (set-face-attribute 'mode-line          nil :overline  line)
-      (set-face-attribute 'mode-line-inactive nil :overline  line)
-      (set-face-attribute 'mode-line-inactive nil :underline line)
-      (set-face-attribute 'mode-line          nil :box       nil)
-      (set-face-attribute 'mode-line-inactive nil :box       nil)))
-
-  (general-add-advice #'load-theme :after #'ad:set-mode-line-attributes)
-  :config
-  (gsetq x-underline-at-descent-line t
-         moody-slant-function #'moody-slant-apple-rgb
-         moody-mode-line-height 28)
-
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode))
+  (gsetq doom-modeline-height 30
+         doom-modeline-icon t
+         doom-modeline-minor-modes t)
+  :config (doom-modeline-mode))
 
 (use-package minions
-  :after moody
+  :demand t
+  :after doom-modeline
   :init
-  (gsetq minions-mode-line-lighter "ʕ•ᴥ•ʔ"
-         minions-mode-line-delimiters '("" . ""))
+  ;; (gsetq minions-mode-line-lighter "ʕ•ᴥ•ʔ"
+  ;;        minions-mode-line-delimiters '("" . ""))
   :config (minions-mode))
 
-;; File & directory handling
+;;; Directory handling
 
 (use-package dired
   :general ('normal "-" #'counsel-dired-jump)
-  :gfhook (nil #'auto-revert-mode)      ; automatically refresh
+  :gfhook (nil #'auto-revert-mode)
   :config
-  ;; Basic settings
+  ;; Basic preferences
   (gsetq dired-auto-revert-buffer t
-         dired-listing-switches "-lha --group-directories-first"
+         dired-listing-switches "-lha --group-directories-first" ; assumes GNU 'ls'
          dired-recursive-copies 'always
          dired-dwim-target t)
 
   (general-spc
-    "d" #'dired-jump))
-
-(general-with-package 'dired
-  (put 'dired-find-alternate-file 'disabled nil)
-  (general-def 'normal dired-mode-map
-    ;; Navigation
-    "h" #'dired-up-directory
-    "j" #'dired-next-line
-    "k" #'dired-previous-line
-    "i" #'dired-find-alternate-file
-    "f" #'counsel-find-file
-    "F" #'find-name-dired
-    ;; Misc
-    "S" #'magit-status))
+    "d" #'dired-jump
+    "D" #'dired-jump-other-window))
 
 (use-package dired-x
   :after dired
   :ghook ('dired-mode-hook #'dired-omit-mode)
   :config (gsetq dired-omit-verbose nil))
 
+(general-with-package 'dired
+                       (put 'dired-find-alternate-file 'disabled nil)
+                       (general-def 'normal dired-mode-map
+                         ;; navigation
+                         "h" #'dired-up-directory
+                         "j" #'dired-next-line
+                         "k" #'dired-previous-line
+                         ;; magit
+                         "S" #'magit-status))
+
+(use-package all-the-icons-dired
+  :ghook 'dired-mode-hook)
+
+;;; Ignore settings
+
 (use-package ignoramus
   :config
-  ;; Ignore a few additional things
   (dolist (name '("company-statistics-cache.el"
                   ".metals"
                   ".bloop"))
@@ -521,25 +437,25 @@ and ':underline' the same value."
 
   (ignoramus-setup))
 
+;;; File handling
+
 (use-package autorevert
   :init
-  (gsetq auto-revert-verbose nil                ; autorevert quietly
-         global-auto-revert-non-file-buffers t) ; and in dired, too
+  (gsetq auto-revert-verbose nil
+         global-auto-revert-non-file-buffers t)
 
-  ;; Notifications aren't used on OSX
-  (when ad:is-a-mac-p
-    (gsetq auto-revert-use-notify nil))
-  :config (global-auto-revert-mode))
+  ;; MacOS doesn't use notifications
+  (when is-a-mac-p (gsetq auto-revert-use-notify nil))
+  :ghook ('after-init-hook #'global-auto-revert-mode))
 
-;; Clean up whitespace on save
+;; Clean up whitespace on file save
 (general-add-hook 'before-save-hook #'whitespace-cleanup)
 
-;;; Windows and buffers
+;;; Window/buffer management
 
 (use-package ace-window
   :general (general-t "w" #'ace-window)
   :config
-  ;; Basic settings
   (gsetq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
          aw-scope 'frame
          aw-dispatch-always t))
@@ -553,38 +469,6 @@ and ':underline' the same value."
     "u" #'winner-undo
     "U" #'winner-redo)
   :config (winner-mode))
-
-(defun ad:kill-this-buffer ()
-  "Call `kill-this-buffer' without menu bar interaction."
-  (interactive)
-  (if (minibufferp)
-      (abort-recursive-edit)
-    (kill-buffer (current-buffer))))
-
-(defun ad:kill-buffer-delete-window ()
-  "Kill the current buffer and delete its window."
-  (interactive)
-  (ad:kill-this-buffer)
-  (delete-window))
-
-(defun ad:delete-other-windows ()
-  "Make the current window the only one."
-  (interactive)
-  (if (eq (count-windows) 1)
-      (winner-undo)
-    (delete-other-windows)))
-
-(defun ad:vsplit ()
-  "Split the window vertically and switch to the new window."
-  (interactive)
-  (split-window-vertically)
-  (other-window 1))
-
-(defun ad:hsplit ()
-  "Split the window horizontally and switch to the new window."
-  (interactive)
-  (split-window-horizontally)
-  (other-window 1))
 
 (general-t
   "f" #'toggle-frame-fullscreen
@@ -620,6 +504,7 @@ and ':underline' the same value."
          shackle-default-rule '(:select t))
   :config (shackle-mode t))
 
+;; Bedazzle the window I just focused, pleaase
 (use-package beacon
   :init
   ;; When to blink
@@ -637,13 +522,208 @@ and ':underline' the same value."
   (add-to-list 'beacon-dont-blink-major-modes 'term-mode)
   (beacon-mode 1))
 
+;;; Which-key
+
+(use-package which-key
+  :init
+  (gsetq which-key-idle-delay 0.3
+     which-key-idle-secondary-delay 0.2
+     which-key-sort-order 'which-key-prefix-then-key-order-reverse
+     which-key-max-display-columns 6
+     which-key-add-column-padding 2)
+  :config
+  ;; Set replacements for the 'which-key' UI
+  (gsetq which-key-replacement-alist '((( nil . "Prefix Command") . (nil . "prefix"))
+                       ((nil . "\\`\\?\\?\\'")    . (nil . "λ"))
+                       ((nil . "magit-")          . (nil . "git-"))))
+
+  ;; Disable line numbers in which-key buffers
+  (general-add-hook 'which-key-init-buffer-hook #'ad:disable-line-numbers)
+
+  (which-key-mode))
+
+;;; Completion and Search
+
+(use-package flx)                       ; used by ivy
+(use-package smex)                      ; used by counsel
+
+(use-package ivy
+  :demand t
+  :general (general-spc "f" #'ivy-switch-buffer)
+  :config
+  ;; Basic settings
+  (gsetq ivy-use-virtual-buffers t
+         ivy-initial-inputs-alist nil
+         ivy-count-format "")
+
+  ;; Enable fuzzy searching everywhere*
+  ;;
+  ;; *not everywhere
+  (gsetq ivy-re-builders-alist
+         '((swiper            . ivy--regex-plus)    ; convert spaces to '.*' for swiper
+           (ivy-switch-buffer . ivy--regex-plus)    ; and buffer switching
+           (counsel-rg        . ivy--regex-plus)    ; and ripgrep
+           (t                 . ivy--regex-fuzzy))) ; go fuzzy everywhere else
+
+  ;; Keybindings
+  (general-def ivy-minibuffer-map
+    "<escape>" #'minibuffer-keyboard-quit ; the natural choice
+    "<next>" #'ivy-scroll-up-command      ; default, here for documentation
+    "<prior>" #'ivy-scroll-down-command   ; same here
+    "C-j" #'ivy-next-history-element      ; repeat command with next element
+    "C-k" #'ivy-previous-history-element  ; repeat command with prev element
+    "C-'" #'ivy-avy)                      ; pick a candidate using avy
+
+  ;; Swap "?" for 'ivy-resume'
+  (general-def 'normal "?" #'ivy-resume)
+  (general-r "?" #'evil-search-backward)
+
+  ;; Advise `ivy-resume' to destroy highlighting after completion. See also `swiper'
+  (general-add-advice 'ivy-resume :after #'(lambda (&rest _)
+                                             (evil-ex-nohighlight)))
+  (ivy-mode 1))
+
+(use-package counsel
+  :demand t
+  :general
+  ;; Replace standard 'evil-ex-search-forward' with swiper
+  ('normal "/" #'counsel-grep-or-swiper)
+  ;; Remap standard commands to their counsel analogs
+  (general-def
+    [remap execute-extended-command] #'counsel-M-x
+    [remap find-file]                #'counsel-find-file
+    [remap describe-bindings]        #'counsel-descbinds
+    [remap describe-face]            #'counsel-describe-face
+    [remap describe-function]        #'counsel-describe-function
+    [remap describe-variable]        #'counsel-describe-variable
+    [remap info-lookup-symbol]       #'counsel-info-lookup-symbol
+    [remap completion-at-point]      #'counsel-company
+    [remap org-goto]                 #'counsel-org-goto)
+  ;; Goto org headings
+  (general-m org-mode-map
+    "j" #'counsel-org-goto
+    "<" #'org-insert-structure-template)
+  ;; For, eg. switching to a newly created project
+  (general-spc
+    "w" #'write-file
+    "F" #'counsel-find-file)
+  ;; Load themes
+  (general-t
+    "T" #'counsel-load-theme)
+  :config (counsel-mode 1))
+
+(use-package swiper
+  :demand t
+  :general ([remap isearch-forward] #'swiper)
+  :init (gsetq swiper-goto-start-of-match t)
+  :config
+  ;; Advise swiper to destroy highlighting after search. Use 'evil-ex-search-forward' for more fine
+  ;; grained control of persistent highlighting.
+  (general-add-advice 'swiper :after #'(lambda (&rest _)
+                                         (evil-ex-nohighlight))))
+
+(use-package avy
+  :general (general-spc "s" #'avy-goto-char-timer)
+  :init (gsetq avy-all-windows nil
+               avy-timeout-seconds 0.25))
+
+;; TODO debug wrong type argument error when using ivy-avy immediately after
+;; starting Emacs and choosing a file from projectile's known files
+(use-package ivy-avy :commands ivy-avy)
+
+(use-package prescient
+  :config (prescient-persist-mode))
+
+(use-package ivy-prescient
+  :after counsel
+  :demand t
+  :config (ivy-prescient-mode))
+
+(use-package ivy-rich
+  :after ivy counsel
+  :init
+  ;; Align virtual buffers, and abbreviate paths
+  (gsetq ivy-virtual-abbreviate 'full
+         ivy-rich-path-style 'abbrev
+         ivy-rich-switch-buffer-align-virtual-buffer t)
+  :config (ivy-rich-mode 1))
+
+(use-package all-the-icons-ivy
+  :after counsel-projectile
+  :config (all-the-icons-ivy-setup))
+
+(use-package company
+  :init
+  (setq company-idle-delay 0.2
+        company-minimum-prefix-length 1
+        company-tooltip-limit 12
+        company-show-numbers t
+        company-tooltip-align-annotations t)
+  :hook (after-init . global-company-mode)
+  :config
+  ;; Update a company backend with yasnippet; see https://github.com/syl20bnr/spacemacs/pull/179
+  (defun ad:company-backend-with-yasnippet (backends)
+    "Adds YASnippet support to existing company backends."
+    (if (and (listp backends) (memq 'company-yasnippet backends))
+        backends
+      (append (if (consp backends)
+                  backends
+                (list backends))
+              '(:with company-yasnippet))))
+
+  ;; Add YASnippet support to company backends
+  (gsetq company-backends
+         (mapcar #'ad:company-backend-with-yasnippet company-backends)))
+
+(use-package company-prescient
+  :after company
+  :config (company-prescient-mode))
+
+(use-package company-emoji
+  :after company
+  :if (version<= "27.0" emacs-version)
+  :config
+  ;; Adjust the font settings for the frame
+  (defun ad:set-emoji-font (frame)
+    "Adjust the font settings of FRAME so Emacs can display emoji properly."
+    (if is-a-mac-p
+        ;; for macOS
+        (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji") frame 'prepend)
+      ;; for GNU/Linux
+      (set-fontset-font t 'symbol (font-spec :family "Symbola") frame 'prepend)))
+
+  (general-add-hook 'after-make-frame-functions #'ad:set-emoji-font)
+  ;; Add emoji completion backend to company
+  (add-to-list 'company-backends 'company-emoji))
+
+(use-package yasnippet
+  :defer t
+  :general
+  (general-def help-map
+    "y" #'yas-describe-tables)
+  :ghook ('prog-mode-hook #'yas-minor-mode)
+  :config
+  ;; Never expand snippets in normal mode
+  (general-def 'normal yas-minor-mode-map
+    [remap yas-expand] #'ignore)
+
+  (yas-reload-all))
+
+(use-package yasnippet-snippets
+  :after yasnippet)
+
 ;;; Org
 
 (use-package org
+  :defer t
   :general
+  ;; Available anywhere commands
   (general-spc
     "c" #'org-capture
     "a" #'org-agenda)
+  (general-m 'normal org-mode-map
+    "l" #'org-insert-link
+    "t" #'org-todo)
   :config
   ;; Set locations of org directory, agenda files, default notes file
   (defun ad:expand-org-file (file)
@@ -744,7 +824,7 @@ Redefined to allow pop-up windows."
   (general-add-hook
    'org-capture-mode-hook
    #'(lambda () (gsetq-local header-line-format
-                        "Capture buffer. Finish 'RET', refile 'r', abort 'q'.")))
+                             "Capture buffer. Finish 'RET', refile 'r', abort 'q'.")))
 
   ;; Refile targets include this file and any agenda file - up to 5 levels deep
   (gsetq org-refile-targets '((nil :maxlevel . 5)
@@ -772,7 +852,7 @@ Redefined to allow pop-up windows."
   ;; Setting `org-agenda-tags-column' to 'auto' doesn't take line numbers into
   ;; account, so if you have line numbers enabled in an org agenda buffer, the
   ;; tags wrap and make things look very ugly.
-  (general-add-hook 'org-agenda-mode-hook #'ad:disable-line-numbers-local)
+  (general-add-hook 'org-agenda-mode-hook #'ad:disable-line-numbers)
 
   ;; Do not dim blocked tasks
   (gsetq org-agenda-dim-blocked-tasks nil)
@@ -786,6 +866,18 @@ Redefined to allow pop-up windows."
 
 (use-package org-ql
   :after org)
+
+(use-package org-bullets
+  :ghook 'org-mode-hook)
+
+(use-package evil-org
+  :after evil org
+  :ghook 'org-mode-hook
+  :gfhook #'(lambda () (evil-org-set-key-theme))
+  :config
+  ;; Evil bindings for agenda views, too
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
 
 ;; Custom Org agenda building commands. This is listed separately for a couple
 ;; of reasons:
@@ -830,29 +922,98 @@ Redefined to allow pop-up windows."
                                  (tags "REFILE"))
                            ((org-ql-block-header "Refile:"))))))))
 
-(use-package org-bullets
-  :ghook 'org-mode-hook)
+;;; Terminal
 
-(use-package evil-org
-  :after evil org
-  :ghook 'org-mode-hook
-  :gfhook #'(lambda () (evil-org-set-key-theme))
+(use-package term
+  :gfhook #'(lambda ()
+              (ad:disable-line-numbers)
+              (global-hl-line-mode -1)))
+
+(use-package vterm
+  :commands vterm
+  :init
+  (gsetq vterm-kill-buffer-on-exit t
+         vterm-max-scrollback 10000)
+
+  (general-add-hook 'vterm-mode-hook #'(lambda ()
+                                         (ad:disable-line-numbers)
+                                         (global-hl-line-mode -1))))
+
+(use-package shell-pop
+  :general (general-t "t" #'shell-pop)
+  :init
+  (gsetq shell-pop-window-size 40
+         shell-pop-window-position 'top
+         shell-pop-full-span t)
   :config
-  ;; Evil bindings in org agenda
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
+  ;; Set shell type to term
+  (gsetq shell-pop-shell-type '("vterm" "vterm" #'(lambda () (vterm)))))
+
+;;; LSP
+
+(use-package lsp-mode
+  :hook ((scala-mode  . lsp-deferred)
+         (python-mode . (lambda () (require 'lsp-python-ms)(lsp-deferred)))
+         (lsp-mode    . lsp-enable-which-key-integration))
+  :commands lsp lsp-deferred
+  :init
+  ;; Disable automatic modes that throw errors on lazy loading
+  (setq lsp-enable-dap-auto-configure nil
+        lsp-modeline-diagnostics-enable nil
+        lsp-modeline-code-actions-enable nil)
+
+  ;; Performance tuning
+  (gsetq lsp-completion-provider :capf
+         lsp-idle-delay 0.5
+         read-process-output-max (* 1024 1024))
+  :config
+  ;; TODO debug why these don't appear for minutes if 'lsp-mode-map' is specified
+  (general-def 'normal
+    "N" #'lsp-describe-thing-at-point
+    "RET" #'lsp-find-definition
+    "<S-return>" #'pop-tag-mark)
+
+  ;; TODO debug why these don't appear for minutes if 'lsp-mode-map' is specified
+  (general-m
+    "m" lsp-command-map
+    "R" #'lsp-restart-workspace
+    "Q" #'lsp-workspace-shutdown
+    "s" #'lsp-describe-session
+    "l" #'lsp-workspace-show-log)
+
+  ;; Bind LSP command map to our major mode leader
+  (gsetq lsp-keymap-prefix "mm")
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
+
+(use-package lsp-ui
+  :commands lsp-ui-mode
+  :gfhook ('lsp-ui-doc-frame-mode-hook #'ad:disable-line-numbers)
+  :init (gsetq lsp-ui-sideline-enable nil)
+  :config
+  ;; Style settings for LSP doc UI
+  (gsetq lsp-ui-doc-enable t
+     lsp-ui-doc-position 'top
+     lsp-ui-doc-max-width 160
+     lsp-ui-doc-max-height 40
+     lsp-ui-doc-use-webkit nil))
+
+(use-package lsp-ivy
+  :after lsp-mode
+  :commands lsp-ivy-workplace-symbol
+  :config
+  (general-m 'normal lsp-mode-map
+    "/" #'lsp-ivy-workspace-symbol))
 
 ;;; Version control
 
 (use-package magit
-  :defer t
-  :general
-  ('normal "S" #'magit-status)
+  :commands magit-status
+  :general ('normal "S" #'magit-status)
   (general-t
-    "g"  #'(:ignore t :which-key "Git")
+    "g" #'(:ignore t :which-key "Git")
     "gs" #'magit-status
     "gl" #'magit-log-all
-    "gL" #'magit-log-buffer-file
+    "gL" #'magit-log-bufer-file
     "gc" #'magit-commit
     "gp" #'magit-push
     "gf" #'magit-pull
@@ -896,119 +1057,15 @@ Redefined to allow pop-up windows."
 (use-package git-timemachine
   :general (general-t "gt" #'git-timemachine))
 
-;;; Completion and search
-
-(use-package flx)                       ; used by ivy
-(use-package smex)                      ; used by counsel
-
-(use-package ivy
-  :demand t
-  :general (general-spc "f" #'ivy-switch-buffer)
-  :config
-  ;; Basic settings
-  (gsetq ivy-use-virtual-buffers t
-         ivy-initial-inputs-alist nil
-         ivy-count-format "")
-
-  ;; Enable fuzzy searching everywhere*
-  ;;
-  ;; *not everywhere
-  (gsetq ivy-re-builders-alist
-         '((swiper            . ivy--regex-plus)    ; convert spaces to '.*' for swiper
-           (ivy-switch-buffer . ivy--regex-plus)    ; and buffer switching
-           (counsel-rg        . ivy--regex-plus)    ; and ripgrep
-           (t                 . ivy--regex-fuzzy))) ; go fuzzy everywhere else
-
-  ;; Keybindings
-  (general-def ivy-minibuffer-map
-    "<escape>" #'minibuffer-keyboard-quit ; the natural choice
-    "<next>" #'ivy-scroll-up-command      ; default, here for documentation
-    "<prior>" #'ivy-scroll-down-command   ; same here
-    "C-j" #'ivy-next-history-element      ; repeat command with next element
-    "C-k" #'ivy-previous-history-element  ; repeat command with prev element
-    "C-'" #'ivy-avy)                      ; pick a candidate using avy
-
-  ;; Swap "?" for 'ivy-resume'
-  (general-def 'normal "?" #'ivy-resume)
-  (general-r "?" #'evil-search-backward)
-
-  (ivy-mode 1))
-
-(use-package counsel
-  :demand t
-  :general
-  ;; Replace standard 'evil-ex-search-forward' with swiper
-  ('normal "/" #'counsel-grep-or-swiper)
-  ;; Remap standard commands to their counsel analogs
-  (general-def
-    [remap execute-extended-command] #'counsel-M-x
-    [remap find-file]                #'counsel-find-file
-    [remap describe-bindings]        #'counsel-descbinds
-    [remap describe-face]            #'counsel-describe-face
-    [remap describe-function]        #'counsel-describe-function
-    [remap describe-variable]        #'counsel-describe-variable
-    [remap info-lookup-symbol]       #'counsel-info-lookup-symbol
-    [remap completion-at-point]      #'counsel-company
-    [remap org-goto]                 #'counsel-org-goto)
-  ;; Goto org headings
-  (general-m org-mode-map
-    "j" #'counsel-org-goto)
-  ;; For, eg. switching to a newly created project
-  (general-spc "F" #'counsel-find-file)
-  ;; Load themes
-  (general-t
-    "t" #'counsel-load-theme)
-  :config (counsel-mode 1))
-
-(use-package swiper
-  :demand t
-  :general ([remap isearch-forward] #'swiper)
-  :init (gsetq swiper-goto-start-of-match t))
-
-(use-package avy
-  :general (general-spc "s" #'avy-goto-char-timer)
-  :init (gsetq avy-all-windows nil
-               avy-timeout-seconds 0.25))
-
-;; TODO debug wrong type argument error when using ivy-avy immediately after
-;; starting Emacs and choosing a file from projectile's known files
-(use-package ivy-avy
-  :after ivy avy)
-
-(use-package prescient
-  :config (prescient-persist-mode))
-
-(use-package ivy-prescient
-  :after ivy
-  :demand t
-  :config (ivy-prescient-mode))
-
-(use-package ivy-rich
-  :after ivy counsel
-  :init
-  ;; Align virtual buffers, and abbreviate paths
-  (gsetq ivy-virtual-abbreviate 'full
-         ivy-rich-path-style 'abbrev
-         ivy-rich-switch-buffer-align-virtual-buffer t)
-  :config (ivy-rich-mode 1))
-
-(use-package yasnippet
+(use-package with-editor
   :defer t
-  :general
-  (general-def help-map
-    "y" #'yas-describe-tables)
-  :ghook ('prog-mode-hook #'yas-minor-mode)
+  :gfhook #'evil-insert-state
   :config
-  ;; Never expand snippets in normal state
-  (general-def 'normal yas-minor-mode-map
-    [remap yas-expand] #'ignore)
+  (general-def 'normal with-editor-mode-map
+    "RET" #'with-editor-finish
+    "q" #'with-editor-cancel))
 
-  (yas-reload-all))
-
-(use-package yasnippet-snippets
-  :after yasnippet)
-
-;;; Project management
+;;; Project management lol
 
 (use-package projectile
   :general
@@ -1044,6 +1101,7 @@ Redefined to allow pop-up windows."
                       :after #'ad:projectile-invalidate-cache))
 
 (use-package counsel-projectile
+  :after counsel
   :general
   (general-spc
     "/" #'ad:counsel-projectile-rg
@@ -1061,11 +1119,11 @@ Redefined to allow pop-up windows."
 
   (counsel-projectile-mode))
 
-;; General programming
+;;; General programming
 
 (use-package electric
   :init
-  ;; Disable pairing in minibuffer
+  ;; Disable pairing in minibuffers
   (gsetq electric-pair-inhibit-predicate #'(lambda (_) (minibufferp)))
   :config (electric-pair-mode))
 
@@ -1101,165 +1159,32 @@ Redefined to allow pop-up windows."
 (use-package rainbow-mode
   :ghook 'prog-mode-hook)
 
-(use-package company
-  :config
-  ;; Basic settings
-  (gsetq company-idle-delay 0.2
-         company-minimum-prefix-length 2
-         company-tooltip-align-annotations t
-         company-show-numbers t)
-
-  ;; Complete, using the current selection
-  (general-def company-active-map
-    "C-;" #'company-complete-selection)
-
-  ;; Add YASnippet support for all company backends
-  ;; See: https://github.com/syl20bnr/spacemacs/pull/179
-  (defun ad:company-backend-with-yas (backends)
-    (if (and (listp backends) (memq 'company-yasnippet backends))
-        backends
-      (append (if (consp backends)
-                  backends
-                (list backends))
-              '(:with company-yasnippet))))
-
-  ;; Add YASnippet to all backends
-  (gsetq company-backends
-         (mapcar #'ad:company-backend-with-yas company-backends))
-
-  (global-company-mode))
-
-;; Use prescient instead of company-statistics for smrts
-(use-package company-prescient
-  :after company
-  :config (company-prescient-mode))
-
-(use-package company-emoji
-  :after company
-  :if (version< "27.0" emacs-version)
-  :config
-  ;; Adjust the font settings for the frame
-  (defun ad:set-emoji-font (frame)
-    "Adjust the font settings of FRAME so Emacs can display emoji properly."
-    (if ad:is-a-mac-p
-        ;; For MacOS
-        (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji") frame 'prepend)
-      ;; For Linux/GNU
-      (set-fontset-font t 'symbol (font-spec :family "Symbola") frame 'prepend)))
-
-  (general-add-hook 'after-make-frame-functions #'ad:set-emoji-font)
-  ;; Add emjoi completion backend
-  (add-to-list 'company-backends 'company-emoji))
-
-(use-package flycheck
-  :ghook ('after-init-hook #'global-flycheck-mode)
-  :config
-  ;; Basic settings
-  (gsetq flycheck-display-errors-delay 0.4)
-
-  ;; Remove background colors for fringe indicators
-  (custom-set-faces
-   '(flycheck-fringe-error ((t :background nil)))
-   '(flycheck-fringe-warning ((t :background nil)))
-   '(flycheck-fringe-info ((t :background nil))))
-
-  ;; Get me outta here
-  (general-def 'normal flycheck-error-list-mode
-    "q" #'quit-window))
-
-(general-with-package 'prog-mode
-  (general-m prog-mode-map
-    "j" #'flycheck-next-error
-    "k" #'flycheck-previous-error
-    "E" #'flycheck-list-errors))
-
-(use-package lsp-mode
-  :init
-  ;; Performance tuning per: https://emacs-lsp.github.io/lsp-mode/page/performance/
-  (gsetq lsp-idle-delay 0.5
-         lsp-completion-provider :capf
-         read-process-output-max (* 1024 1024))
-
-  ;; Disable the following settings that lead to 'void-function' warnings during LSP startup;
-  (gsetq lsp-enable-dap-auto-configure nil
-         lsp-modeline-diagnostics-enable nil
-         lsp-modeline-code-actions-enable nil)
-  :config
-  (general-def 'normal lsp-mode-map
-    "N" #'lsp-describe-thing-at-point
-    "RET" #'lsp-find-definition)
-
-  (gsetq lsp-keymap-prefix "mm")
-  (general-add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-
-  (general-m lsp-mode-map
-    "m" lsp-command-map
-    "i" #'lsp-goto-implementation
-    "D" #'lsp-find-declaration
-    "x" #'lsp-find-references
-    "r" #'lsp-rename
-    "R" #'lsp-workspace-restart
-    "=" #'lsp-format-buffer
-    "l" #'lsp-workspace-show-log))
-
-(use-package lsp-metals
-  :init (gsetq lsp-metals-server-command "metals-emacs"))
-
-(use-package lsp-ui
-  :ghook ('lsp-mode-hook #'lsp-ui-mode)
-  :commands lsp-ui-mode
-  ;; :init (general-add-hook 'lsp-ui-doc-frame-hook)
-  )
-
-(use-package lsp-ivy
-  :commands lsp-ivy-workspace-symbol)
-
-(use-package term
-  :init
-  ;; Disable line numbers and current line highlighting in terminal buffers
-  (general-add-hook 'term-mode-hook
-                    #'(lambda ()
-                        (ad:disable-line-numbers-local)
-                        (gsetq-local global-hl-line-mode nil))))
-
-(use-package vterm
-  :init
-  (gsetq vterm-kill-buffer-on-exit t
-         vterm-max-scrollback 10000))
-
-(use-package shell-pop
-  :general (general-m "t" #'shell-pop)
-  :init (gsetq shell-pop-window-size 40
-               shell-pop-window-position 'top
-               shell-pop-full-span t)
-  :config
-  ;; Set shell type to term
-  (gsetq shell-pop-shell-type
-         '("vterm" "vterm" #'(lambda () (vterm)))))
-
-;; Git specific modes
+;;; Git flavored modes
 
 (use-package git-commit
   :defer t
   :init
-  (gsetq
-   git-commit-usage-message
-   "Type 'RET' to finish, 'q' to cancel, and \\[git-commit-prev-message] and \\[git-commit-next-message] to recover older messages")
+  (gsetq git-commit-usage-message
+         "Type 'RET' to finish, 'q' to cancel, and \\[git-commit-prev-message] and \\[git-commit-next-message] to recover older messages.")
   :config
   ;; Remove style conventions
-  (general-remove-hook 'git-commit-finish-query-functions
-                       #'git-commit-check-style-conventions))
+  (general-remove-hook 'git-commit-finish-query-functions #'git-commit-check-style-conventions))
 
-(use-package gitconfig-mode
-  :defer t)
+(use-package gitconfig-mode)
+(use-package gitignore-mode)
+(use-package gitattributes_mode)
 
-(use-package gitignore-mode
-  :defer t)
+;;; Markdown
 
-(use-package gitattributes-mode
-  :defer t)
+(use-package vmd-mode
+  :commands vmd-mode)
 
-;; Lisp/Emacs Lisp
+(use-package markdown-mode
+  :mode ("\\.md\\'" "\\.markdown\\'")
+  :general (general-m markdown-mode-map
+             "p" #'vmd-mode))
+
+;;; Emacs Lisp
 
 (use-package elisp-mode
   :general
@@ -1271,42 +1196,40 @@ Redefined to allow pop-up windows."
   (general-def 'normal emacs-lisp-mode-map
     "RET" #'xref-find-definitions
     "<S-return>" #'pop-tag-mark)
-  :config
-  (gsetq emacs-lisp-docstring-fill-column 80))
+  :init
+  (gsetq emacs-lisp-docstring-fill-column 100))
 
-;; Markdown
-
-(use-package vmd-mode
-  :defer t)
-
-(use-package markdown-mode
-  :general
-  (general-m markdown-mode-map
-    "p" #'vmd-mode))
-
-;; Scala
+;;; Scala
 
 (use-package scala-mode
-  :mode ("\\.scala\\'" "\\.sbt\\'" "\\.worksheet\\.sc\\'")
-  :gfhook #'lsp-deferred
+  :mode ("\\.scala\\'" "\\.sbt\\'")
   :general
+  ;; Bind available 'lsp-metals' actions
   (general-m scala-mode-map
-    "b" #'lsp-metals-build-import
+    ;; LSP metals session functionality
+    "i" #'lsp-metals-build-import
     "c" #'lsp-metals-build-connect
-    "d" #'lsp-metals-doctor-run)
+    "D" #'lsp-metals-doctor-run
+    ;; Supported LSP actions
+    "g" #'lsp-find-definition
+    "x" #'lsp-find-references
+    "r" #'lsp-rename
+    "=" #'lsp-format-buffer)
   :config
   ;; Indentation preferences
   (gsetq scala-indent:default-run-on-strategy
-         scala-indent:operator-strategy
-         scala-indent:use-javadoc-style t)
+     scala-indent:operator-strategy
+     scala-indent:use-javadoc-style t)
 
-  ;; Insert newline in a multiline comment should insert an asterisk
-  (defun ad|scala-mode-newline-comments ()
-    "Insert a leading asterisk in multiline comments, when hitting 'RET'."
+  ;; Inserting newline in a multiline comment should do what I mean
+  (defun ad:scala-mode-newline-in-multiline-comment ()
+    "Insert a leading asterisk in Scala multiline comments, when hitting 'RET'."
     (interactive)
     (newline-and-indent)
     (scala-indent:insert-asterisk-on-multiline-comment))
-  (define-key scala-mode-map (kbd "RET") #'ad|scala-mode-newline-comments))
+
+  (general-def 'insert scala-mode-map
+    "RET" #'ad:scala-mode-newline-in-multiline-comment))
 
 (use-package sbt-mode
   :after scala-mode
@@ -1322,29 +1245,42 @@ Redefined to allow pop-up windows."
    'self-insert-command
    minibuffer-local-completion-map))
 
-;; Python
+;;; Nix
+
+(use-package nix-mode
+  :mode "\\.nix\\'")
+
+(use-package nix-shell
+  :ensure nil
+  :commands nix-shell nix-unpack)
+
+(use-package nix-drv-mode
+  :ensure nil
+  :mode "\\.drv\\'")
+
+;;; Python
 
 (use-package lsp-python-ms
-  :init (gsetq lsp-python-ms-auto-install-server t)
-  :ghook ('python-mode-hook #'(lambda ()
-                                (require 'lsp-python-ms)
-                                (lsp-deferred))))
+  ;; TODO don't auto-install server once you can build it via Nix
+  :init (gsetq lsp-python-ms-auto-install-server t))
 
 (use-package conda
   :defer t
   :init
-  (gsetq conda-anaconda-home (expand-file-name "~/miniconda3")
-         conda-env-home-directory (expand-file-name "~/miniconda3")))
+  ;; WARNING: do NOT set `conda-anaconda-home' instead, as it breaks automatic discovery and use of
+  ;; Conda environments. It's annoyingly brittle, but using the appropriate conda environment
+  ;; depends on having this set and NOT `conda-anaconda-home'.
+  (gsetq conda-env-home-directory (expand-file-name "~/miniconda3")))
 
-;; YAML
+;;; YAML
 
 (use-package yaml-mode
   :mode ("\\.yaml\\'" "\\.yml\\'" "MLproject\\'"))
 
-;; Nix
+;;; JSON
 
-(use-package nix-mode
-  :mode "\\.nix\\'")
+;; TODO switch to lsp-json (https://emacs-lsp.github.io/lsp-mode/page/lsp-json/)
+(use-package json-mode)
 
 (provide 'init)
 ;;; init.el ends here
