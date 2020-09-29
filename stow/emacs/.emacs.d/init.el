@@ -954,6 +954,7 @@ Redefined to allow pop-up windows."
 (use-package lsp-mode
   :hook ((scala-mode  . lsp-deferred)
          (python-mode . (lambda () (require 'lsp-python-ms)(lsp-deferred)))
+         (sh-mode     . lsp-deferred)
          (lsp-mode    . lsp-enable-which-key-integration))
   :commands lsp lsp-deferred
   :init

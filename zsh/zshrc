@@ -1,3 +1,5 @@
+# Custom 'zshrc' managed by Nix    # -*- mode:sh; -*-
+
 # History settings
 HISTFILE="${HOME}/.zhistory"
 HISTSIZE=10000
