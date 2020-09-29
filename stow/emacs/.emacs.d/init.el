@@ -999,7 +999,10 @@ Redefined to allow pop-up windows."
 
 (use-package lsp-ivy
   :after lsp-mode
-  :commands lsp-ivy-workplace-symbol)
+  :commands lsp-ivy-workplace-symbol
+  :config
+  (general-m 'normal lsp-mode-map
+    "/" #'lsp-ivy-workspace-symbol))
 
 ;;; Version control
 
