@@ -19,7 +19,9 @@ let
       pkgs.bash
       pkgs.cacert
       pkgs.coreutils
+      pkgs.emacs-all-the-icons-fonts
       pkgs.fasd
+      pkgs.fd
       pkgs.gawk
       pkgs.git
       pkgs.gitAndTools.hub
@@ -74,12 +76,8 @@ let
   # A custom font build
   iosevka = import ./iosevka { inherit pkgs; };
 
-  # Unstable (27.1) version of Emacs, with packages
-  emacs27 = pkgs.emacsUnstable;
-  emacs = (pkgs.emacsPackagesGen emacs27).emacsWithPackages (epkgs:
-    with epkgs.melpaPackages; [
-      vterm
-    ]);
+  # A custom Emacs with packages
+  emacs = import ./emacs { inherit pkgs; };
 
 in
   if pkgs.lib.inNixShell
