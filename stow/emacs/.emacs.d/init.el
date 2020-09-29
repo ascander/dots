@@ -326,15 +326,6 @@
 
 ;;; Color themes
 
-;; Distinguish evil state by cursor shape/color
-;; TODO advise `load-theme' to set cursor colors per theme
-(gsetq evil-mode-line-format nil
-       evil-normal-state-cursor '(box "#839496")
-       evil-motion-state-cursor '(box "#b58900")
-       evil-insert-state-cursor '(bar "#268bd2")
-       evil-emacs-state-cursor  '(bar "#d33682")
-       evil-visual-state-cursor '(box "#d33682"))
-
 ;; Disable old color theme when switching to new color theme
 (defun ad:disable-themes (&rest _)
   "Disable all currently active color themes."
