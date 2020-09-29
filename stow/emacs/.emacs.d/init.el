@@ -1167,9 +1167,9 @@ Redefined to allow pop-up windows."
   ;; Remove style conventions
   (general-remove-hook 'git-commit-finish-query-functions #'git-commit-check-style-conventions))
 
-(use-package gitconfig-mode :defer t)
-(use-package gitignore-mode :defer t)
-(use-package gitattributes_mode :defer t)
+(use-package gitconfig-mode)
+(use-package gitignore-mode)
+(use-package gitattributes_mode)
 
 ;;; Markdown
 
