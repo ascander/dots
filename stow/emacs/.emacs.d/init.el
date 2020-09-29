@@ -601,9 +601,12 @@
     [remap org-goto]                 #'counsel-org-goto)
   ;; Goto org headings
   (general-m org-mode-map
-    "j" #'counsel-org-goto)
+    "j" #'counsel-org-goto
+    "<" #'org-insert-structure-template)
   ;; For, eg. switching to a newly created project
-  (general-spc "F" #'counsel-find-file)
+  (general-spc
+    "w" #'write-file
+    "F" #'counsel-find-file)
   ;; Load themes
   (general-t
     "T" #'counsel-load-theme)
@@ -714,9 +717,13 @@
 (use-package org
   :defer t
   :general
+  ;; Available anywhere commands
   (general-spc
     "c" #'org-capture
     "a" #'org-agenda)
+  (general-m 'normal org-mode-map
+    "l" #'org-insert-link
+    "t" #'org-todo)
   :config
   ;; Set locations of org directory, agenda files, default notes file
   (defun ad:expand-org-file (file)
