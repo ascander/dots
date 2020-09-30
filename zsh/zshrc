@@ -91,36 +91,9 @@ if (( $+commands[fasd] )); then
     # alias zz='fasd_cd -d -i' # cd with interactive selection
 fi
 
-# Emacs settings
-if (( $+commands[emacsclient] )); then
-    # Launches Emacs in an SMRT way
-    #
-    # First, check to see if there are any existing Emacs frames. If so, connect
-    # to the existing one. If not, create one. By going through `emacsclient` we
-    # also start the Emacs server if it isn't running.
-    #
-    # Note: the minimum number of frames required is 2. This is not a mistake. If
-    # this is set to 1, Emacs does not successfully connect to the existing frame.
-    # My best guess at explaining this is that running the Emacs daemon consumes a
-    # frame, and counting actual frames opened is 2-indexed.
-    _emacslauncher() {
-        if [[ "$(emacsclient --alternate-editor "" --eval '(length (frame-list))' 2>/dev/null)" -ge 2 ]]; then
-            emacsclient --alternate-editor "" "$@"
-        else
-            emacsclient --alternate-editor "" --create-frame "$@"
-        fi
-    }
-
-    export EDITOR='emacsclient'
-    export VISUAL='emacsclient'
-
-    alias emacs='_emacslauncher --no-wait'
-    alias e=emacs
-    alias temacs='_emacslauncher --no-wait -nw'
-    alias te=temacs
-    alias eeval='_emacslauncher --eval'
-    alias ke="_emacslauncher --eval '(kill-emacs)'"
-fi
+# Emacs aliases
+alias emacs='emacsclient --no-wait --create-frame'
+alias e=emacs
 
 # Nix aliases
 alias ns='nix-shell'

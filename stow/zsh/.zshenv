@@ -4,3 +4,6 @@
 if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
     . "$HOME/.nix-profile/etc/profile.d/nix.sh"
 fi
+
+export EDITOR=emacsclient
+export VISUAL=emacsclient
