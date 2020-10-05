@@ -1181,7 +1181,7 @@ Redefined to allow pop-up windows."
 
 (use-package gitconfig-mode)
 (use-package gitignore-mode)
-(use-package gitattributes_mode)
+(use-package gitattributes-mode)
 
 ;;; Markdown
 
