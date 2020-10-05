@@ -878,7 +878,6 @@ Redefined to allow pop-up windows."
   :ghook 'org-mode-hook)
 
 (use-package evil-org
-  :after evil org
   :ghook 'org-mode-hook
   :gfhook #'(lambda () (evil-org-set-key-theme))
   :config
