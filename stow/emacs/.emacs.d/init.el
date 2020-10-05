@@ -615,6 +615,9 @@
   ;; Load themes
   (general-t
     "T" #'counsel-load-theme)
+  ;; Add bindings to help map
+  (general-def help-map
+    "x" #'counsel-describe-face)
   :config (counsel-mode 1))
 
 (use-package swiper
