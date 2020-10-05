@@ -37,7 +37,7 @@
 (push '(vertical-scroll-bars) default-frame-alist)
 
 ;; Set font early
-(push '(font . "Iosevka Custom") default-frame-alist)
+(push '(font . "Iosevka Custom Light 14") default-frame-alist)
 
 (provide 'early-init)
 ;;; early-init.el ends here
