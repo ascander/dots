@@ -520,8 +520,7 @@
          beacon-blink-when-window-changes t
          beacon-blink-when-focused t)
   ;; How to blink
-  (gsetq beacon-size 30
-         beacon-color "#d33682")        ; Emacs/Visual state color
+  (gsetq beacon-size 20)
   :config
   ;; Not for terminal modes
   (add-to-list 'beacon-dont-blink-major-modes 'term-mode)
