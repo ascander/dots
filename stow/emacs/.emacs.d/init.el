@@ -1193,6 +1193,13 @@ Redefined to allow pop-up windows."
   :general (general-m markdown-mode-map
              "p" #'vmd-mode))
 
+;;; Shell
+
+(use-package sh-script
+  :config
+  (with-eval-after-load 'flycheck
+    (general-pushnew 'zsh flycheck-shellcheck-supported-shells)))
+
 ;;; Emacs Lisp
 
 (use-package elisp-mode
