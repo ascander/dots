@@ -348,21 +348,35 @@
          solarized-height-plus-2 1.0
          solarized-height-plus-3 1.0
          solarized-height-plus-4 1.0)
-  :config
-  ;; Conditionally load the default theme based on whether we're
-  ;; running the Emacs daemon.
-  (if (daemonp)
-      (add-hook 'after-make-frame-functions
-                (lambda (frame)
-                  (select-frame frame)
-                  (load-theme 'solarized-dark t)))
-    (load-theme 'solarized-dark t)))
+  ;; :config
+  ;; ;; Conditionally load the default theme based on whether we're
+  ;; ;; running the Emacs daemon.
+  ;; (if (daemonp)
+  ;;     (add-hook 'after-make-frame-functions
+  ;;               (lambda (frame)
+  ;;                 (select-frame frame)
+  ;;                 (load-theme 'solarized-dark t)))
+  ;;   (load-theme 'solarized-dark t))
+  )
 
 (use-package doom-themes
   :init
   (gsetq doom-themes-enable-bold nil
          doom-themes-enable-italic nil)
+  :ghook ('after-make-frame-functions #'(lambda (frame) (with-selected-frame frame (load-theme 'doom-spacegrey t))))
   :config
+  ;; Advise `load-theme' to set the value for `beacon-color' if we just switched to a DOOM theme
+  (defun ad:set-beacon-color-from-doom-theme (&rest _)
+    "Set the value of `beacon-color' based on the current DOOM color theme."
+    (interactive)
+    (when-let ((theme (car custom-enabled-themes))
+               (doomy (string-prefix-p "doom-" (symbol-name theme)))
+               (value (doom-color 'builtin))
+               (_ (bound-and-true-p beacon-color)))
+      (gsetq beacon-color value)))
+
+  (general-add-advice 'load-theme :after #'ad:set-beacon-color-from-doom-theme)
+
   (require 'doom-themes-ext-org)
   (doom-themes-org-config))
 
@@ -373,7 +387,7 @@
   (gsetq doom-modeline-height 30
          doom-modeline-icon t
          doom-modeline-minor-modes t)
-  :config (doom-modeline-mode))
+  :ghook 'window-setup-hook)
 
 (use-package minions
   :demand t
