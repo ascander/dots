@@ -647,13 +647,14 @@
   :config (ivy-prescient-mode))
 
 (use-package ivy-rich
-  :after ivy counsel
+  :after counsel
+  :demand t
   :init
   ;; Align virtual buffers, and abbreviate paths
   (gsetq ivy-virtual-abbreviate 'full
          ivy-rich-path-style 'abbrev
          ivy-rich-switch-buffer-align-virtual-buffer t)
-  :config (ivy-rich-mode 1))
+  :config (ivy-rich-mode))
 
 (use-package all-the-icons-ivy
   :after counsel-projectile
