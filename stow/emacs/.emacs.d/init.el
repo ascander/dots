@@ -755,7 +755,8 @@
          org-startup-truncated nil
          org-tags-column -80
          org-enable-priority-commands nil
-         org-reverse-note-order t)
+         org-reverse-note-order t
+         org-return-follows-link t)
 
   ;; Don't try to be intelligent about inserting blank lines
   (gsetq org-blank-before-new-entry '((heading . nil) (plain-list-item . nil)))
