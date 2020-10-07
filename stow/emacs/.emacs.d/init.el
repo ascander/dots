@@ -976,14 +976,26 @@ Redefined to allow pop-up windows."
          lsp-idle-delay 0.5
          read-process-output-max (* 1024 1024))
   :config
-  ;; TODO debug why these don't appear for minutes if 'lsp-mode-map' is specified
-  (general-def 'normal
+  ;; TODO figure out why these bindings don't take effect unless manually evaluating
+  ;; `evil-normal-state' in the relevant buffer. Current behavior is as follows:
+  ;;
+  ;;     * Navigate to a project/file that triggers `lsp' (or `lsp-deferred')
+  ;;     * Position the cursor over some relevant element
+  ;;     * Hitting "RET" does *not* call `lsp-find-definition' (bound to `evil-ret')
+  ;;     * Evaluate `evil-normal-state'
+  ;;     * Hitting "RET" now calls `lsp-find-definition' as expected
+  ;;     * From the destination buffer, hitting eg. "<S-return>" does *not* call `pop-tag-mark'
+  ;;     * Evaluate `evil-normal-state'
+  ;;     * Hitting "<S-return>" now calls `pop-tag-mark' as expected
+  ;;     * Bindings seem to work properly thereafter
+  ;;
+  ;; Needless to say, this is infuriating.
+  (general-def 'normal lsp-mode-map
     "N" #'lsp-describe-thing-at-point
     "RET" #'lsp-find-definition
     "<S-return>" #'pop-tag-mark)
 
-  ;; TODO debug why these don't appear for minutes if 'lsp-mode-map' is specified
-  (general-m
+  (general-m lsp-mode-map
     "m" lsp-command-map
     "R" #'lsp-restart-workspace
     "Q" #'lsp-workspace-shutdown
