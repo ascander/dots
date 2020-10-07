@@ -154,11 +154,11 @@
 
 (use-package evil
   :init
-  (gsetq evil-want-keybinding nil ; don't load evil bindings for other modes
-     evil-overriding-maps nil ; no maps should override evil maps
-     evil-search-module 'evil-search ; use evil-search instead of isearch (remapped)
-     evil-exsearch-persistent-highlight nil ; no persistent highlighting of search matches
-     evil-want-Y-yank-to-eol t)		; make 'Y' behave like 'D'
+  (gsetq evil-want-keybinding nil               ; don't load evil bindings for other modes
+         evil-overriding-maps nil               ; no maps should override evil maps
+         evil-search-module 'evil-search        ; use evil-search instead of isearch (remapped)
+         evil-exsearch-persistent-highlight nil ; no persistent highlighting of search matches
+         evil-want-Y-yank-to-eol t)             ; make 'Y' behave like 'D'
   :config (evil-mode))
 
 (use-package evil-collection
