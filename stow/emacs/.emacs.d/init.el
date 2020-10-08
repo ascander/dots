@@ -980,7 +980,7 @@ Redefined to allow pop-up windows."
   ;; `evil-normal-state' in the relevant buffer. Current behavior is as follows:
   ;;
   ;;     * Navigate to a project/file that triggers `lsp' (or `lsp-deferred')
-  ;;     * Position the cursor over some relevant element
+  ;;     * Position the cursor over some object
   ;;     * Hitting "RET" does *not* call `lsp-find-definition' (bound to `evil-ret')
   ;;     * Evaluate `evil-normal-state'
   ;;     * Hitting "RET" now calls `lsp-find-definition' as expected
