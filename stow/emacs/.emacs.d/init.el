@@ -959,6 +959,18 @@ Redefined to allow pop-up windows."
 
 ;;; LSP
 
+(use-package flycheck
+  :ghook ('after-init-hook #'global-flycheck-mode)
+  :init (gsetq flycheck-display-errors-delay 0.2)
+  :config
+  (general-def 'normal flycheck-error-list-mode
+    "q" #'quit-window)
+
+  (general-m 'normal flycheck-mode-map
+    "E" #'flycheck-list-errors
+    "j" #'flycheck-next-error
+    "k" #'flycheck-previous-error))
+
 (use-package lsp-mode
   :hook ((scala-mode  . lsp-deferred)
          (python-mode . (lambda () (require 'lsp-python-ms)(lsp-deferred)))
@@ -976,6 +988,9 @@ Redefined to allow pop-up windows."
          lsp-idle-delay 0.5
          read-process-output-max (* 1024 1024))
   :config
+  ;; Not sure why this is needed, but Flycheck never initializes unless this is called
+  (require 'lsp-diagnostics)
+
   ;; TODO figure out why these bindings don't take effect unless manually evaluating
   ;; `evil-normal-state' in the relevant buffer. Current behavior is as follows:
   ;;
@@ -997,7 +1012,7 @@ Redefined to allow pop-up windows."
 
   (general-m lsp-mode-map
     "m" lsp-command-map
-    "R" #'lsp-restart-workspace
+    "R" #'lsp-workspace-restart
     "Q" #'lsp-workspace-shutdown
     "s" #'lsp-describe-session
     "l" #'lsp-workspace-show-log)
