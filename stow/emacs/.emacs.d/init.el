@@ -922,7 +922,7 @@ Redefined to allow pop-up windows."
                            ((org-ql-block-header "Waiting on:")))
              (org-ql-block '(and (todo)
                                  (not (scheduled))
-                                 (not (todo "WAITING"))
+                                 (not (todo "HOLD" "WAITING" "NEXT"))
                                  (tags "@work")
                                  (tags "charliework"))
                            ((org-ql-block-header "Charlie work:")))
