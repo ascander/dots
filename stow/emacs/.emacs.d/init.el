@@ -295,7 +295,11 @@
                     :weight 'regular)
 
 ;; For icons used in various places
-(use-package all-the-icons)
+(use-package all-the-icons
+  :init
+  ;; Scale icons down slightly (default is 1.2) to allow room for DOOM modeline. See
+  ;; https://github.com/hlissner/doom-emacs/issues/2967#issuecomment-619319082 for more details.
+  (gsetq all-the-icons-scale-factor 1.1))
 
 ;;; Emacs file management
 
