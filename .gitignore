@@ -1,7 +1,5 @@
 # SSH secrets
-id_rsa
-id_rsa.pub
-known_hosts
+.ssh/
 
 # Local-only files
 .zshrc.local
