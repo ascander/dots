@@ -887,6 +887,10 @@ Redefined to allow pop-up windows."
   :ghook 'org-mode-hook
   :gfhook #'(lambda () (evil-org-set-key-theme))
   :config
+  ;; Directly bind `evil-org-return' instead of messing with the `evil-org-key-theme' list
+  (general-def 'normal org-mode-map
+    "RET" #'evil-org-return)
+
   ;; Evil bindings for agenda views, too
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
