@@ -10,7 +10,6 @@ let
       fzf
       iosevka
       pinentry
-      pure
       vmd
       zshrc
 
@@ -35,6 +34,7 @@ let
       pkgs.nodejs-12_x
       pkgs.openjdk
       pkgs.ripgrep
+      pkgs.starship
       pkgs.stow
       pkgs.tree
       pkgs.zsh-completions
@@ -43,11 +43,6 @@ let
 
   # A custom '.zshrc' (see './zshrc/default.nix')
   zshrc = pkgs.callPackage ./zsh/zshrc.nix {};
-
-  # Use pinned version of 'pure' prompt from niv
-  pure = pkgs.callPackage ./zsh/pure.nix {
-    src = pkgs.sources.pure;
-  };
 
   # Use pinned version of 'dircolors-solarized'
   dircolors-solarized = pkgs.callPackage ./zsh/dircolors-solarized.nix {
