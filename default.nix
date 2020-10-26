@@ -9,7 +9,6 @@ let
       emacs
       fzf
       iosevka
-      metals
       pinentry
       pure
       vmd
@@ -29,6 +28,7 @@ let
       pkgs.jq
       pkgs.less
       pkgs.libvterm-neovim
+      pkgs.metals
       pkgs.niv.niv
       pkgs.nix
       pkgs.nix-zsh-completions
@@ -66,9 +66,6 @@ let
 
   # The right 'pinentry' for macos
   pinentry = if (pkgs.stdenv.isDarwin) then pkgs.pinentry_mac else pkgs.pinentry;
-
-  # Use pinned version of 'metals' from niv
-  metals = pkgs.callPackage pkgs.sources.metals {};
 
   # A custom 'fzf' (see './fzf/default.nix')
   fzf = pkgs.callPackage ./fzf { inherit (pkgs) fzf; };
