@@ -41,13 +41,6 @@ fi
 # Load completions
 autoload -Uz compinit && compinit
 
-# Load prompt
-autoload -U promptinit; promptinit
-prompt pure
-
-# Triple my prompting
-PURE_PROMPT_SYMBOL="❯❯❯"
-
 # Bindkey
 bindkey -e
 bindkey '\e[3~' delete-char
@@ -181,3 +174,6 @@ alias ..='cd ../.'
 alias ...='cd ../../.'
 alias ....='cd ../../../.'
 alias .....='cd ../../../../.'
+
+# Prompt initialization
+eval "$(starship init zsh)"
