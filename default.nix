@@ -42,6 +42,9 @@ let
       pkgs.zsh-syntax-highlighting
     ];
 
+  # Some packages come from the unstable branch
+  pkgs-unstable = import pkgs.sources.nixpkgs-unstable {};
+
   # Node2nix generated expression for 'bash-language-server'
   bash-language-server = pkgs.callPackage ./npm/bash-language-server {
     inherit pkgs;
@@ -68,7 +71,7 @@ let
   pinentry = if (pkgs.stdenv.isDarwin) then pkgs.pinentry_mac else pkgs.pinentry;
 
   # A custom starship prompt
-  starship = pkgs.callPackage ./starship { inherit (pkgs) starship; };
+  starship = pkgs-unstable.callPackage ./starship { inherit (pkgs-unstable) starship; };
 
   # Node2nix generated expression for 'vmd'
   vmd = pkgs.callPackage ./npm/vmd {
