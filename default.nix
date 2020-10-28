@@ -11,6 +11,7 @@ let
       iosevka
       iosevka-nerd
       pinentry
+      starship
       vmd
       zshrc
 
@@ -35,33 +36,24 @@ let
       pkgs.nodejs-12_x
       pkgs.openjdk
       pkgs.ripgrep
-      pkgs.starship
       pkgs.stow
       pkgs.tree
       pkgs.zsh-completions
       pkgs.zsh-syntax-highlighting
     ];
 
-  # A custom '.zshrc' (see './zshrc/default.nix')
-  zshrc = pkgs.callPackage ./zsh/zshrc.nix {};
+  # Node2nix generated expression for 'bash-language-server'
+  bash-language-server = pkgs.callPackage ./npm/bash-language-server {
+    inherit pkgs;
+  };
 
   # Use pinned version of 'dircolors-solarized'
   dircolors-solarized = pkgs.callPackage ./zsh/dircolors-solarized.nix {
     src = pkgs.sources.dircolors-solarized;
   };
 
-  # Node2nix generated expression for 'vmd'
-  vmd = pkgs.callPackage ./npm/vmd {
-    inherit pkgs;
-  };
-
-  # Node2nix generated expression for 'bash-language-server'
-  bash-language-server = pkgs.callPackage ./npm/bash-language-server {
-    inherit pkgs;
-  };
-
-  # The right 'pinentry' for macos
-  pinentry = if (pkgs.stdenv.isDarwin) then pkgs.pinentry_mac else pkgs.pinentry;
+  # A custom Emacs with packages
+  emacs = import ./emacs { inherit pkgs; };
 
   # A custom 'fzf' (see './fzf/default.nix')
   fzf = pkgs.callPackage ./fzf { inherit (pkgs) fzf; };
@@ -70,11 +62,21 @@ let
   iosevka = import ./iosevka { inherit pkgs; };
 
   # Required for starship prompt
-  iosevka-nerd = pkgs.nerdfonts { fonts = ["Iosevka"]; };
+  iosevka-nerd = pkgs.nerdfonts.override { fonts = ["Iosevka"]; };
 
-  # A custom Emacs with packages
-  emacs = import ./emacs { inherit pkgs; };
+  # The right 'pinentry' for macos
+  pinentry = if (pkgs.stdenv.isDarwin) then pkgs.pinentry_mac else pkgs.pinentry;
 
+  # A custom starship prompt
+  starship = pkgs.callPackage ./starship { inherit (pkgs) starship; };
+
+  # Node2nix generated expression for 'vmd'
+  vmd = pkgs.callPackage ./npm/vmd {
+    inherit pkgs;
+  };
+
+  # A custom '.zshrc' (see './zshrc/default.nix')
+  zshrc = pkgs.callPackage ./zsh/zshrc.nix {};
 in
   if pkgs.lib.inNixShell
   then pkgs.mkShell
