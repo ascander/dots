@@ -9,6 +9,7 @@ let
       emacs
       fzf
       iosevka
+      iosevka-nerd
       pinentry
       vmd
       zshrc
@@ -67,6 +68,9 @@ let
 
   # A custom font build
   iosevka = import ./iosevka { inherit pkgs; };
+
+  # Required for starship prompt
+  iosevka-nerd = pkgs.nerdfonts { fonts = ["Iosevka"]; };
 
   # A custom Emacs with packages
   emacs = import ./emacs { inherit pkgs; };
