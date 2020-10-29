@@ -10,7 +10,8 @@ format = "[$symbol$branch]($style) "
 style = "242"
 
 [git_status]
-format = "[$ahead_behind](cyan) "
+style = "242"
+# format = "[$ahead_behind](cyan) "
 
 [java]
 disabled = true
