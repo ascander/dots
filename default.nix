@@ -70,8 +70,8 @@ let
   # The right 'pinentry' for macos
   pinentry = if (pkgs.stdenv.isDarwin) then pkgs.pinentry_mac else pkgs.pinentry;
 
-  # A custom starship prompt
-  starship = pkgs-unstable.callPackage ./starship { inherit (pkgs-unstable) starship; };
+  # Use the unstable branch of nixpkgs to get version 0.45.x
+  starship = pkgs-unstable.starship;
 
   # Node2nix generated expression for 'vmd'
   vmd = pkgs.callPackage ./npm/vmd {
