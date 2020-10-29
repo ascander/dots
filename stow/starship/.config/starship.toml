@@ -1,0 +1,16 @@
+[character]
+success_symbol = "[❯](blue)[❯](cyan)[❯](white)"
+error_symbol = "[❯](red)[❯](red)[❯](red)"
+
+[directory]
+format = "[$path](blue)[$read_only](red) "
+
+[git_branch]
+format = "[$symbol$branch]($style) "
+style = "242"
+
+[git_status]
+format = "[$ahead_behind](cyan) "
+
+[java]
+disabled = true
