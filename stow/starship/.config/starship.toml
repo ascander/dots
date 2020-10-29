@@ -10,8 +10,9 @@ format = "[$symbol$branch]($style) "
 style = "242"
 
 [git_status]
-style = "242"
-# format = "[$ahead_behind](cyan) "
+format = "[$conflicted$stashed$ahead_behind](242) "
+stashed = "≡"
+conflicted = "✘"
 
 [java]
 disabled = true
