@@ -9,8 +9,10 @@ let
       emacs
       fzf
       iosevka
+      iosevka-nerd
+      metals
       pinentry
-      pure
+      starship
       vmd
       zshrc
 
@@ -28,7 +30,6 @@ let
       pkgs.jq
       pkgs.less
       pkgs.libvterm-neovim
-      pkgs.metals
       pkgs.niv.niv
       pkgs.nix
       pkgs.nix-zsh-completions
@@ -41,12 +42,12 @@ let
       pkgs.zsh-syntax-highlighting
     ];
 
-  # A custom '.zshrc' (see './zshrc/default.nix')
-  zshrc = pkgs.callPackage ./zsh/zshrc.nix {};
+  # Some packages come from the unstable branch
+  pkgs-unstable = import pkgs.sources.nixpkgs-unstable {};
 
-  # Use pinned version of 'pure' prompt from niv
-  pure = pkgs.callPackage ./zsh/pure.nix {
-    src = pkgs.sources.pure;
+  # Node2nix generated expression for 'bash-language-server'
+  bash-language-server = pkgs.callPackage ./npm/bash-language-server {
+    inherit pkgs;
   };
 
   # Use pinned version of 'dircolors-solarized'
@@ -54,18 +55,8 @@ let
     src = pkgs.sources.dircolors-solarized;
   };
 
-  # Node2nix generated expression for 'vmd'
-  vmd = pkgs.callPackage ./npm/vmd {
-    inherit pkgs;
-  };
-
-  # Node2nix generated expression for 'bash-language-server'
-  bash-language-server = pkgs.callPackage ./npm/bash-language-server {
-    inherit pkgs;
-  };
-
-  # The right 'pinentry' for macos
-  pinentry = if (pkgs.stdenv.isDarwin) then pkgs.pinentry_mac else pkgs.pinentry;
+  # A custom Emacs with packages
+  emacs = import ./emacs { inherit pkgs; };
 
   # A custom 'fzf' (see './fzf/default.nix')
   fzf = pkgs.callPackage ./fzf { inherit (pkgs) fzf; };
@@ -73,9 +64,25 @@ let
   # A custom font build
   iosevka = import ./iosevka { inherit pkgs; };
 
-  # A custom Emacs with packages
-  emacs = import ./emacs { inherit pkgs; };
+  # Required for starship prompt
+  iosevka-nerd = pkgs.nerdfonts.override { fonts = ["Iosevka"]; };
 
+  # Use the unstable branch of nixpkgs to get v0.9.4
+  metals = pkgs-unstable.metals;
+
+  # The right 'pinentry' for macos
+  pinentry = if (pkgs.stdenv.isDarwin) then pkgs.pinentry_mac else pkgs.pinentry;
+
+  # Use the unstable branch of nixpkgs to get v0.45.2
+  starship = pkgs-unstable.starship;
+
+  # Node2nix generated expression for 'vmd'
+  vmd = pkgs.callPackage ./npm/vmd {
+    inherit pkgs;
+  };
+
+  # A custom '.zshrc' (see './zshrc/default.nix')
+  zshrc = pkgs.callPackage ./zsh/zshrc.nix {};
 in
   if pkgs.lib.inNixShell
   then pkgs.mkShell

@@ -47,6 +47,18 @@
         "url": "https://github.com/NixOS/nixpkgs/archive/5e199f944cfa599636ff93e14d27e1d08ad2d9d1.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "nixpkgs-unstable": {
+        "branch": "nixpkgs-unstable",
+        "description": "Nix Packages collection",
+        "homepage": "",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "7ad5e816faba3f808e2a8815b14d0f023a4e2160",
+        "sha256": "1vqqpcnybwl10h5br5nm8n0l33qfzj3rxhahf3pfjfvrc8iyk762",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/7ad5e816faba3f808e2a8815b14d0f023a4e2160.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "pure": {
         "branch": "v1.13.0",
         "description": "Pretty, minimal and fast ZSH prompt",
