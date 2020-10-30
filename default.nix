@@ -10,6 +10,7 @@ let
       fzf
       iosevka
       iosevka-nerd
+      metals
       pinentry
       starship
       vmd
@@ -29,7 +30,6 @@ let
       pkgs.jq
       pkgs.less
       pkgs.libvterm-neovim
-      pkgs.metals
       pkgs.niv.niv
       pkgs.nix
       pkgs.nix-zsh-completions
@@ -67,10 +67,13 @@ let
   # Required for starship prompt
   iosevka-nerd = pkgs.nerdfonts.override { fonts = ["Iosevka"]; };
 
+  # Use the unstable branch of nixpkgs to get v0.9.4
+  metals = pkgs-unstable.metals;
+
   # The right 'pinentry' for macos
   pinentry = if (pkgs.stdenv.isDarwin) then pkgs.pinentry_mac else pkgs.pinentry;
 
-  # Use the unstable branch of nixpkgs to get version 0.45.x
+  # Use the unstable branch of nixpkgs to get v0.45.2
   starship = pkgs-unstable.starship;
 
   # Node2nix generated expression for 'vmd'
