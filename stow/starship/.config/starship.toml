@@ -14,5 +14,12 @@ format = "[$conflicted$stashed$ahead_behind](242) "
 stashed = "≡"
 conflicted = "✘"
 
+[conda]
+format = "[$symbol $environment](dimmed green) "
+symbol = "🐍"
+
 [java]
+disabled = true
+
+[python]
 disabled = true
