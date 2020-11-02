@@ -36,6 +36,7 @@ let
       pkgs.nodejs-12_x
       pkgs.openjdk
       pkgs.ripgrep
+      pkgs.sourceHighlight
       pkgs.stow
       pkgs.tree
       pkgs.zsh-completions
