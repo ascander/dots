@@ -367,7 +367,7 @@
   :init
   (gsetq doom-themes-enable-bold nil
          doom-themes-enable-italic nil)
-  :ghook ('after-make-frame-functions #'(lambda (frame) (with-selected-frame frame (load-theme 'doom-spacegrey t))))
+  :ghook ('after-make-frame-functions #'(lambda (frame) (with-selected-frame frame (load-theme 'doom-nord t))))
   :config
   ;; Advise `load-theme' to set the value for `beacon-color' if we just switched to a DOOM theme
   (defun ad:set-beacon-color-from-doom-theme (&rest _)
