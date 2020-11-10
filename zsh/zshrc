@@ -73,7 +73,7 @@ export LESS_TERMCAP_ue=$'\E[0m'     # reset underline
 
 # Colorize less output for source code if GNU source-highlight is installed
 if (( $+commands[source-highlight-esc.sh] )); then
-    export LESSOPEN="|source-highlight-esc.sh %s"
+    export LESSOPEN="|source-highlight-esc.sh %s 2>/dev/null"
 fi
 
 # Source local zshrc if present
