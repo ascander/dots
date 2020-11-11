@@ -25,8 +25,10 @@ let
       pkgs.fd
       pkgs.gawk
       pkgs.git
+      pkgs.gitAndTools.gh
       pkgs.gitAndTools.hub
       pkgs.gnupg
+      pkgs.httpie
       pkgs.jq
       pkgs.less
       pkgs.libvterm-neovim
