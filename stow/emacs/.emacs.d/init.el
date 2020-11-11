@@ -251,7 +251,6 @@
 
 ;; Use Vim-style visual line numbers, with an absolute line number for the current line
 (gsetq-default display-line-numbers 'visual
-               display-line-numbers-widen t
                display-line-numbers-current-absolute t)
 
 ;; Switch to absolute line numbers in 'insert' state
