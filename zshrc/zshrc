@@ -138,11 +138,6 @@ alias la="ls ${lsflags} -lhA"   # show all files (except . and ..)
 alias lt="ls ${lsflags} -lhtr"  # show by date modified (oldest first)
 alias l="ll"                    # pacify the monster
 
-# Link nix-installed dircolors theme if needed
-if [ -d "$HOME/.nix-profile/share/zsh/dircolors-solarized" ]; then
-    test -L "$HOME/.dircolors" || ln -s "$HOME/.nix-profile/share/zsh/dircolors-solarized/dircolors.256dark" "$HOME/.dircolors"
-fi
-
 # Colorize some programs if ~/.dircolors exists
 if (( $+commands[dircolors] )); then
     test -r $HOME/.dircolors && eval "$(dircolors $HOME/.dircolors)"
