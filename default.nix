@@ -5,7 +5,6 @@ let
     [
       # Customized packages
       bash-language-server
-      dircolors-solarized
       emacs
       fzf
       iosevka
@@ -53,11 +52,6 @@ let
     inherit pkgs;
   };
 
-  # Use pinned version of 'dircolors-solarized'
-  dircolors-solarized = pkgs.callPackage ./zsh/dircolors-solarized.nix {
-    src = pkgs.sources.dircolors-solarized;
-  };
-
   # A custom Emacs with packages
   emacs = import ./emacs { inherit pkgs; };
 
@@ -82,7 +76,7 @@ let
   };
 
   # A custom '.zshrc' (see './zshrc/default.nix')
-  zshrc = pkgs.callPackage ./zsh/zshrc.nix {};
+  zshrc = pkgs.callPackage ./zshrc {};
 in
   if pkgs.lib.inNixShell
   then pkgs.mkShell
