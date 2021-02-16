@@ -7,6 +7,3 @@ fi
 
 export EDITOR=emacsclient
 export VISUAL=emacsclient
-
-# Keep PATH and path unique
-typeset -U -g PATH path
