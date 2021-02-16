@@ -21,5 +21,8 @@ symbol = "🐍"
 [java]
 disabled = true
 
+[package]
+disabled = true
+
 [python]
 disabled = true
