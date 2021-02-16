@@ -1,16 +1,4 @@
 {
-    "dircolors-solarized": {
-        "branch": "master",
-        "description": "This is a repository of themes for GNU ls (configured via GNU dircolors) that support Ethan Schoonover’s Solarized color scheme.",
-        "homepage": "http://ethanschoonover.com/solarized",
-        "owner": "seebi",
-        "repo": "dircolors-solarized",
-        "rev": "5fb86a3f947f0e8b3005871c2f97df80e80f3016",
-        "sha256": "1bcdnfdagwjfrkrwnmdy8p2dnhl9xrii7xg6pjwhgvfm4cak7fgy",
-        "type": "tarball",
-        "url": "https://github.com/seebi/dircolors-solarized/archive/5fb86a3f947f0e8b3005871c2f97df80e80f3016.tar.gz",
-        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    },
     "emacs-overlay": {
         "branch": "master",
         "description": "Bleeding edge emacs overlay [maintainer=@adisbladis] ",
