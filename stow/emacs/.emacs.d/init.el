@@ -391,7 +391,11 @@
   (gsetq doom-modeline-height 30
          doom-modeline-icon t
          doom-modeline-minor-modes t)
-  :ghook 'window-setup-hook)
+  :ghook 'window-setup-hook
+  :config
+  (custom-set-faces
+   '(mode-line ((t (:family "Helvetica Neue" :height 0.95))))
+   '(mode-line-inactive ((t (:family "Helvetica Neue" :height 0.95))))))
 
 (use-package minions
   :demand t
