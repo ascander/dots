@@ -288,18 +288,18 @@
     "C-M-0")
   :config (default-text-scale-mode))
 
-;; Default variable pitch font
-(set-face-attribute 'variable-pitch nil
-                    :family "Helvetica Neue"
-                    :height 140
-                    :weight 'regular)
+;; ;; Default variable pitch font
+;; (set-face-attribute 'variable-pitch nil
+;;                     :family "Helvetica Neue"
+;;                     :height 140
+;;                     :weight 'regular)
 
 ;; For icons used in various places
 (use-package all-the-icons
   :init
   ;; Scale icons down slightly (default is 1.2) to allow room for DOOM modeline. See
   ;; https://github.com/hlissner/doom-emacs/issues/2967#issuecomment-619319082 for more details.
-  (gsetq all-the-icons-scale-factor 1.1))
+  (gsetq all-the-icons-scale-factor 1.2))
 
 ;;; Emacs file management
 
@@ -388,14 +388,20 @@
 
 (use-package doom-modeline
   :init
-  (gsetq doom-modeline-height 30
-         doom-modeline-icon t
+  (gsetq doom-modeline-icon t
          doom-modeline-minor-modes t)
   :ghook 'window-setup-hook
   :config
+  ;; Pad the main modeline with a space, to prevent modeline components from being truncated.
+  (doom-modeline-def-modeline 'main
+    '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position word-count parrot selection-info)
+    '(objed-state misc-info persp-name battery grip irc mu4e gnus github debug repl lsp minor-modes input-method indent-info buffer-encoding major-mode process vcs checker " "))
+
+  ;; Set font for modeline explicitly to 'Noto Sans' and scale to 0.9 of the default height, to
+  ;; prevent modeline components from being truncated
   (custom-set-faces
-   '(mode-line ((t (:family "Helvetica Neue" :height 0.95))))
-   '(mode-line-inactive ((t (:family "Helvetica Neue" :height 0.95))))))
+   '(mode-line ((t (:family "Noto Sans" :height 0.9))))
+   '(mode-line-inactive ((t (:family "Noto Sans" :height 0.9))))))
 
 (use-package minions
   :demand t
@@ -613,7 +619,7 @@
     [remap org-goto]                 #'counsel-org-goto)
   ;; Goto org headings
   (general-m org-mode-map
-    "j" #'counsel-org-goto
+    "g" #'counsel-org-goto
     "<" #'org-insert-structure-template)
   ;; For, eg. switching to a newly created project
   (general-spc
