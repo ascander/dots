@@ -1,7 +1,7 @@
 [user]
   name = Ascander Dost
   email = 1815984+ascander@users.noreply.github.com
-  signingkey = 2AA4090A82FB6FA4
+  signingkey = E86E0E7921EBE9E2
 [credential]
   helper = osxkeychain
 [alias]

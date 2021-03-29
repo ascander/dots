@@ -17,8 +17,9 @@ shell.nix
 .vscode
 .idea
 .iml
-.bloop/*
-.metals/*
+.bloop/
+.metals/
+.bsp/
 project/project
 project/metals.sbt
 project/.bloop
