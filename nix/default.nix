@@ -6,8 +6,6 @@ let
       niv = import sources.niv {};
       inherit sources;
     };
-
-  emacs-overlay = import sources.emacs-overlay;
 in
 import sources.nixpkgs
-  { overlays = [ overlay emacs-overlay ]; config = {}; }
+  { overlays = [ overlay ]; config = {}; }
