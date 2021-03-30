@@ -12,6 +12,7 @@ let
       packages.myVimPackage = with vimPlugins; {
         start = [
 	        vim-airline
+                vim-fugitive
 	      ];
       };
     };
