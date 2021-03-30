@@ -1,0 +1,51 @@
+" Use Vim settings instead of Vi settings; set explicitly to make this clear.
+set nocompatible
+
+filetype plugin indent on      " Load plugins according to detected filetype
+syntax on                      " Enable syntax highlighting
+
+set autoindent                 " Indent according to the previous line
+set expandtab                  " Use spaces instead of tabs
+set softtabstop=2              " Tab key indents by 2 spaces
+set shiftwidth=2               " >> indents by 2 spaces
+set shiftround                 " >> indents to the next multiple of 'shiftwidth'
+
+set backspace=indent,eol,start " Make backspace work as expected in insert mode
+set hidden                     " Switch between buffers without having to save first
+set laststatus=2               " Always show statusline
+set display=lastline           " Show as much as possible of the last line
+
+set showmode                   " Show current mode in the statusline
+set showcmd                    " Show already typed keys when more are expected
+
+set incsearch                  " Highlight while searching with / or ?
+set hlsearch                   " Keep matches highlighted
+
+set ttyfast                    " Faster redrawing
+set lazyredraw                 " Only redraw when necessary
+
+set splitbelow                 " Open new windows below the current one
+set splitright                 " Open new windows to the right of the current one
+
+set cursorline                 " Find the cursor line quickly
+set wrapscan                   " Searches wrap around the end of the file
+set report=0                   " Always report changed lines
+
+" Display non-printable characters
+set list
+set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
+
+" Put all temporary files under the same directory.
+" https://github.com/mhinz/vim-galore#handling-backup-swap-undo-and-viminfo-files
+set backup
+set backupdir=$HOME/.vim/files/backup/
+set backupext=-vimbackup
+set backupskip=
+set directory=$HOME/.vim/files/swap//
+set updatecount=100
+set undofile
+set undodir=$HOME/.vim/files/undo/
+set viminfo='100,n$HOME/.vim/files/info/viminfo
+
+" vim-airline settings
+let g:airline_powerline_fonts=1

@@ -1,11 +1,13 @@
-with { pkgs = import ./nix {}; };
 let
+  pkgs = import ./nix {};
+
   # The list of packages to be installed
   packages = with pkgs;
     [
       # Customized packages
       fzf
       iosevka
+      vim
       pinentry
       starship
       zshrc
@@ -45,6 +47,9 @@ let
 
   # A custom font build
   iosevka = import ./iosevka { inherit pkgs; };
+
+  # Diary of a Vimpy Kid™
+  vim = pkgs.callPackage ./vim {};
 
   # The right 'pinentry' for macos
   pinentry = if (pkgs.stdenv.isDarwin) then pkgs.pinentry_mac else pkgs.pinentry;
