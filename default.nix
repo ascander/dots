@@ -6,7 +6,6 @@ let
     [
       # Customized packages
       fzf
-      iosevka
       vim
       pinentry
       starship
@@ -23,6 +22,7 @@ let
       pkgs.gitAndTools.gh
       pkgs.gnupg
       pkgs.httpie
+      pkgs.iosevka-bin
       pkgs.jq
       pkgs.less
       pkgs.metals
@@ -44,9 +44,6 @@ let
 
   # A custom 'fzf' (see './fzf/default.nix')
   fzf = pkgs.callPackage ./fzf { inherit (pkgs) fzf; };
-
-  # A custom font build
-  iosevka = import ./iosevka { inherit pkgs; };
 
   # Diary of a Vimpy Kid™
   vim = pkgs.callPackage ./vim {};
