@@ -11,8 +11,17 @@ let
       customRC = builtins.readFile ./vimrc;
       packages.myVimPackage = with vimPlugins; {
         start = [
-	        vim-airline
+                nord-vim
+                fzf-vim
+                fzfWrapper
+                rainbow
+                tabular
+                vim-airline
                 vim-fugitive
+                vim-markdown
+                vim-nix
+                vim-scala
+                vim-surround
 	      ];
       };
     };

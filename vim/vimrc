@@ -31,6 +31,10 @@ set cursorline                 " Find the cursor line quickly
 set wrapscan                   " Searches wrap around the end of the file
 set report=0                   " Always report changed lines
 
+colorscheme nord               " Use the Nord color theme
+
+set number relativenumber      " Display hybrid line numbers
+
 " Display non-printable characters
 set list
 set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
@@ -49,3 +53,6 @@ set viminfo='100,n$HOME/.vim/files/info/viminfo
 
 " vim-airline settings
 let g:airline_powerline_fonts=1
+
+" rainbow
+let g:rainbow_active=1
