@@ -4,6 +4,7 @@
 # Local-only files
 .zshrc.local
 .gitconfig.work
+stow/karabiner/.config/karabiner/automatic_backups/
 
 # Local TODO list
 TODO.md

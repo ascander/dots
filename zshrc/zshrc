@@ -111,10 +111,6 @@ if (( $+commands[fasd] )); then
     # alias zz='fasd_cd -d -i' # cd with interactive selection
 fi
 
-# Emacs aliases
-alias emacs='emacsclient --no-wait --create-frame'
-alias e=emacs
-
 # Nix aliases
 alias ns='nix-shell'
 alias ne='nix-env'
