@@ -6,9 +6,10 @@ let
     [
       # Customized packages
       fzf
-      vim
+      iosevka
       pinentry
       starship
+      vim
       zshrc
 
       # Vernilla packages
@@ -45,14 +46,18 @@ let
   # A custom 'fzf' (see './fzf/default.nix')
   fzf = pkgs.callPackage ./fzf { inherit (pkgs) fzf; };
 
-  # Diary of a Vimpy Kid™
-  vim = pkgs.callPackage ./vim {};
+  iosevka = pkgs-unstable.iosevka-bin.override {
+    variant = "ss08";
+  };
 
   # The right 'pinentry' for macos
   pinentry = if (pkgs.stdenv.isDarwin) then pkgs.pinentry_mac else pkgs.pinentry;
 
   # Use the unstable branch of nixpkgs to get v0.45.2
   starship = pkgs-unstable.starship;
+
+  # Diary of a Vimpy Kid™
+  vim = pkgs.callPackage ./vim {};
 
   # A custom '.zshrc' (see './zshrc/default.nix')
   zshrc = pkgs.callPackage ./zshrc {};
