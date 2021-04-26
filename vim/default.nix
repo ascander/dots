@@ -22,6 +22,7 @@ let
                 vim-nix
                 vim-scala
                 vim-surround
+                vim-toml
 	      ];
       };
     };
