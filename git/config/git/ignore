@@ -1,0 +1,26 @@
+# Global gitignore file
+
+# OS generated files
+.DS_Store
+.DS_Store?
+
+# Temporary files
+*.bak
+*.swp
+*.swo
+*.temp
+*~
+*#
+
+# IDE files
+shell.nix
+.vscode
+.idea
+.iml
+.bloop/
+.metals/
+.bsp/
+project/project
+project/metals.sbt
+project/.bloop
+
