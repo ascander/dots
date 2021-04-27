@@ -1,8 +1,36 @@
+{ sources ? import ./nix/sources.nix }:
 let
-  pkgs = import ./nix {};
+  # Non-specific overlay for things like pinned versions, or unstable packages
+  cherries = self: super:
+    {
+      niv = import sources.niv {};
+      pkgs-unstable = import sources.nixpkgs-unstable {};
+      pinentry = if (super.stdenv.isDarwin) then super.pinentry_mac else super.pinentry;
+
+      inherit (self.pkgs-unstable) iosevka-bin starship;
+    };
+
+  # User-specific overlay for customizations, such as wrapped configuration, etc.
+  customized = self: super:
+    {
+      custom = {
+        fzf = self.callPackage ./fzf { inherit (super) fzf; };
+        git = self.callPackage ./git { inherit (super) git; };
+        iosevka = super.iosevka-bin.override { variant = "ss08"; };
+        vim = self.callPackage ./vim {};
+        zshrc = self.callPackage ./zshrc {};
+      };
+    };
+
+  pkgs = import sources.nixpkgs {
+    overlays = [ cherries customized ];
+    config = {};
+  };
 
   # The list of packages to be installed
-  packages = with pkgs;
+  packages =
+    with pkgs;
+    with custom;
     [
       # Customized packages
       fzf
@@ -39,31 +67,6 @@ let
       pkgs.zsh-completions
       pkgs.zsh-syntax-highlighting
     ];
-
-  # Some packages come from the unstable branch
-  pkgs-unstable = import pkgs.sources.nixpkgs-unstable {};
-
-  # A custom 'fzf' (see './fzf/default.nix')
-  fzf = pkgs.callPackage ./fzf { inherit (pkgs) fzf; };
-
-  # A version of 'git' with config and global ignore included
-  git = pkgs.callPackage ./git { inherit (pkgs) git; };
-
-  iosevka = pkgs-unstable.iosevka-bin.override {
-    variant = "ss08";
-  };
-
-  # The right 'pinentry' for macos
-  pinentry = if (pkgs.stdenv.isDarwin) then pkgs.pinentry_mac else pkgs.pinentry;
-
-  # Use the unstable branch of nixpkgs to get v0.45.2
-  starship = pkgs-unstable.starship;
-
-  # Diary of a Vimpy Kid™
-  vim = pkgs.callPackage ./vim {};
-
-  # A custom '.zshrc' (see './zshrc/default.nix')
-  zshrc = pkgs.callPackage ./zshrc {};
 in
   if pkgs.lib.inNixShell
   then pkgs.mkShell
