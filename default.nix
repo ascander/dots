@@ -6,6 +6,7 @@ let
     [
       # Customized packages
       fzf
+      git
       iosevka
       pinentry
       starship
@@ -19,7 +20,6 @@ let
       pkgs.fasd
       pkgs.fd
       pkgs.gawk
-      pkgs.git
       pkgs.gitAndTools.gh
       pkgs.gnupg
       pkgs.httpie
@@ -45,6 +45,9 @@ let
 
   # A custom 'fzf' (see './fzf/default.nix')
   fzf = pkgs.callPackage ./fzf { inherit (pkgs) fzf; };
+
+  # A version of 'git' with config and global ignore included
+  git = pkgs.callPackage ./git { inherit (pkgs) git; };
 
   iosevka = pkgs-unstable.iosevka-bin.override {
     variant = "ss08";
