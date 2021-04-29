@@ -17,6 +17,11 @@ let
             src = sources.markdown-preview-nvim;
           };
         };
+
+      tmuxPlugins =
+        super.tmuxPlugins // {
+          inherit (self.pkgs-unstable.tmuxPlugins) fingers;
+        };
     };
 
   # User-specific overlay for customizations, such as wrapped configuration, etc.
@@ -71,6 +76,7 @@ let
       pkgs.nix-zsh-completions
       pkgs.nodejs-12_x
       pkgs.openjdk
+      pkgs.reattach-to-user-namespace
       pkgs.ripgrep
       pkgs.sourceHighlight
       pkgs.stow
