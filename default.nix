@@ -27,6 +27,7 @@ let
         git = self.callPackage ./git { inherit (super) git; };
         iosevka = super.iosevka-bin.override { variant = "ss08"; };
         vim = self.callPackage ./vim {};
+        tmux = self.callPackage ./tmux { inherit (super) tmux; };
         zshrc = self.callPackage ./zshrc {};
       };
     };
@@ -47,6 +48,7 @@ let
       iosevka
       pinentry
       starship
+      tmux
       vim
       zshrc
 
