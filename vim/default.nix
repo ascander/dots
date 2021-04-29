@@ -23,6 +23,7 @@ let
                 vim-nix
                 vim-scala
                 vim-surround
+                vim-tmux-navigator
                 vim-toml
 	      ];
       };
