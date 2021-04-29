@@ -17,6 +17,11 @@ let
             src = sources.markdown-preview-nvim;
           };
         };
+
+      tmuxPlugins =
+        super.tmuxPlugins // {
+          inherit (self.pkgs-unstable.tmuxPlugins) fingers;
+        };
     };
 
   # User-specific overlay for customizations, such as wrapped configuration, etc.
