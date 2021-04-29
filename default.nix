@@ -76,6 +76,7 @@ let
       pkgs.nix-zsh-completions
       pkgs.nodejs-12_x
       pkgs.openjdk
+      pkgs.reattach-to-user-namespace
       pkgs.ripgrep
       pkgs.sourceHighlight
       pkgs.stow
