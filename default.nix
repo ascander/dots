@@ -8,6 +8,15 @@ let
       pinentry = if (super.stdenv.isDarwin) then super.pinentry_mac else super.pinentry;
 
       inherit (self.pkgs-unstable) iosevka-bin starship;
+
+      vimPlugins =
+        with self.vimUtils;
+        super.vimPlugins // {
+          markdown-preview = self.callPackage ./vim/markdown-preview {
+            inherit buildVimPluginFrom2Nix;
+            src = sources.markdown-preview-nvim;
+          };
+        };
     };
 
   # User-specific overlay for customizations, such as wrapped configuration, etc.

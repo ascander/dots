@@ -51,8 +51,24 @@ set undofile
 set undodir=$HOME/.vim/files/undo/
 set viminfo='100,n$HOME/.vim/files/info/viminfo
 
+" Easier split navigation
+nnoremap <C-H> <C-W><C-H>
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+
+" Automatically resize splits on window resize
+au VimResized * exe "normal! \<c-w>="
+
 " vim-airline settings
 let g:airline_powerline_fonts=1
 
 " rainbow
 let g:rainbow_active=1
+
+" Spellcheck Markdown files
+autocmd FileType markdown setlocal spell spelllang=en_us
+
+" Disable folding in Markdown files
+let g:vim_markdown_folding_disabled=1
+

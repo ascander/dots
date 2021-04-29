@@ -1,4 +1,16 @@
 {
+    "markdown-preview-nvim": {
+        "branch": "master",
+        "description": "markdown preview plugin for (neo)vim",
+        "homepage": "",
+        "owner": "iamcco",
+        "repo": "markdown-preview.nvim",
+        "rev": "cd6dbfbca82e7d5e61fae5d6e300a533e4957698",
+        "sha256": "1pzk9338f6gb93vqm5fjfa6pbs4jpr4y7dcz5r6fygd8h1han6qr",
+        "type": "tarball",
+        "url": "https://github.com/iamcco/markdown-preview.nvim/archive/cd6dbfbca82e7d5e61fae5d6e300a533e4957698.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "niv": {
         "branch": "master",
         "description": "Easy dependency management for Nix projects",

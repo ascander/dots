@@ -1,4 +1,4 @@
-# Vim, with a set of extra packages (extraPackages) and a custom vimrc (./vimrc) bundled.
+# Vim, with a set of extra packages and a custom vimrc (see ./vimrc) bundled.
 { symlinkJoin
 , makeWrapper
 , neovim
@@ -14,6 +14,7 @@ let
                 nord-vim
                 fzf-vim
                 fzfWrapper
+                markdown-preview
                 rainbow
                 tabular
                 vim-airline
