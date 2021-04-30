@@ -23,4 +23,4 @@ shell.nix
 project/project
 project/metals.sbt
 project/.bloop
-
+*.worksheet.sc
