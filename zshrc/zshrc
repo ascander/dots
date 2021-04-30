@@ -157,6 +157,7 @@ alias mv='mv -i'
 alias cp='cp -i'
 
 # Misc
+alias c='clear' # easier than <prefix> C-l in a tmux session
 alias mkdir='mkdir -p'
 alias du='du -h'
 alias ..='cd ../.'
