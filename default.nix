@@ -9,6 +9,10 @@ let
 
       inherit (self.pkgs-unstable) iosevka-bin starship metals;
 
+      nodePackages = super.nodePackages // {
+        bash-language-server = self.pkgs-unstable.nodePackages.bash-language-server;
+      };
+
       vimPlugins =
         with self.vimUtils;
         super.vimPlugins // {
@@ -31,9 +35,12 @@ let
         fzf = self.callPackage ./fzf { inherit (super) fzf; };
         git = self.callPackage ./git { inherit (super) git; };
         iosevka = super.iosevka-bin.override { variant = "ss08"; };
-        vim = self.callPackage ./vim {};
         tmux = self.callPackage ./tmux { inherit (super) tmux; };
         zshrc = self.callPackage ./zshrc {};
+
+        vim = self.callPackage ./vim {
+          inherit (self.nodePackages) bash-language-server;
+        };
       };
     };
 
@@ -78,6 +85,7 @@ let
       pkgs.openjdk
       pkgs.reattach-to-user-namespace
       pkgs.ripgrep
+      pkgs.rnix-lsp
       pkgs.sourceHighlight
       pkgs.stow
       pkgs.tree

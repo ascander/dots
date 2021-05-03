@@ -1,16 +1,32 @@
 # Vim, with a set of extra packages and a custom vimrc (see ./vimrc) bundled.
-{ symlinkJoin
+{ bash-language-server
 , makeWrapper
+, metals
 , neovim
+, nodejs
+, rnix-lsp
+, symlinkJoin
 , vimPlugins
+, writeText
 }:
 let
+  dynamicRc = ''
+    let g:coc_node_path='${nodejs}/bin/node'
+  '';
+
+  coc-settings = import ./coc-nvim/coc-settings.nix {
+    inherit bash-language-server metals rnix-lsp;
+  };
+
+  coc-settings-file = writeText "coc-settings.json" (builtins.toJSON coc-settings);
+
   neovim-unwrapped = neovim.override {
     vimAlias = false;
     configure = {
-      customRC = builtins.readFile ./vimrc;
+      customRC = dynamicRc + "\n" + builtins.readFile ./vimrc;
       packages.myVimPackage = with vimPlugins; {
         start = [
+                coc-nvim
                 nord-vim
                 fzf-vim
                 fzfWrapper
@@ -36,6 +52,7 @@ in
     paths = [ neovim-unwrapped ];
     postBuild = ''
       mkdir -p $out/conf
+      cp ${coc-settings-file} $out/conf/coc-settings.json
       wrapProgram "$out/bin/nvim" \
         --set VIMCONFIG "$out/conf"
       makeWrapper "$out/bin/nvim" "$out/bin/vim"
