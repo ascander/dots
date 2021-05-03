@@ -19,7 +19,7 @@ set showmode                   " Show current mode in the statusline
 set showcmd                    " Show already typed keys when more are expected
 
 set incsearch                  " Highlight while searching with / or ?
-set hlsearch                   " Keep matches highlighted
+set nohlsearch                 " No persistent highlighting of matches
 
 set ttyfast                    " Faster redrawing
 set lazyredraw                 " Only redraw when necessary
@@ -66,9 +66,25 @@ let g:airline_powerline_fonts=1
 " rainbow
 let g:rainbow_active=1
 
+" Markdown
+
 " Spellcheck Markdown files
 autocmd FileType markdown setlocal spell spelllang=en_us
 
 " Disable folding in Markdown files
 let g:vim_markdown_folding_disabled=1
 
+" LSP
+
+" Default updatetime (4000 ms) leads to noticeable delays and a poor user
+" experience
+set updatetime=300
+
+" Always show the signcolumn, otherwise it shifts the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
