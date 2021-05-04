@@ -86,6 +86,7 @@ fi
 
 # Git aliases
 # Taken from: https://github.com/holman/dotfiles/blob/master/git/aliases.zsh
+alias ga='git add'
 alias gc='git commit'
 alias gca='git commit -a'
 alias gco='git checkout'
