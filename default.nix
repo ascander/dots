@@ -7,7 +7,7 @@ let
       pkgs-unstable = import sources.nixpkgs-unstable {};
       pinentry = if (super.stdenv.isDarwin) then super.pinentry_mac else super.pinentry;
 
-      inherit (self.pkgs-unstable) iosevka-bin starship;
+      inherit (self.pkgs-unstable) iosevka-bin starship metals;
 
       vimPlugins =
         with self.vimUtils;
@@ -51,6 +51,7 @@ let
       fzf
       git
       iosevka
+      metals
       pinentry
       starship
       tmux
@@ -70,7 +71,6 @@ let
       pkgs.iosevka-bin
       pkgs.jq
       pkgs.less
-      pkgs.metals
       pkgs.niv.niv
       pkgs.nix
       pkgs.nix-zsh-completions
