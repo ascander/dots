@@ -26,36 +26,35 @@ let
       customRC = dynamicRc + "\n" + builtins.readFile ./vimrc;
       packages.myVimPackage = with vimPlugins; {
         start = [
-                coc-nvim
-                nord-vim
-                fzf-vim
-                fzfWrapper
-                markdown-preview
-                rainbow
-                tabular
-                vim-airline
-                vim-fugitive
-                vim-markdown
-                vim-nix
-                vim-scala
-                vim-surround
-                vim-tmux-navigator
-                vim-toml
-	      ];
+          coc-nvim
+          nord-vim
+          fzf-vim
+          fzfWrapper
+          markdown-preview
+          rainbow
+          tabular
+          vim-airline
+          vim-fugitive
+          vim-markdown
+          vim-nix
+          vim-scala
+          vim-surround
+          vim-tmux-navigator
+          vim-toml
+        ];
       };
     };
   };
 in
-  symlinkJoin {
-    name = "nvim";
-    buildInputs = [ makeWrapper ];
-    paths = [ neovim-unwrapped ];
-    postBuild = ''
-      mkdir -p $out/conf
-      cp ${coc-settings-file} $out/conf/coc-settings.json
-      wrapProgram "$out/bin/nvim" \
-        --set VIMCONFIG "$out/conf"
-      makeWrapper "$out/bin/nvim" "$out/bin/vim"
-    '';
-  }
-
+symlinkJoin {
+  name = "nvim";
+  buildInputs = [ makeWrapper ];
+  paths = [ neovim-unwrapped ];
+  postBuild = ''
+    mkdir -p $out/conf
+    cp ${coc-settings-file} $out/conf/coc-settings.json
+    wrapProgram "$out/bin/nvim" \
+      --set VIMCONFIG "$out/conf"
+    makeWrapper "$out/bin/nvim" "$out/bin/vim"
+  '';
+}
