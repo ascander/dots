@@ -70,6 +70,10 @@ let g:airline_powerline_fonts=1
 " rainbow
 let g:rainbow_active=1
 
+if executable('fzf') && executable('fd')
+  let $FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git"
+endif
+
 " Bind fzf file search to <leader>t
 nnoremap <leader>t :Files<CR>
 
