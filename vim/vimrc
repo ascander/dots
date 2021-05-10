@@ -71,7 +71,7 @@ let g:airline_powerline_fonts=1
 let g:rainbow_active=1
 
 if executable('fzf') && executable('fd')
-  let $FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git"
+  let $FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git --exclude .DS_Store"
 endif
 
 " Bind fzf file search to <leader>t
