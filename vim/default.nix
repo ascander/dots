@@ -35,6 +35,8 @@ let
           rainbow
           tabular
           vim-airline
+          vim-easy-align
+          vim-easymotion
           vim-fugitive
           vim-markdown
           vim-nix
