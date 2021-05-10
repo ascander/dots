@@ -27,10 +27,11 @@ let
       packages.myVimPackage = with vimPlugins; {
         start = [
           coc-nvim
-          nord-vim
           fzf-vim
           fzfWrapper
           markdown-preview
+          nerdcommenter
+          nord-vim
           rainbow
           tabular
           vim-airline

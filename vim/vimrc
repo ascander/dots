@@ -70,11 +70,20 @@ let g:airline_powerline_fonts=1
 " rainbow
 let g:rainbow_active=1
 
+" Nerdcommenter
+
+let g:NERDSpaceDelims = 1       " Add spaces after delimiters by default
+let g:NERDCompactSexyComs = 1   " Use compact syntax for prettified multi-line comments
+let g:NERDCommentEmptyLines = 1 " Allow commenting and inverting empty lines
+
+" FZF
+
+" Set '$FZF_DEFAULT_COMMAND' here instead of wrapping 'fzf' via Nix
 if executable('fzf') && executable('fd')
   let $FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git --exclude .DS_Store"
 endif
 
-" Bind fzf file search to <leader>t
+" Bind 'fzf' search
 nnoremap <leader>t :Files<CR>
 
 " Markdown
