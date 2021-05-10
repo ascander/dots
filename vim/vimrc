@@ -140,6 +140,10 @@ endif
 " Use <c-space> to trigger completion
 inoremap <silent><expr> <c-space> coc#refresh()
 
+" Use <c-j> and <c-k> to navigate candidates
+inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
+inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
+
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
