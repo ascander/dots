@@ -81,7 +81,7 @@ let g:NERDCommentEmptyLines = 1 " Allow commenting and inverting empty lines
 
 " Set '$FZF_DEFAULT_COMMAND' here instead of wrapping 'fzf' via Nix
 if executable('fzf') && executable('fd')
-  let $FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git --exclude .DS_Store"
+  let $FZF_DEFAULT_COMMAND="fd --type f --hidden --follow"
 endif
 
 " Bind 'fzf' search
