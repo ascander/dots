@@ -1,0 +1,17 @@
+# macOS specific
+.DS_Store
+
+# Temporary files
+*.bak
+*.swp
+*.swo
+*.temp
+*~
+*#
+
+# Version control
+.git/
+
+# Metals specific (Scala)
+.bloop/
+.metals/

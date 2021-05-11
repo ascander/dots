@@ -32,6 +32,7 @@ let
   customized = self: super:
     {
       custom = {
+        fd = self.callPackage ./fd { inherit (super) fd; };
         git = self.callPackage ./git { inherit (super) git; };
         iosevka = super.iosevka-bin.override { variant = "ss08"; };
         tmux = self.callPackage ./tmux { inherit (super) tmux; };
@@ -54,7 +55,7 @@ let
     with custom;
     [
       # Customized packages
-      fzf
+      fd
       git
       iosevka
       metals
@@ -69,7 +70,6 @@ let
       pkgs.cacert
       pkgs.coreutils
       pkgs.fasd
-      pkgs.fd
       pkgs.fzf
       pkgs.gawk
       pkgs.gitAndTools.gh
