@@ -8,7 +8,7 @@
   codeLens.enable = true;
 
   diagnostic = {
-    errorSign = "👺 ";
+    errorSign = "💀 ";
     warningSign = "⚡";
     infoSign = "Ⓘ";
   };
