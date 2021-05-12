@@ -3,8 +3,14 @@
 {
   coc.preferences = {
     extensionUpdateCheck = "never";
-    codeLens.enable = true;
-    diagnostic.errorSign = "💥";
+  };
+
+  codeLens.enable = true;
+
+  diagnostic = {
+    errorSign = "👺 ";
+    warningSign = "⚡";
+    infoSign = "Ⓘ";
   };
 
   languageserver = {
