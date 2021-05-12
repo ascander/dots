@@ -40,6 +40,9 @@ set number relativenumber      " Display hybrid line numbers
 set list
 set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
 
+" Make signcolumn the same color as line number column
+highlight clear SignColumn
+
 " Put all temporary files under the same directory.
 " https://github.com/mhinz/vim-galore#handling-backup-swap-undo-and-viminfo-files
 set backup
@@ -75,6 +78,7 @@ let g:rainbow_active=1
 
 let g:NERDSpaceDelims = 1       " Add spaces after delimiters by default
 let g:NERDCompactSexyComs = 1   " Use compact syntax for prettified multi-line comments
+let g:NERDDefaultAlign = 'left' " Align line-wise comment delimiters with the left margin
 let g:NERDCommentEmptyLines = 1 " Allow commenting and inverting empty lines
 
 " FZF
