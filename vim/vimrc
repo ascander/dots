@@ -31,7 +31,6 @@ set cursorline                 " Find the cursor line quickly
 set wrapscan                   " Searches wrap around the end of the file
 set report=0                   " Always report changed lines
 
-set termguicolors              " Enable 24-bit color
 colorscheme nord               " Use the Nord color theme
 
 set number relativenumber      " Display hybrid line numbers
@@ -91,9 +90,13 @@ let g:NERDCustomDelimiters = { 'sbt': { 'left': '//', 'leftAlt': '/*', 'rightAlt
 " FZF
 
 " Set '$FZF_DEFAULT_COMMAND' here instead of wrapping 'fzf' via Nix
-if executable('fzf') && executable('fd')
-  let $FZF_DEFAULT_COMMAND="fd --type f --hidden --follow"
-endif
+let $FZF_DEFAULT_COMMAND="fd --type f --hidden --follow"
+
+" Set color theme for 'bat' command used in colorizing preview
+let $BAT_THEME="Nord"
+
+" Use 'bat' for fancy syntax highlighting in the preview window
+let $FZF_DEFAULT_OPTS="--ansi --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
 
 " Bind 'fzf' search
 nnoremap <leader>t :Files<CR>

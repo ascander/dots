@@ -67,6 +67,7 @@ let
 
       # Vernilla packages
       pkgs.bash
+      pkgs.bat
       pkgs.cacert
       pkgs.coreutils
       pkgs.fasd
