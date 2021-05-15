@@ -29,7 +29,6 @@ let
           coc-nvim
           fzf-vim
           fzfWrapper
-          markdown-preview
           nerdcommenter
           nord-vim
           rainbow
@@ -39,6 +38,7 @@ let
           vim-easymotion
           vim-fugitive
           vim-markdown
+          vim-markdown-composer
           vim-nix
           vim-scala
           vim-surround

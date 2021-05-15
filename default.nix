@@ -14,12 +14,8 @@ let
       };
 
       vimPlugins =
-        with self.vimUtils;
         super.vimPlugins // {
-          markdown-preview = self.callPackage ./vim/markdown-preview {
-            inherit buildVimPluginFrom2Nix;
-            src = sources.markdown-preview-nvim;
-          };
+          inherit (self.pkgs-unstable.vimPlugins) vim-markdown-composer;
         };
 
       tmuxPlugins =
