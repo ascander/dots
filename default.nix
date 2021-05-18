@@ -9,9 +9,10 @@ let
 
       inherit (self.pkgs-unstable) iosevka-bin starship metals;
 
-      nodePackages = super.nodePackages // {
-        bash-language-server = self.pkgs-unstable.nodePackages.bash-language-server;
-      };
+      nodePackages =
+        super.nodePackages // {
+          bash-language-server = self.pkgs-unstable.nodePackages.bash-language-server;
+        };
 
       vimPlugins =
         super.vimPlugins // {
@@ -89,10 +90,10 @@ let
       pkgs.zsh-syntax-highlighting
     ];
 in
-  if pkgs.lib.inNixShell
-  then pkgs.mkShell
-    {
-      buildInputs = packages;
-      shellHook = ''$(zshrc)'';
-    }
-  else packages
+if pkgs.lib.inNixShell
+then pkgs.mkShell
+  {
+    buildInputs = packages;
+    shellHook = ''$(zshrc)'';
+  }
+else packages
