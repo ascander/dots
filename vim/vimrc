@@ -109,9 +109,9 @@ nmap ga <Plug>(EasyAlign)
 " EasyMotion
 
 " Bind 2-character search to '<leader>s'
-nmap s <Plug>(easymotion-s2)
+nmap <leader>s <Plug>(easymotion-s2)
 
-" Bind n-character serach to '<leader>/'
+" Replace the default search forward with n-character EasyMotion version
 map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
 
