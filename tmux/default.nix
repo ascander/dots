@@ -10,9 +10,10 @@ let
     ''
     else "";
 
-  # Manually install tmux-fingers
+  # Manually install tmux-fingers and nord-tmux
   extraConf = darwinConf + ''
     run-shell ${tmuxPlugins.fingers}/share/tmux-plugins/fingers/tmux-fingers.tmux
+    run-shell ${tmuxPlugins.nord}/share/tmux-plugins/nord/nord.tmux
   '';
 
   baseConf = builtins.readFile ./tmux.conf;

@@ -21,7 +21,7 @@ let
 
       tmuxPlugins =
         super.tmuxPlugins // {
-          inherit (self.pkgs-unstable.tmuxPlugins) fingers;
+          inherit (self.pkgs-unstable.tmuxPlugins) fingers nord;
         };
     };
 
