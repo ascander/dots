@@ -8,8 +8,9 @@
   co = checkout
   cb = checkout -b
   ps = push
-  psup = push --set-upstream
-  loglines = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  pu = push --set-upstream
+  pl = pull --rebase
+  ll = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 [color]
   diff = auto
   status = auto
