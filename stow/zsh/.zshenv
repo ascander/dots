@@ -1,9 +1,10 @@
-# Generated .zshenv file; do not edit
-#
-# This .zshenv file initializes Nix
+# Symlinked '.zshenv' file; do not edit
+
+# Initialize Nix
 if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
     . "$HOME/.nix-profile/etc/profile.d/nix.sh"
 fi
 
-export EDITOR="code --wait"
-export VISUAL="code --wait"
+# Set editor
+export EDITOR="vim"
+export VISUAL="vim"
