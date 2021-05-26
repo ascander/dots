@@ -32,7 +32,6 @@ set wrapscan                   " Searches wrap around the end of the file
 set report=0                   " Always report changed lines
 
 set termguicolors              " Enable 24-bit color
-colorscheme nord               " Use the Nord color theme
 
 set number relativenumber      " Display hybrid line numbers
 
