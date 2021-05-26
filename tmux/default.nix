@@ -10,10 +10,19 @@ let
     ''
     else "";
 
-  # Manually install tmux-fingers and nord-tmux
+  # Note: since the location of 'tmux.conf' changes every generation, we have
+  # to find out what it is in order to activate color themes. You can do this
+  # manually with: 
+  #
+  #   less ${HOME}/.nix-profile/bin/tmux
+  #
+  # and running '<prefix>:source-file' on the path to the latest 'tmux.conf'.
+  # This is annoying, but less painful than wrapping my head around how to
+  # dynamically generate a binding to sourcing the current 'tmux.conf' and
+  # writing it to that same 'tmux.conf'
   extraConf = darwinConf + ''
     run-shell ${tmuxPlugins.fingers}/share/tmux-plugins/fingers/tmux-fingers.tmux
-    run-shell ${tmuxPlugins.nord}/share/tmux-plugins/nord/nord.tmux
+    run-shell ${tmuxPlugins.onedark-theme}/share/tmux-plugins/onedark-theme/tmux-onedark-theme.tmux
   '';
 
   baseConf = builtins.readFile ./tmux.conf;
