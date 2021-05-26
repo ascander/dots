@@ -6,5 +6,6 @@
 .gitconfig.work
 stow/karabiner/.config/karabiner/automatic_backups/
 
-# Local TODO list
-TODO.md
+# SBT locally generated files
+target/
+project/target/
