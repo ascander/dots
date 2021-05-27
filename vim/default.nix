@@ -41,6 +41,7 @@ let
           rainbow
           tabular
           vim-airline
+          vim-airline-themes
           vim-easy-align
           vim-easymotion
           vim-fugitive
