@@ -4,10 +4,12 @@ let
   cherries = self: super:
     {
       niv = import sources.niv {};
+      # TODO ascii pin to latest unstable version to pick up alacritty 0.8.0
+      # See: https://github.com/alacritty/alacritty/issues/13
       pkgs-unstable = import sources.nixpkgs-unstable {};
       pinentry = if (super.stdenv.isDarwin) then super.pinentry_mac else super.pinentry;
 
-      inherit (self.pkgs-unstable) iosevka-bin starship metals;
+      inherit (self.pkgs-unstable) alacritty iosevka-bin starship metals;
 
       nodePackages =
         super.nodePackages // {
@@ -29,6 +31,7 @@ let
   customized = self: super:
     {
       custom = {
+        alacritty = self.callPackage ./alacritty { inherit (super) alacritty; };
         fd = self.callPackage ./fd { inherit (super) fd; };
         git = self.callPackage ./git { inherit (super) git; };
         iosevka = super.iosevka-bin.override { variant = "ss08"; };
@@ -52,6 +55,7 @@ let
     with custom;
     [
       # Customized packages
+      alacritty
       fd
       git
       iosevka
