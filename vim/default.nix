@@ -10,9 +10,17 @@
 , writeText
 }:
 let
-  dynamicRc = ''
+  cocNodeRc = ''
     let g:coc_node_path='${nodejs}/bin/node'
   '';
+
+  # See: https://github.com/NixOS/nixpkgs/issues/96062#issuecomment-679386923
+  onedarkRc = ''
+    packadd! onedark-vim
+    colorscheme onedark
+  '';
+
+  dynamicRc = cocNodeRc + "\n" + onedarkRc;
 
   coc-settings = import ./coc-nvim/coc-settings.nix {
     inherit bash-language-server metals rnix-lsp;
@@ -30,10 +38,10 @@ let
           fzf-vim
           fzfWrapper
           nerdcommenter
-          nord-vim
           rainbow
           tabular
           vim-airline
+          vim-airline-themes
           vim-easy-align
           vim-easymotion
           vim-fugitive
@@ -45,6 +53,7 @@ let
           vim-tmux-navigator
           vim-toml
         ];
+        opt = [ onedark-vim ];
       };
     };
   };

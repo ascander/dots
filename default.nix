@@ -16,12 +16,12 @@ let
 
       vimPlugins =
         super.vimPlugins // {
-          inherit (self.pkgs-unstable.vimPlugins) vim-markdown-composer;
+          inherit (self.pkgs-unstable.vimPlugins) vim-markdown-composer onedark-vim;
         };
 
       tmuxPlugins =
         super.tmuxPlugins // {
-          inherit (self.pkgs-unstable.tmuxPlugins) fingers nord;
+          inherit (self.pkgs-unstable.tmuxPlugins) fingers onedark-theme;
         };
     };
 

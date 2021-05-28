@@ -32,7 +32,6 @@ set wrapscan                   " Searches wrap around the end of the file
 set report=0                   " Always report changed lines
 
 set termguicolors              " Enable 24-bit color
-colorscheme nord               " Use the Nord color theme
 
 set number relativenumber      " Display hybrid line numbers
 
@@ -70,6 +69,7 @@ let maplocalleader = ","
 
 " vim-airline settings
 let g:airline_powerline_fonts=1
+let g:airline_thme='onedark'
 let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
 let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
 let airline#extensions#coc#error_symbol = '💀 '
