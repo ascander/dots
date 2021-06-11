@@ -175,12 +175,12 @@ font:
 # If `true`, bold text is drawn using the bright color variants.
 #draw_bold_text_with_bright_colors: false
 
-# Colors (Tomorrow Night)
-#colors:
+# Colors (One Dark)
+colors:
   # Default colors
-  #primary:
-  #  background: '#1d1f21'
-  #  foreground: '#c5c8c6'
+  primary:
+    background: '#282c34'
+    foreground: '#abb2bf'
 
     # Bright and dim foreground colors
     #
@@ -197,9 +197,9 @@ font:
   #
   # Allowed values are CellForeground/CellBackground, which reference the
   # affected cell, or hexadecimal colors like #ff00ff.
-  #cursor:
-  #  text: CellBackground
-  #  cursor: CellForeground
+  cursor:
+    text: CellBackground
+    cursor: '#528bff' # syntax-cursor-color
 
   # Vi mode cursor colors
   #
@@ -262,20 +262,20 @@ font:
   #
   # Allowed values are CellForeground/CellBackground, which reference the
   # affected cell, or hexadecimal colors like #ff00ff.
-  #selection:
-  #  text: CellBackground
-  #  background: CellForeground
+  selection:
+    text: CellForeground
+    background: '#3e4451' # syntax-selection-color
 
   # Normal colors
-  #normal:
-  #  black:   '#1d1f21'
-  #  red:     '#cc6666'
-  #  green:   '#b5bd68'
-  #  yellow:  '#f0c674'
-  #  blue:    '#81a2be'
-  #  magenta: '#b294bb'
-  #  cyan:    '#8abeb7'
-  #  white:   '#c5c8c6'
+  normal:
+    black: '#5c6370' # mono-3
+    red: '#e06c75' # red 1
+    green: '#98c379'
+    yellow: '#e5c07b' # orange 2
+    blue: '#61afef'
+    magenta: '#c678dd'
+    cyan: '#56b6c2'
+    white: '#828997' # mono-2
 
   # Bright colors
   #bright:
