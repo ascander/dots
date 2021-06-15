@@ -79,11 +79,6 @@ fi
 # Source local zshrc if present
 test -s "$HOME/.zshrc.local" && source "$HOME/.zshrc.local"
 
-# Git settings
-if (( $+commands[hub] )); then
-    eval "$(hub alias -s)"
-fi
-
 # Git aliases
 # Taken from: https://github.com/holman/dotfiles/blob/master/git/aliases.zsh
 alias ga='git add'
@@ -93,7 +88,7 @@ alias gco='git checkout'
 alias gb='git branch'
 alias gs='git status -sb'
 alias gl='git log'
-alias gll='git loglines'
+alias gll='git ll'
 alias gd='git diff'
 alias gp='git push'
 alias gpd='git push --dry-run'
@@ -120,10 +115,6 @@ fi
 # Nix aliases
 alias ns='nix-shell'
 alias ne='nix-env'
-
-alias nixfind='nix-env -qaP'
-alias nixinfo='nix-env -qa --description'
-alias nixopps='nix-env --rollback'
 
 # GNU and BSD (macOS) ls use different flags
 if $(ls --version &>/dev/null); then
