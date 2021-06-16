@@ -12,6 +12,7 @@
 # Version control
 .git/
 
-# Metals specific (Scala)
+# Metals
 .bloop/
 .metals/
+.bsp/
