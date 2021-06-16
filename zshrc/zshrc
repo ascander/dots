@@ -116,6 +116,12 @@ fi
 alias ns='nix-shell'
 alias ne='nix-env'
 
+# Command line calculator from https://unix.stackexchange.com/a/480316
+calc () {
+  local in="$(echo " $*" | sed -e 's/\[/(/g' -e 's/\]/)/g')";
+  gawk -v PREC=201 'BEGIN {printf("%.60g\n", '"${in-0}"')}' < /dev/null
+}
+
 # GNU and BSD (macOS) ls use different flags
 if $(ls --version &>/dev/null); then
     lsflags="--color=auto --group-directories-first"
