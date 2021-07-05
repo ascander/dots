@@ -42,6 +42,13 @@ set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
 " Make signcolumn the same color as line number column
 highlight clear SignColumn
 
+" Color theme
+set background=dark
+colorscheme NeoSolarized
+
+let g:neosolarized_contrast = "low"
+let g:neosolarized_visibility = "low"
+
 " Put all temporary files under the same directory.
 " https://github.com/mhinz/vim-galore#handling-backup-swap-undo-and-viminfo-files
 set backup
@@ -69,7 +76,7 @@ let maplocalleader = ","
 
 " vim-airline settings
 let g:airline_powerline_fonts=1
-let g:airline_thme='onedark'
+let g:airline_thme='solarized'
 let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
 let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
 let airline#extensions#coc#error_symbol = '💀 '

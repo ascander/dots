@@ -7,21 +7,21 @@ let
       pkgs-unstable = import sources.nixpkgs-unstable {};
       pinentry = if (super.stdenv.isDarwin) then super.pinentry_mac else super.pinentry;
 
-      inherit (self.pkgs-unstable) iosevka-bin starship metals;
+      inherit (self.pkgs-unstable) iosevka-bin starship metals powerline;
 
       nodePackages =
         super.nodePackages // {
-          bash-language-server = self.pkgs-unstable.nodePackages.bash-language-server;
+          inherit (self.pkgs-unstable.nodePackages) bash-language-server;
         };
 
       vimPlugins =
         super.vimPlugins // {
-          inherit (self.pkgs-unstable.vimPlugins) vim-markdown-composer onedark-vim;
+          inherit (self.pkgs-unstable.vimPlugins) vim-markdown-composer NeoSolarized;
         };
 
       tmuxPlugins =
         super.tmuxPlugins // {
-          inherit (self.pkgs-unstable.tmuxPlugins) fingers onedark-theme;
+          inherit (self.pkgs-unstable.tmuxPlugins) fingers tmux-colors-solarized;
         };
     };
 
@@ -57,6 +57,7 @@ let
       iosevka
       metals
       pinentry
+      powerline
       starship
       tmux
       vim

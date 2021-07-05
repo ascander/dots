@@ -10,17 +10,9 @@
 , writeText
 }:
 let
-  cocNodeRc = ''
+  dynamicRc = ''
     let g:coc_node_path='${nodejs}/bin/node'
   '';
-
-  # See: https://github.com/NixOS/nixpkgs/issues/96062#issuecomment-679386923
-  onedarkRc = ''
-    packadd! onedark-vim
-    colorscheme onedark
-  '';
-
-  dynamicRc = cocNodeRc + "\n" + onedarkRc;
 
   coc-settings = import ./coc-nvim/coc-settings.nix {
     inherit bash-language-server metals rnix-lsp;
@@ -34,6 +26,7 @@ let
       customRC = dynamicRc + "\n" + builtins.readFile ./vimrc;
       packages.myVimPackage = with vimPlugins; {
         start = [
+          NeoSolarized
           coc-nvim
           fzf-vim
           fzfWrapper
@@ -53,7 +46,6 @@ let
           vim-tmux-navigator
           vim-toml
         ];
-        opt = [ onedark-vim ];
       };
     };
   };

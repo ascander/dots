@@ -1,6 +1,12 @@
-# Tmux with ./tmux.conf baked in
-# Copied from https://github.com/nmattia/homies/blob/master/tmux/default.nix
-{ tmux, stdenv, symlinkJoin, makeWrapper, tmuxPlugins, writeTextFile }:
+# Tmux, with a set of extra plugins and custom config bundled.
+{ tmux
+, stdenv
+, symlinkJoin
+, makeWrapper
+, powerline
+, tmuxPlugins
+, writeTextFile
+}:
 let
   # Copy/yank behavior for MacOS
   darwinConf =
@@ -19,7 +25,9 @@ let
   # and running '<prefix>:source-file' on the relevant path.
   extraConf = darwinConf + ''
     run-shell ${tmuxPlugins.fingers}/share/tmux-plugins/fingers/tmux-fingers.tmux
-    run-shell ${tmuxPlugins.onedark-theme}/share/tmux-plugins/onedark-theme/tmux-onedark-theme.tmux
+    run-shell ${tmuxPlugins.tmux-colors-solarized}/share/tmux-plugins/tmuxcolors/tmuxcolors.tmux
+
+    source ${powerline}/share/tmux/powerline.conf
   '';
 
   baseConf = builtins.readFile ./tmux.conf;
@@ -32,14 +40,14 @@ let
     '';
   };
 in
-  symlinkJoin {
-    name = "tmux";
-    buildInputs = [ makeWrapper ];
-    paths = [ tmux ];
-    postBuild = ''
-      mkdir -p $out/conf
-      ln -s ${tmuxConfFile} $out/conf/tmux.conf
-      wrapProgram "$out/bin/tmux" \
-      --add-flags "-f $out/conf/tmux.conf"
-    '';
-  }
+symlinkJoin {
+  name = "tmux";
+  buildInputs = [ makeWrapper ];
+  paths = [ tmux ];
+  postBuild = ''
+    mkdir -p $out/conf
+    ln -s ${tmuxConfFile} $out/conf/tmux.conf
+    wrapProgram "$out/bin/tmux" \
+    --add-flags "-f $out/conf/tmux.conf"
+  '';
+}
