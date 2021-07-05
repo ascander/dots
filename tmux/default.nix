@@ -19,7 +19,7 @@ let
   # and running '<prefix>:source-file' on the relevant path.
   extraConf = darwinConf + ''
     run-shell ${tmuxPlugins.fingers}/share/tmux-plugins/fingers/tmux-fingers.tmux
-    run-shell ${tmuxPlugins.onedark-theme}/share/tmux-plugins/onedark-theme/tmux-onedark-theme.tmux
+    run-shell ${tmuxPlugins.tmux-colors-solarized}/share/tmux-plugins/tmuxcolors/tmuxcolors.tmux
   '';
 
   baseConf = builtins.readFile ./tmux.conf;
