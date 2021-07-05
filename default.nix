@@ -7,7 +7,7 @@ let
       pkgs-unstable = import sources.nixpkgs-unstable {};
       pinentry = if (super.stdenv.isDarwin) then super.pinentry_mac else super.pinentry;
 
-      inherit (self.pkgs-unstable) iosevka-bin starship metals;
+      inherit (self.pkgs-unstable) iosevka-bin starship metals powerline;
 
       nodePackages =
         super.nodePackages // {
@@ -57,6 +57,7 @@ let
       iosevka
       metals
       pinentry
+      powerline
       starship
       tmux
       vim
