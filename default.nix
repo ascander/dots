@@ -11,7 +11,7 @@ let
 
       nodePackages =
         super.nodePackages // {
-          bash-language-server = self.pkgs-unstable.nodePackages.bash-language-server;
+          inherit (self.pkgs-unstable.nodePackages) bash-language-server;
         };
 
       vimPlugins =
