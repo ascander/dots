@@ -34,10 +34,7 @@ let
         iosevka = super.iosevka-bin.override { variant = "ss08"; };
         tmux = self.callPackage ./tmux { inherit (super) tmux; };
         zshrc = self.callPackage ./zshrc {};
-
-        vim = self.callPackage ./vim {
-          inherit (self.nodePackages) bash-language-server;
-        };
+        vim = self.callPackage ./vim { };
       };
     };
 
