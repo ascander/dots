@@ -13,6 +13,7 @@ let
         start = [
           lualine-nvim
           vim-fugitive
+          vim-tmux-navigator
           NeoSolarized
         ];
       };
