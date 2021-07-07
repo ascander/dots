@@ -33,6 +33,21 @@ set report=0                   " Always report changed lines
 
 "}}}
 
+" Mappings "{{{
+" --------------------------------------------------------------------------------
+
+" Leader keys
+let mapleader = ";"
+let maplocalleader = ","
+
+" Easy split navigation
+nnoremap <C-H> <C-W><C-H>
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+
+"}}}
+
 " Backups "{{{
 " --------------------------------------------------------------------------------
 
@@ -73,6 +88,9 @@ set number relativenumber      " Display hybrid line numbers
 " Display non-printable characters
 set list
 set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
+
+" Automatically resize splits on window resize
+au VimResized * exe "normal! \<c-w>="
 
 "}}}
 
