@@ -14,6 +14,7 @@ let
           lualine-nvim
           vim-fugitive
           vim-tmux-navigator
+          telescope-nvim
           NeoSolarized
         ];
       };

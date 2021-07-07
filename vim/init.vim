@@ -113,4 +113,33 @@ EOF
 
 "}}}
 
+" Fuzzy finding "{{{
+" --------------------------------------------------------------------------------
+
+" Telescope bindings
+nnoremap <leader>f <cmd>Telescope find_files<cr>
+nnoremap <leader>g <cmd>Telescope live_grep<cr>
+nnoremap <leader>b <cmd>Telescope buffers<cr>
+nnoremap <leader>h <cmd>Telescope help_tags<cr>
+
+" Globally bind 'q' to quit Telescope
+lua << EOF
+  local actions = require('telescope.actions')
+
+  require('telescope').setup {
+    defaults = {
+      prompt_prefix = "❯ ",
+      selection_caret = "❯ ",
+      set_env = { ['COLORTERM'] = 'truecolor' },
+      mappings = {
+        n = {
+          ["q"] = actions.close
+        }
+      }
+    }
+  }
+EOF
+
+"}}}
+
 " vim: set foldmethod=marker foldlevel=0:
