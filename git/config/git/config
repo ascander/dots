@@ -11,6 +11,9 @@
   pu = push --set-upstream
   pl = pull --rebase
   ll = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  unstage = reset HEAD --
+  uncommit = reset HEAD~
+  last = log -1 HEAD
 [color]
   diff = auto
   status = auto
