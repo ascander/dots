@@ -107,6 +107,20 @@ lua << EOF
       icons_enabled = false,
       theme = 'solarized_dark'
     },
+    sections = {
+      lualine_a = { 'mode' },
+      lualine_b = { 'branch' },
+      lualine_c = { 'filename' },
+      lualine_x = {
+        {
+            'diagnostics', sources = {'nvim_lsp'}, symbols = {error = '!!', warn = '!?', info = '??', hint = '..'}
+        },
+        'encoding',
+        'filetype'
+      },
+      lualine_y = { 'filename' },
+      lualine_z = { 'location' }
+    },
     extensions = { 'fugitive' }
   }
 EOF
