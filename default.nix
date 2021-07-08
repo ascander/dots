@@ -7,7 +7,7 @@ let
       pkgs-unstable = import sources.nixpkgs-unstable {};
       pinentry = if (super.stdenv.isDarwin) then super.pinentry_mac else super.pinentry;
 
-      inherit (self.pkgs-unstable) iosevka-bin starship metals neovim powerline;
+      inherit (self.pkgs-unstable) iosevka-bin starship metals neovim powerline tree-sitter;
 
       nodePackages =
         super.nodePackages // {
@@ -33,8 +33,8 @@ let
         git = self.callPackage ./git { inherit (super) git; };
         iosevka = super.iosevka-bin.override { variant = "ss08"; };
         tmux = self.callPackage ./tmux { inherit (super) tmux; };
+        vim = self.callPackage ./vim {};
         zshrc = self.callPackage ./zshrc {};
-        vim = self.callPackage ./vim { };
       };
     };
 
@@ -52,10 +52,6 @@ let
       fd
       git
       iosevka
-      metals
-      pinentry
-      powerline
-      starship
       tmux
       vim
       zshrc
@@ -73,17 +69,22 @@ let
       pkgs.iosevka-bin
       pkgs.jq
       pkgs.less
+      pkgs.metals
       pkgs.niv.niv
       pkgs.nix
       pkgs.nix-zsh-completions
       pkgs.nodejs-12_x
       pkgs.openjdk
+      pkgs.pinentry
+      pkgs.powerline
       pkgs.reattach-to-user-namespace
       pkgs.ripgrep
       pkgs.rnix-lsp
       pkgs.sourceHighlight
+      pkgs.starship
       pkgs.stow
       pkgs.tree
+      pkgs.tree-sitter
       pkgs.zsh-completions
       pkgs.zsh-syntax-highlighting
     ];
