@@ -145,32 +145,16 @@ EOF
 
 "}}}
 
-" Fuzzy finding "{{{
+" FZF "{{{
 " --------------------------------------------------------------------------------
 
-" Telescope bindings
-nnoremap <leader>f <cmd>Telescope find_files<cr>
-nnoremap <leader>g <cmd>Telescope live_grep<cr>
-nnoremap <leader>b <cmd>Telescope buffers<cr>
-nnoremap <leader>h <cmd>Telescope help_tags<cr>
+" Set default command and options
+let $FZF_DEFAULT_COMMAND="fd --type f --hidden --follow"
+let $FZF_DEFAULT_OPTS="--color=dark --color=fg:-1,bg:-1,hl:#c678dd,fg+:#ffffff,bg+:#4b5263,hl+:#d858fe --color=info:#98c379,prompt:#61afef,pointer:#be5046,marker:#e5c07b,spinner:#61afef,header:#61afef"
 
-" Globally bind 'q' to quit Telescope
-lua << EOF
-local actions = require('telescope.actions')
-
-require('telescope').setup {
-  defaults = {
-    prompt_prefix = "❯ ",
-    selection_caret = "❯ ",
-    set_env = { ['COLORTERM'] = 'truecolor' },
-    mappings = {
-      n = {
-        ["q"] = actions.close
-        }
-      }
-    }
-  }
-EOF
+" Bindings
+nnoremap <leader>f :Files<CR>
+nnoremap <leader>g :Rg<CR>
 
 "}}}
 

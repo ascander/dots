@@ -11,11 +11,12 @@ let
       customRC = builtins.readFile ./init.vim;
       packages.myVimPackage = with vimPlugins; {
         start = [
+          NeoSolarized
+          fzf-vim
+          fzfWrapper
           lualine-nvim
           vim-fugitive
           vim-tmux-navigator
-          telescope-nvim
-          NeoSolarized
         ];
       };
     };
