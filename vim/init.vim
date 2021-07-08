@@ -156,16 +156,16 @@ nnoremap <leader>h <cmd>Telescope help_tags<cr>
 
 " Globally bind 'q' to quit Telescope
 lua << EOF
-  local actions = require('telescope.actions')
+local actions = require('telescope.actions')
 
-  require('telescope').setup {
-    defaults = {
-      prompt_prefix = "❯ ",
-      selection_caret = "❯ ",
-      set_env = { ['COLORTERM'] = 'truecolor' },
-      mappings = {
-        n = {
-          ["q"] = actions.close
+require('telescope').setup {
+  defaults = {
+    prompt_prefix = "❯ ",
+    selection_caret = "❯ ",
+    set_env = { ['COLORTERM'] = 'truecolor' },
+    mappings = {
+      n = {
+        ["q"] = actions.close
         }
       }
     }
@@ -173,5 +173,18 @@ lua << EOF
 EOF
 
 "}}}
+
+" Tree-sitter "{{{
+" --------------------------------------------------------------------------------
+
+lua <<EOF
+require('nvim-treesitter.configs').setup {
+  ensure_installed = { "bash", "java", "json", "kotlin", "lua", "nix", "python", "scala", "toml", "yaml"},
+  highlight = { enable = true },
+  indent = { enable = true }
+}
+EOF
+
+" }}}
 
 " vim: set foldmethod=marker foldlevel=0:

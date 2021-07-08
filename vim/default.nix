@@ -12,6 +12,7 @@ let
       packages.myVimPackage = with vimPlugins; {
         start = [
           lualine-nvim
+          nvim-treesitter
           vim-fugitive
           vim-tmux-navigator
           telescope-nvim
