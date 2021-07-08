@@ -102,6 +102,11 @@ set termguicolors              " Enable 24-bit color
 set background=dark            " Use the 'dark' version of themes
 colorscheme NeoSolarized       " I always come back to you
 
+" Allow transparency from iTerm
+" Note: this needs to happen after 'colorscheme'
+highlight Normal ctermbg=NONE guibg=NONE
+highlight NonText ctermbg=NONE guibg=NONE
+
 " Use low-contrast versions of the Solarized palette
 let g:neosolarized_contrast = "low"
 let g:neosolarized_visibility = "low"
@@ -110,6 +115,9 @@ let g:neosolarized_visibility = "low"
 let g:neosolarized_bold = 1
 let g:neosolarized_underline = 1
 let g:neosolarized_italic = 0
+
+" Enable rainbow brackets
+let g:rainbow_active = 1
 
 "}}}
 

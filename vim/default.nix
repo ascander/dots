@@ -15,8 +15,15 @@ let
           fzf-vim
           fzfWrapper
           lualine-nvim
+          rainbow
           vim-fugitive
+          vim-markdown
+          vim-markdown-composer
+          vim-nix
+          vim-scala
+          vim-surround
           vim-tmux-navigator
+          vim-toml
         ];
       };
     };
