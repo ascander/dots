@@ -174,17 +174,4 @@ EOF
 
 "}}}
 
-" Tree-sitter "{{{
-" --------------------------------------------------------------------------------
-
-lua <<EOF
-require('nvim-treesitter.configs').setup {
-  ensure_installed = { "bash", "java", "json", "kotlin", "lua", "nix", "python", "scala", "toml", "yaml"},
-  highlight = { enable = true },
-  indent = { enable = true }
-}
-EOF
-
-" }}}
-
 " vim: set foldmethod=marker foldlevel=0:

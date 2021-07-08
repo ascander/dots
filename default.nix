@@ -7,7 +7,7 @@ let
       pkgs-unstable = import sources.nixpkgs-unstable {};
       pinentry = if (super.stdenv.isDarwin) then super.pinentry_mac else super.pinentry;
 
-      inherit (self.pkgs-unstable) iosevka-bin starship metals neovim powerline tree-sitter;
+      inherit (self.pkgs-unstable) iosevka-bin starship metals neovim powerline;
 
       nodePackages =
         super.nodePackages // {
@@ -84,7 +84,6 @@ let
       pkgs.starship
       pkgs.stow
       pkgs.tree
-      pkgs.tree-sitter
       pkgs.zsh-completions
       pkgs.zsh-syntax-highlighting
     ];
