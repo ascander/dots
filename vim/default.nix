@@ -30,11 +30,10 @@ let
           coc-nvim
           fzf-vim
           fzfWrapper
+          lualine-nvim
           nerdcommenter
           rainbow
           tabular
-          vim-airline
-          vim-airline-themes
           vim-easy-align
           vim-easymotion
           vim-fugitive

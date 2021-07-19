@@ -68,13 +68,37 @@ au VimResized * exe "normal! \<c-w>="
 let mapleader = ";"
 let maplocalleader = ","
 
-" vim-airline settings
-let g:airline_powerline_fonts=1
-let g:airline_thme='solarized'
-let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
-let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
-let airline#extensions#coc#error_symbol = '💀 '
-let airline#extensions#coc#warning_symbol = '⚡'
+" Statusline
+
+lua <<EOF
+require('lualine').setup {
+  options = {
+    icons_enabled = false,
+    theme = 'solarized_dark'
+  },
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch'},
+    lualine_c = {'filename'},
+    lualine_x = {
+      'fileformat',
+      'encoding',
+      'filetype'},
+      lualine_y = {'progress'},
+      lualine_z = {'location'}
+    },
+    inactive_sections = {
+      lualine_a = {},
+      lualine_b = {},
+      lualine_c = {'filename'},
+      lualine_x = {'location'},
+      lualine_y = {},
+      lualine_z = {}
+    },
+    tabline = {},
+    extensions = {'fugitive', 'fzf'}
+  }
+EOF
 
 " rainbow
 let g:rainbow_active=1
