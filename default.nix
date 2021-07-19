@@ -19,8 +19,7 @@ let
           inherit (self.pkgs-unstable.vimPlugins) vim-markdown-composer;
 
           material-nvim = super.vimUtils.buildVimPluginFrom2Nix {
-            pname = "material-nvim";
-            version = "2021-07-19";
+            name = "material-nvim";
             src = sources.material-nvim;
           };
         };
