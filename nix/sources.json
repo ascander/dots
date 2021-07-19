@@ -1,4 +1,16 @@
 {
+    "material-nvim": {
+        "branch": "main",
+        "description": ":trident: Material colorscheme for NeoVim written in Lua with built-in support for native LSP, TreeSitter and many more plugins",
+        "homepage": "",
+        "owner": "marko-cerovac",
+        "repo": "material.nvim",
+        "rev": "7efc173d4e19d1a60bedf683489ebbd268ee7065",
+        "sha256": "0yvvi2c56znjrwk32px05bzqnx8r9qgb6i8k119y8wfnf0nqa310",
+        "type": "tarball",
+        "url": "https://github.com/marko-cerovac/material.nvim/archive/7efc173d4e19d1a60bedf683489ebbd268ee7065.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "niv": {
         "branch": "master",
         "description": "Easy dependency management for Nix projects",
