@@ -16,7 +16,13 @@ let
 
       vimPlugins =
         super.vimPlugins // {
-          inherit (self.pkgs-unstable.vimPlugins) vim-markdown-composer NeoSolarized;
+          inherit (self.pkgs-unstable.vimPlugins) vim-markdown-composer;
+
+          material-nvim = super.vimUtils.buildVimPluginFrom2Nix {
+            pname = "material-nvim";
+            version = "2021-07-19";
+            src = sources.material-nvim;
+          };
         };
 
       tmuxPlugins =

@@ -31,6 +31,7 @@ let
           fzf-vim
           fzfWrapper
           lualine-nvim
+          material-nvim
           nerdcommenter
           rainbow
           tabular
