@@ -26,7 +26,6 @@ let
       customRC = dynamicRc + "\n" + builtins.readFile ./vimrc;
       packages.myVimPackage = with vimPlugins; {
         start = [
-          NeoSolarized
           coc-nvim
           fzf-vim
           fzfWrapper
