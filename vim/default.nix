@@ -25,12 +25,12 @@ let
       customRC = dynamicRc + "\n" + builtins.readFile ./vimrc;
       packages.myVimPackage = with vimPlugins; {
         start = [
-          NeoSolarized
           coc-metals
           coc-nvim
           fzf-vim
           fzfWrapper
           lualine-nvim
+          onedark-nvim
           nerdcommenter
           rainbow
           tabular

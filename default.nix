@@ -16,7 +16,12 @@ let
 
       vimPlugins =
         super.vimPlugins // {
-          inherit (self.pkgs-unstable.vimPlugins) coc-metals vim-markdown-composer NeoSolarized;
+          inherit (self.pkgs-unstable.vimPlugins) coc-metals vim-markdown-composer;
+
+          onedark-nvim = super.vimUtils.buildVimPluginFrom2Nix {
+            name = "onedark-nvim";
+            src = sources.onedark-nvim;
+          };
         };
 
       tmuxPlugins =

@@ -34,5 +34,17 @@
         "type": "tarball",
         "url": "https://github.com/NixOS/nixpkgs/archive/7b4ff2184e4cab274ecb2b2eb49d20ef2142ddf1.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "onedark-nvim": {
+        "branch": "master",
+        "description": "One Dark Theme for Neovim >= 0.5.0 written in lua based on Atom's One Dark UI Theme. Additionally, it comes with 5 color variant styles",
+        "homepage": "",
+        "owner": "navarasu",
+        "repo": "onedark.nvim",
+        "rev": "d770b0939d9423b73d4ddcd8ad4a3ced08ab2e2d",
+        "sha256": "00cg4n044vv9z2g12zfa93a5gfsq9ihdknzzhz9jyl8p0s7mivnq",
+        "type": "tarball",
+        "url": "https://github.com/navarasu/onedark.nvim/archive/d770b0939d9423b73d4ddcd8ad4a3ced08ab2e2d.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
