@@ -1,4 +1,6 @@
-{ bash-language-server, metals, rnix-lsp }:
+{ bash-language-server
+, rnix-lsp
+}:
 
 {
   coc.preferences = {
@@ -13,17 +15,14 @@
     infoSign = "Ⓘ";
   };
 
+  metals.serverVersion = "0.10.5";
+
   languageserver = {
     bash = {
       command = bash-language-server + "/bin/bash-language-server";
       args = [ "start" ];
       filetypes = [ "sh" ];
       ignoredRootPaths = [ "~" ];
-    };
-    metals = {
-      command = metals + "/bin/metals-vim";
-      rootPatterns = [ "build.sbt" ];
-      filetypes = [ "scala" "sbt" "sc" ];
     };
     nix = {
       command = rnix-lsp + "/bin/rnix-lsp";
