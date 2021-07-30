@@ -7,7 +7,7 @@ let
       pkgs-unstable = import sources.nixpkgs-unstable {};
       pinentry = if (super.stdenv.isDarwin) then super.pinentry_mac else super.pinentry;
 
-      inherit (self.pkgs-unstable) iosevka-bin starship metals neovim powerline;
+      inherit (self.pkgs-unstable) iosevka-bin starship neovim powerline;
 
       nodePackages =
         super.nodePackages // {
@@ -16,7 +16,7 @@ let
 
       vimPlugins =
         super.vimPlugins // {
-          inherit (self.pkgs-unstable.vimPlugins) vim-markdown-composer NeoSolarized;
+          inherit (self.pkgs-unstable.vimPlugins) coc-metals vim-markdown-composer NeoSolarized;
         };
 
       tmuxPlugins =
@@ -55,7 +55,6 @@ let
       fd
       git
       iosevka
-      metals
       pinentry
       powerline
       starship

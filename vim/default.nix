@@ -1,7 +1,6 @@
 # Vim, with a set of extra packages and a custom vimrc (see ./vimrc) bundled.
 { bash-language-server
 , makeWrapper
-, metals
 , neovim
 , nodejs
 , rnix-lsp
@@ -15,7 +14,7 @@ let
   '';
 
   coc-settings = import ./coc-nvim/coc-settings.nix {
-    inherit bash-language-server metals rnix-lsp;
+    inherit bash-language-server rnix-lsp;
   };
 
   coc-settings-file = writeText "coc-settings.json" (builtins.toJSON coc-settings);
@@ -27,6 +26,7 @@ let
       packages.myVimPackage = with vimPlugins; {
         start = [
           NeoSolarized
+          coc-metals
           coc-nvim
           fzf-vim
           fzfWrapper
