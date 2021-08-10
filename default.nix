@@ -83,7 +83,7 @@ let
       pkgs.nix
       pkgs.nix-zsh-completions
       pkgs.nodejs-12_x
-      pkgs.openjdk
+      pkgs.openjdk8
       pkgs.reattach-to-user-namespace
       pkgs.ripgrep
       pkgs.rnix-lsp
