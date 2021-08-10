@@ -43,11 +43,7 @@ set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
 highlight clear SignColumn
 
 " Color theme
-set background=dark
-colorscheme NeoSolarized
-
-let g:neosolarized_contrast = "low"
-let g:neosolarized_visibility = "low"
+colorscheme onedark
 
 " Put all temporary files under the same directory.
 " https://github.com/mhinz/vim-galore#handling-backup-swap-undo-and-viminfo-files
@@ -74,7 +70,7 @@ lua <<EOF
 require('lualine').setup {
   options = {
     icons_enabled = false,
-    theme = 'solarized_dark'
+    theme = 'onedark'
   },
   sections = {
     lualine_a = {'mode'},

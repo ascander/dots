@@ -7,7 +7,7 @@ let
       pkgs-unstable = import sources.nixpkgs-unstable {};
       pinentry = if (super.stdenv.isDarwin) then super.pinentry_mac else super.pinentry;
 
-      inherit (self.pkgs-unstable) iosevka-bin starship neovim powerline;
+      inherit (self.pkgs-unstable) iosevka-bin starship neovim;
 
       nodePackages =
         super.nodePackages // {
@@ -16,12 +16,17 @@ let
 
       vimPlugins =
         super.vimPlugins // {
-          inherit (self.pkgs-unstable.vimPlugins) coc-metals vim-markdown-composer NeoSolarized;
+          inherit (self.pkgs-unstable.vimPlugins) coc-metals vim-markdown-composer;
+
+          onedark-nvim = super.vimUtils.buildVimPluginFrom2Nix {
+            name = "onedark-nvim";
+            src = sources.onedark-nvim;
+          };
         };
 
       tmuxPlugins =
         super.tmuxPlugins // {
-          inherit (self.pkgs-unstable.tmuxPlugins) fingers tmux-colors-solarized;
+          inherit (self.pkgs-unstable.tmuxPlugins) fingers onedark-theme;
         };
     };
 
@@ -56,7 +61,6 @@ let
       git
       iosevka
       pinentry
-      powerline
       starship
       tmux
       vim
