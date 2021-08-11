@@ -32,7 +32,6 @@ let
           fzfWrapper
           lualine-nvim
           onedark-nvim
-          nerdcommenter
           rainbow
           tabular
           vim-easy-align

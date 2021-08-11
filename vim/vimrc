@@ -99,16 +99,6 @@ EOF
 " rainbow
 let g:rainbow_active=1
 
-" Nerdcommenter
-
-let g:NERDSpaceDelims = 1       " Add spaces after delimiters by default
-let g:NERDCompactSexyComs = 1   " Use compact syntax for prettified multi-line comments
-let g:NERDDefaultAlign = 'left' " Align line-wise comment delimiters with the left margin
-let g:NERDCommentEmptyLines = 1 " Allow commenting and inverting empty lines
-
-" Add delimiters for SBT files
-let g:NERDCustomDelimiters = { 'sbt': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' } }
-
 " FZF
 
 " Set '$FZF_DEFAULT_COMMAND' here instead of wrapping 'fzf' via Nix
