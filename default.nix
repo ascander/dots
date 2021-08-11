@@ -16,7 +16,7 @@ let
 
       vimPlugins =
         super.vimPlugins // {
-          inherit (self.pkgs-unstable.vimPlugins) coc-metals vim-markdown-composer;
+          inherit (self.pkgs-unstable.vimPlugins) coc-metals coc-pyright vim-markdown-composer;
 
           onedark-nvim = super.vimUtils.buildVimPluginFrom2Nix {
             name = "onedark-nvim";

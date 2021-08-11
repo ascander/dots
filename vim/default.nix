@@ -27,6 +27,7 @@ let
         start = [
           coc-metals
           coc-nvim
+          coc-pyright
           fzf-vim
           fzfWrapper
           lualine-nvim
