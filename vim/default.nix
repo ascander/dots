@@ -28,6 +28,7 @@ let
           coc-metals
           coc-nvim
           coc-pyright
+          commentary
           fzf-vim
           fzfWrapper
           lualine-nvim
