@@ -15,8 +15,6 @@
     infoSign = "Ⓘ";
   };
 
-  metals.serverVersion = "0.10.5";
-
   languageserver = {
     bash = {
       command = bash-language-server + "/bin/bash-language-server";
