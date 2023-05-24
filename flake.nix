@@ -8,7 +8,10 @@
     darwin.url = "github:lnl7/nix-darwin/master";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
-    home-manager.url = "github:nix-community/home-manager";
+    # Use the `home-manager` branch corresponding to the 'nixpkgs' branch
+    #
+    # See: https://github.com/nix-community/home-manager/issues/3928
+    home-manager.url = "github:nix-community/home-manager/release-22.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs:
