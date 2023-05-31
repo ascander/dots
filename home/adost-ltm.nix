@@ -72,6 +72,10 @@
         plugin = tmuxPlugins.fingers;
         extraConfig = "set -g @fingers-copy-command 'pbcopy'";
       }
+      {
+        plugin = tmuxPlugins.power-theme;
+        extraConfig = "set -g @tmux_power_theme 'default'";
+      }
     ];
     extraConfig = builtins.readFile ../config/tmux/tmux.conf;
   };
