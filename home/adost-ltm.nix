@@ -60,6 +60,19 @@
 
   # Tmux
   # https://nix-community.github.io/home-manager/options.html#opt-programs.tmux.enable
+  #
+  # NOTE:
+  # The 'tmux-256color' terminal is not available on macOS systems by default.
+  # To manually install it, run:
+  #
+  #   /usr/bin/tic -x -o $HOME/.local/share/terminfo tmux-256color.src
+  #
+  # with the patched terminfo entry included in the 'resources' folder. Set
+  # `TERMINFO_DIRS` to pick up the location:
+  #
+  #   export TERMINFO_DIRS=$HOME/.local/share/terminfo:$TERMINFO_DIRS
+  #
+  # See: https://gpanders.com/blog/the-definitive-guide-to-using-tmux-256color-on-macos/
   programs.tmux = {
     enable = true;
     clock24 = true;
