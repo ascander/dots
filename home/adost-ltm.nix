@@ -164,57 +164,57 @@
   # Neovim
   # https://nix-community.github.io/home-manager/options.html#opt-programs.neovim.enable
   programs.neovim = {
-  enable = true;
-  package = pkgs.unstable.neovim-unwrapped;
-  viAlias = true;
-  vimAlias = true;
-  vimdiffAlias = true;
-  withNodeJs = true;
-  plugins =
-    with pkgs.unstable;
-    with vimPlugins;
-    [
-      cmp-buffer
-      cmp-nvim-lsp
-      cmp-nvim-lsp-signature-help
-      cmp-path
-      cmp_luasnip
-      comment-nvim
-      friendly-snippets
-      kanagawa-nvim
-      lspkind-nvim
-      lualine-nvim
-      luasnip
-      markdown-preview-nvim
-      nightfox-nvim
-      nvim-cmp
-      nvim-lspconfig
-      nvim-metals
-      (nvim-treesitter.withPlugins (plugins: with plugins; [
-        tree-sitter-bash
-        tree-sitter-dockerfile
-        tree-sitter-java
-        tree-sitter-kotlin
-        tree-sitter-lua
-        tree-sitter-nix
-        tree-sitter-python
-        tree-sitter-scala
-        tree-sitter-toml
-        tree-sitter-yaml
-      ]))
-      nvim-treesitter-textobjects
-      nvim-web-devicons
-      onedark-nvim
-      rose-pine
-      telescope
-      telescope-fzf-native-nvim
-      vim-easy-align
-      vim-fugitive
-      vim-nix
-      vim-rhubarb
-      vim-surround
-      vim-tmux-navigator
-    ];
+    enable = true;
+    package = pkgs.unstable.neovim-unwrapped;
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+    withNodeJs = true;
+    plugins =
+      with pkgs.unstable;
+      with vimPlugins;
+      [
+        cmp-buffer
+        cmp-nvim-lsp
+        cmp-nvim-lsp-signature-help
+        cmp-path
+        cmp_luasnip
+        comment-nvim
+        friendly-snippets
+        kanagawa-nvim
+        lspkind-nvim
+        lualine-nvim
+        luasnip
+        markdown-preview-nvim
+        nightfox-nvim
+        nvim-cmp
+        nvim-lspconfig
+        nvim-metals
+        (nvim-treesitter.withPlugins (plugins: with plugins; [
+          tree-sitter-bash
+          tree-sitter-dockerfile
+          tree-sitter-java
+          tree-sitter-kotlin
+          tree-sitter-lua
+          tree-sitter-nix
+          tree-sitter-python
+          tree-sitter-scala
+          tree-sitter-toml
+          tree-sitter-yaml
+        ]))
+        nvim-treesitter-textobjects
+        nvim-web-devicons
+        onedark-nvim
+        rose-pine
+        telescope
+        telescope-fzf-native-nvim
+        vim-easy-align
+        vim-fugitive
+        vim-nix
+        vim-rhubarb
+        vim-surround
+        vim-tmux-navigator
+      ];
   };
 
   # Direnv
