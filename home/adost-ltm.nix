@@ -251,7 +251,7 @@
     ripgrep
     rnix-lsp
     stylua
-    sumneko-lua-language-server
+    unstable.lua-language-server
     tree
     tree-sitter
     zsh-completions

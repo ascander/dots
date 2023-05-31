@@ -5,7 +5,7 @@ LSP configuration
 Installed servers:
 
   Bash    → bashls
-  Lua     → sumneko_lua
+  Lua     → lua-language-server
   Nix     → rnix
   Python  → pyright
   Scala   → nvim-metals (Note: not part of lspconfig)
@@ -126,14 +126,14 @@ for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup({ capabilities = capabilities })
 end
 
--- Configure sumneko lua language server
--- See https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#sumneko_lua
+-- Configure lua language server
+-- See https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#lua_ls
 
 local runtime_path = vim.split(package.path, ";")
 table.insert(runtime_path, "lua/?.lua")
 table.insert(runtime_path, "lua/?/init.lua")
 
-lspconfig.sumneko_lua.setup({
+lspconfig.lua_ls.setup({
   settings = {
     Lua = {
       runtime = {
