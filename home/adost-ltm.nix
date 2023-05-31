@@ -241,7 +241,9 @@
     jq
     openjdk8
     ncspot
+    nil
     nix-zsh-completions
+    nixpkgs-fmt
     nodePackages.bash-language-server
     nodePackages.yaml-language-server
     nodePackages.mermaid-cli
@@ -249,7 +251,6 @@
     pyright
     reattach-to-user-namespace
     ripgrep
-    rnix-lsp
     stylua
     unstable.lua-language-server
     tree

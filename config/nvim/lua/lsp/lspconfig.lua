@@ -6,7 +6,7 @@ Installed servers:
 
   Bash    → bashls
   Lua     → lua-language-server
-  Nix     → rnix
+  Nix     → nil
   Python  → pyright
   Scala   → nvim-metals (Note: not part of lspconfig)
   YAML    → yamlls
@@ -120,11 +120,26 @@ autocmd("LspAttach", {
 })
 
 -- Configure language servers
-local servers = { "bashls", "pyright", "rnix", "yamlls" }
+local servers = { "bashls", "pyright", "yamlls" }
 
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup({ capabilities = capabilities })
 end
+
+-- Configure nil language server
+-- See https://github.com/oxalica/nil/blob/dcd38b96c91a2d07552f824a6480e00dc7b4948a/dev/nvim-lsp.nix#L83-L95
+lspconfig.nil_ls.setup({
+  autostart = true,
+  capabilities = capabilities,
+  cmd = { "nil" },
+  settings = {
+    ['nil'] = {
+      formatting = {
+        command = { "nixpkgs-fmt" },
+      },
+    },
+  },
+})
 
 -- Configure lua language server
 -- See https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#lua_ls
