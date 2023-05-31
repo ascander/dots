@@ -12,6 +12,7 @@
   # Dotfiles
   # TODO: re-evaluate
   xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
+  xdg.configFile."alacritty/alacritty.yml".source = ../config/alacritty/alacritty.yml;
   xdg.configFile."fd/ignore".source = ../config/fd/ignore;
   xdg.configFile."direnv/direnvrc".source = ../config/direnv/direnvrc;
   xdg.configFile."iTerm2/com.googlecode.iterm2.plist".source = ../config/iTerm2/com.googlecode.iterm2.plist;
