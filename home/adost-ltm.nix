@@ -1,5 +1,4 @@
-{ config, lib, pkgs, ... }:
-{
+{ config, lib, pkgs, ... }: {
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
@@ -46,7 +45,7 @@
       GPG_TTY = "$(tty)";
 
       JAVA_HOME = "${pkgs.openjdk8}";
-      TERMINFO_DIRS = "${pkgs.alacritty.terminfo.outPath}/share/terminfo";
+      TERMINFO_DIRS = "$HOME/.local/share/terminfo:${pkgs.unstable.alacritty.terminfo.outPath}/share/terminfo";
     };
     initExtra = builtins.readFile ../config/zsh/.zshrc;
   };
