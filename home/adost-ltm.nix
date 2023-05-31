@@ -15,7 +15,6 @@
   xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
   xdg.configFile."fd/ignore".source = ../config/fd/ignore;
   xdg.configFile."direnv/direnvrc".source = ../config/direnv/direnvrc;
-  xdg.configFile."alacritty/alacritty.yml".source = ../config/alacritty/alacritty.yml;
   xdg.configFile."iTerm2/com.googlecode.iterm2.plist".source = ../config/iTerm2/com.googlecode.iterm2.plist;
   xdg.configFile.nvim = {
     source = ../config/nvim;
@@ -47,7 +46,7 @@
       GPG_TTY = "$(tty)";
 
       JAVA_HOME = "${pkgs.openjdk8}";
-      TERMINFO_DIRS = "${pkgs.unstable.alacritty.terminfo.outPath}/share/terminfo";
+      TERMINFO_DIRS = "${pkgs.alacritty.terminfo.outPath}/share/terminfo";
     };
     initExtra = builtins.readFile ../config/zsh/.zshrc;
   };
