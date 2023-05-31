@@ -52,7 +52,7 @@
         };
       };
 
-      darwinConfigurations = rec {
+      darwinConfigurations = {
         adost-ltm = darwinSystem {
           system = "x86_64-darwin";
           modules = [
