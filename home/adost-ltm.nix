@@ -165,12 +165,13 @@
   # https://nix-community.github.io/home-manager/options.html#opt-programs.neovim.enable
   programs.neovim = {
   enable = true;
+  package = pkgs.unstable.neovim-unwrapped;
   viAlias = true;
   vimAlias = true;
   vimdiffAlias = true;
   withNodeJs = true;
   plugins =
-    with pkgs;
+    with pkgs.unstable;
     with vimPlugins;
     [
       cmp-buffer
