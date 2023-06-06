@@ -2,7 +2,7 @@
   description = "Ascander's darwin system";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-22.11-darwin";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-23.05-darwin";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     darwin.url = "github:lnl7/nix-darwin/master";
@@ -11,7 +11,7 @@
     # Use the `home-manager` branch corresponding to the 'nixpkgs' branch
     #
     # See: https://github.com/nix-community/home-manager/issues/3928
-    home-manager.url = "github:nix-community/home-manager/release-22.11";
+    home-manager.url = "github:nix-community/home-manager/release-23.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs:
@@ -63,6 +63,7 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.adost = import ./home/adost-ltm.nix;
+              users.users.adost.home = "/Users/adost";
             }
           ];
         };
