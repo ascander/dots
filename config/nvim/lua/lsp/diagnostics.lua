@@ -28,8 +28,8 @@ end
 -- Settings.
 sign({ name = "DiagnosticSignError", text = "●" })
 sign({ name = "DiagnosticSignWarn", text = "▲" })
-sign({ name = "DiagnosticSignHint", text = "⚑" })
 sign({ name = "DiagnosticSignInfo", text = "»" })
+sign({ name = "DiagnosticSignHint", text = "⚑" })
 
 vim.diagnostic.config({
   virtual_text = false,

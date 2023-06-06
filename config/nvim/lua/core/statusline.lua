@@ -11,7 +11,6 @@ See:
   - https://github.com/nvim-lualine/lualine.nvim#usage-and-customization
 
 --]]
-
 local ok, lualine = pcall(require, "lualine")
 if not ok then
   return
@@ -25,7 +24,17 @@ lualine.setup({
   },
   sections = {
     lualine_a = { "mode" },
-    lualine_b = { "branch", "diff", "diagnostics" },
+    lualine_b = { "branch", "diff",
+      {
+        "diagnostics",
+        symbols = {
+          error = '●',
+          warn = '▲',
+          info = '»',
+          hint = '⚑',
+        }
+      }
+    },
     lualine_c = { "filename", "g:metals_status" },
     lualine_x = { "fileformat", "encoding", "filetype" },
     lualine_y = { "progress" },
