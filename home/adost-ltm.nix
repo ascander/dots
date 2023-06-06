@@ -229,7 +229,6 @@
     coursier
     delta
     exa
-    fasd
     fd
     fzf
     gawk
@@ -255,6 +254,7 @@
     unstable.lua-language-server
     tree
     tree-sitter
+    zoxide
     zsh-completions
     zsh-syntax-highlighting
   ];
