@@ -1,4 +1,10 @@
-{ config, lib, pkgs, ... }: {
+{ config, lib, pkgs, ... }:
+let
+  inherit (config.lib.file) mkOutOfStoreSymlink;
+
+  nixConfigDir = "/Users/adost/code/dots";
+in
+{
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
@@ -9,17 +15,16 @@
   # See https://nix-community.github.io/home-manager/release-notes.html
   home.stateVersion = "22.11";
 
-  # Dotfiles
-  # TODO: re-evaluate
+  # Dotfiles (stable)
   xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
-  xdg.configFile."alacritty/alacritty.yml".source = ../config/alacritty/alacritty.yml;
   xdg.configFile."fd/ignore".source = ../config/fd/ignore;
   xdg.configFile."direnv/direnvrc".source = ../config/direnv/direnvrc;
-  xdg.configFile."iTerm2/com.googlecode.iterm2.plist".source = ../config/iTerm2/com.googlecode.iterm2.plist;
-  xdg.configFile.nvim = {
-    source = ../config/nvim;
-    recursive = true;
-  };
+
+  # Dotfiles (unstable)
+  # This allows direct editing for testing, troubleshooting, etc.
+  # Warning: it is possible to lose configuration if changes are made and not ported to this repository
+  xdg.configFile."alacritty/alacritty.yml".source = mkOutOfStoreSymlink "${nixConfigDir}/config/alacritty/alacritty.yml";
+  xdg.configFile.nvim.source = mkOutOfStoreSymlink "${nixConfigDir}/config/nvim";
 
   # ZSH
   # https://nix-community.github.io/home-manager/options.html#opt-programs.zsh.enable

@@ -75,7 +75,7 @@
   # NOTE: this removes any manually added fonts
   fonts.fontDir.enable = true;
   fonts.fonts = with pkgs; [
-    (nerdfonts.override { fonts = [ "FiraMono" ]; })
+    (nerdfonts.override { fonts = [ "FiraMono" "VictorMono" ]; })
     source-sans-pro
   ];
 
