@@ -22,7 +22,6 @@ in
 
   # Dotfiles (unstable)
   # This allows direct editing for testing, troubleshooting, etc.
-  # Warning: it is possible to lose configuration if changes are made and not ported to this repository
   xdg.configFile."alacritty/alacritty.yml".source = mkOutOfStoreSymlink "${nixConfigDir}/config/alacritty/alacritty.yml";
   xdg.configFile.nvim.source = mkOutOfStoreSymlink "${nixConfigDir}/config/nvim";
 
