@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }: {
+{ lib, pkgs, ... }: {
   # Nix configuration
   nix.settings = {
     trusted-users = [ "@admin" ];
