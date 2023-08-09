@@ -54,6 +54,7 @@
 
       darwinModules = {
         bootstrap = import ./darwin/bootstrap.nix;
+        defaults = import ./darwin/defaults.nix;
         configuration = import ./darwin/configuration.nix;
         homebrew = import ./darwin/homebrew.nix;
       };
