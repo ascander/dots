@@ -22,6 +22,8 @@ in
 
   # Prefer applications from the Mac App Store
   homebrew.masApps = {
+    Slack = 803453959;
+    "Things 3" = 904280696;
   };
 
   # Use Homebrew Casks for applications not available in the Mac App Store
@@ -30,6 +32,10 @@ in
   # installed via nix-darwin or home-manager are not, by default.
   homebrew.casks = [
     "alacritty"
+    "karabiner-elements"
+    "obsidian"
+    "signal"
+    "spotify"
   ];
 
   # A last resort; for packages that aren't available (or broken) in `nixpkgs`
