@@ -52,11 +52,17 @@
         };
       };
 
+      darwinModules = {
+        bootstrap = import ./darwin/bootstrap.nix;
+        defaults = import ./darwin/defaults.nix;
+        configuration = import ./darwin/configuration.nix;
+        homebrew = import ./darwin/homebrew.nix;
+      };
+
       darwinConfigurations = {
         adost-ltm = darwinSystem {
           system = "x86_64-darwin";
-          modules = [
-            ./darwin/configuration.nix
+          modules = attrValues self.darwinModules ++ [
             home-manager.darwinModules.home-manager
             {
               nixpkgs = nixpkgsConfig;
