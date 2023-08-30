@@ -32,6 +32,7 @@ in
   # installed via nix-darwin or home-manager are not, by default.
   homebrew.casks = [
     "alacritty"
+    "arc"
     "karabiner-elements"
     "obsidian"
     "signal"
