@@ -59,6 +59,11 @@
         homebrew = import ./darwin/homebrew.nix;
       };
 
+      homeManagerModules = {
+        dotfiles = import ./home/dotfiles.nix;
+        ascii = import ./home/adost-ltm.nix;
+      };
+
       darwinConfigurations = {
         adost-ltm = darwinSystem {
           system = "x86_64-darwin";
@@ -68,7 +73,9 @@
               nixpkgs = nixpkgsConfig;
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.adost = import ./home/adost-ltm.nix;
+              home-manager.users.adost = {
+                imports = attrValues self.homeManagerModules;
+              };
               users.users.adost.home = "/Users/adost";
             }
           ];

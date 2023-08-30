@@ -1,9 +1,4 @@
 { config, lib, pkgs, ... }:
-let
-  inherit (config.lib.file) mkOutOfStoreSymlink;
-
-  nixConfigDir = "/Users/adost/code/dots";
-in
 {
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -15,15 +10,6 @@ in
   # See https://nix-community.github.io/home-manager/release-notes.html
   home.stateVersion = "22.11";
 
-  # Dotfiles (stable)
-  xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
-  xdg.configFile."fd/ignore".source = ../config/fd/ignore;
-  xdg.configFile."direnv/direnvrc".source = ../config/direnv/direnvrc;
-
-  # Dotfiles (unstable)
-  # This allows direct editing for testing, troubleshooting, etc.
-  xdg.configFile."alacritty/alacritty.yml".source = mkOutOfStoreSymlink "${nixConfigDir}/config/alacritty/alacritty.yml";
-  xdg.configFile.nvim.source = mkOutOfStoreSymlink "${nixConfigDir}/config/nvim";
 
   # ZSH
   # https://nix-community.github.io/home-manager/options.html#opt-programs.zsh.enable
