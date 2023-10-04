@@ -33,7 +33,7 @@ end
 -- Settings
 local metals_config = metals.bare_config()
 metals_config.settings = {
-  serverVersion = "1.0.0",
+  serverVersion = "1.0.1",
   fallbackScalaVersion = "2.12.15",
   showImplicitArguments = true,
   showImplicitConversionsAndClasses = true,
