@@ -200,6 +200,7 @@ in
           tree-sitter-java
           tree-sitter-kotlin
           tree-sitter-lua
+          tree-sitter-markdown
           tree-sitter-nix
           tree-sitter-python
           tree-sitter-scala
@@ -241,6 +242,7 @@ in
     gnupg
     gnugrep
     gtop
+    httpie
     jq
     openjdk8
     ncspot
