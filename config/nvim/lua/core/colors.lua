@@ -35,4 +35,4 @@ nightfox.setup({ options = { styles = { comments = "italic" } } })
 rose_pine.setup({ dark_variant = "moon" })
 
 -- Enable default theme.
-vim.cmd("colorscheme terafox")
+vim.cmd("colorscheme nordfox")
