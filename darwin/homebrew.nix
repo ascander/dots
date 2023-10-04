@@ -9,9 +9,17 @@ in
   '';
 
   homebrew.enable = true;
-  homebrew.onActivation.autoUpdate = true;
-  homebrew.onActivation.cleanup = "zap";
   homebrew.global.brewfile = true;
+  homebrew.onActivation.cleanup = "zap";
+
+  # Disable homebrew auto-updating itself and formulae when called manually.
+  # Homebrew formulae are only upgraded during nix-darwin system activation,
+  # after running `brew update` explicitly.
+  #
+  # See: https://daiderd.com/nix-darwin/manual/index.html#opt-homebrew.global.autoUpdate
+  homebrew.global.autoUpdate = false;
+  homebrew.onActivation.autoUpdate = false;
+  homebrew.onActivation.upgrade = true;
 
   homebrew.taps = [
     "homebrew/bundle"
