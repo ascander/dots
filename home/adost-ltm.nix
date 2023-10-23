@@ -233,7 +233,7 @@ in
     bat
     coursier
     delta
-    exa
+    unstable.eza
     fd
     fzf
     gawk

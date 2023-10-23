@@ -91,8 +91,8 @@ alias bat="bat --theme=TwoDark"
 alias cat="bat"
 alias f="cat"
 
-# Exa ('ls' replacement) aliases
-alias ls="exa --color=auto --group-directories-first" # use color and group directories first
+# Eza ('ls' replacement) aliases
+alias ls="eza --color=auto --group-directories-first" # use color and group directories first
 alias ll="ls --long --header --git"                   # long format, with headers and git status
 alias la="ll -a"                                      # show all files
 alias lm="ll --sort=modified"                         # show by modified date (oldest first)
