@@ -42,6 +42,17 @@ in
       size = 10000;
       save = 10000;
     };
+    plugins = [
+      {
+        name = "zsh-vi-mode";
+        src = pkgs.fetchFromGitHub {
+          owner = "jeffreytse";
+          repo = "zsh-vi-mode";
+          rev = "v0.10.0";
+          sha256 = "13ifm0667my9izsl2zwidf33vg6byjw5dnyrm27lcprn0g1rjkj0";
+        };
+      }
+    ];
     sessionVariables = {
       EDITOR = "nvim";
       VISUAL = "nvim";
