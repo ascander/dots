@@ -222,6 +222,7 @@ in
         nvim-web-devicons
         onedark-nvim
         rose-pine
+        symbols-outline-nvim
         telescope
         telescope-fzf-native-nvim
         vim-easy-align
