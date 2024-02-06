@@ -23,8 +23,6 @@ in
 
   homebrew.taps = [
     "homebrew/bundle"
-    "homebrew/cask"
-    "homebrew/core"
     "nrlquaker/createzap"
   ];
 
