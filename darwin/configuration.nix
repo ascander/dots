@@ -3,7 +3,9 @@
   # NOTE: this removes any manually added fonts
   fonts.fontDir.enable = true;
   fonts.fonts = with pkgs; [
-    (nerdfonts.override { fonts = [ "FiraMono" "IBMPlexMono" ]; })
-    source-sans-pro
+    cooper-hewitt
+    (nerdfonts.override { fonts = [ "FiraMono" "FiraCode" "IBMPlexMono" ]; })
+    source-sans
+    source-serif
   ];
 }

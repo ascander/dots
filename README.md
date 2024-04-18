@@ -16,3 +16,11 @@ nix build .#darwinConfigurations.{hostname}.system && ./result/sw/bin/darwin-reb
 ```
 
 where `{hostname}` is a Darwin configuration in `flake.nix`.
+
+## Tasks
+
+- [x] Update Darwin fonts
+- [ ] Update HM packages
+- [ ] Update Homebrew packages
+- [ ] Update MAS packages
+- [ ] Experiment with Neovim flake based setup
