@@ -39,6 +39,7 @@ in
   homebrew.casks = [
     "alacritty"
     "arc"
+    "intellij-idea-ce"
     "karabiner-elements"
     "obsidian"
     "signal"
@@ -47,6 +48,8 @@ in
 
   # A last resort; for packages that aren't available (or broken) in `nixpkgs`
   homebrew.brews = [
+    "jenv"
+    "mvn"
     "poetry"
     "pyenv"
   ];
