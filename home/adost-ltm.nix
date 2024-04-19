@@ -242,38 +242,53 @@ in
 
   # Packages
   home.packages = with pkgs; [
+    # Nix stuff
+    nix-zsh-completions
+    nixpkgs-fmt
+
+    # ZSH plugins
+    zsh-autocomplete
+    zsh-autosuggestions
+    zsh-completions
+    zsh-history-substring-search
+    zsh-syntax-highlighting
+    zsh-vi-mode
+
+    # Command line utilities
     bat
     coursier
     delta
-    unstable.eza
     fd
     fzf
     gawk
     gitAndTools.gh
-    glow
-    gnupg
     gnugrep
+    gnupg
     gtop
     httpie
     jq
-    openjdk8
-    ncspot
-    nil
-    nix-zsh-completions
-    nixpkgs-fmt
-    nodePackages.bash-language-server
-    nodePackages.yaml-language-server
-    nodePackages.mermaid-cli
-    pinentry_mac
-    pyright
+    pstree
+    tree
+    unstable.eza
+    zoxide
+
+    # Neovim requirements
+    glow
     reattach-to-user-namespace
     ripgrep
     stylua
-    unstable.lua-language-server
-    tree
     tree-sitter
-    zoxide
-    zsh-completions
-    zsh-syntax-highlighting
+    unstable.lazygit
+
+    # Language servers
+    nil
+    nodePackages.bash-language-server
+    nodePackages.yaml-language-server
+    pyright
+    unstable.lua-language-server
+
+    # Misc
+    openjdk8
+    pinentry_mac
   ];
 }

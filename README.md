@@ -20,7 +20,7 @@ where `{hostname}` is a Darwin configuration in `flake.nix`.
 ## Tasks
 
 - [x] Update Darwin fonts
-- [ ] Update HM packages
+- [x] Update HM packages
 - [ ] Update Homebrew packages
 - [ ] Update MAS packages
 - [ ] Experiment with Neovim flake based setup
