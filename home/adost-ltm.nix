@@ -261,7 +261,8 @@ in
     fd
     fzf
     gawk
-    gitAndTools.gh
+    gh
+    gh-dash
     gnugrep
     gnupg
     gtop
