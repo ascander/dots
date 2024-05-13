@@ -68,7 +68,8 @@
               nixpkgs = nixpkgsConfig;
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.adost = import ./home/adost-ltm.nix;
+
+              home-manager.users.adost = import ./home/home.nix;
               users.users.adost.home = "/Users/adost";
             }
           ];

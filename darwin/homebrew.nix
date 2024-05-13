@@ -4,10 +4,6 @@ let
   brewEnabled = config.homebrew.enable;
 in
 {
-  environment.shellInit = mkIf brewEnabled ''
-    eval "$(${config.homebrew.brewPrefix}/brew shellenv)"
-  '';
-
   homebrew.enable = true;
   homebrew.global.brewfile = true;
   homebrew.onActivation.cleanup = "zap";
@@ -29,7 +25,7 @@ in
   # Prefer applications from the Mac App Store
   homebrew.masApps = {
     Slack = 803453959;
-    "Things 3" = 904280696;
+    "Things 4" = 904280696;
   };
 
   # Use Homebrew Casks for applications not available in the Mac App Store
