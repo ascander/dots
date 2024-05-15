@@ -182,7 +182,7 @@ in
   # https://nix-community.github.io/home-manager/options.html#opt-programs.neovim.enable
   # programs.neovim = {
   #   enable = true;
-  #   package = pkgs.unstable.neovim-unwrapped;
+  #   package = pkgs.neovim-nightly;
   #   viAlias = true;
   #   vimAlias = true;
   #   vimdiffAlias = true;
@@ -276,6 +276,7 @@ in
     zoxide
 
     # Neovim requirements
+    neovim-nightly
     glow
     reattach-to-user-namespace
     ripgrep
