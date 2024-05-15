@@ -19,11 +19,13 @@ in
   xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
   xdg.configFile."fd/ignore".source = ../config/fd/ignore;
   xdg.configFile."direnv/direnvrc".source = ../config/direnv/direnvrc;
+  xdg.configFile."gh/config.yml".source = ../config/gh/config.yml;
+  xdg.configFile."gh/hosts.yml".source = ../config/gh/hosts.yml;
 
   # Dotfiles (unstable)
   # This allows direct editing for testing, troubleshooting, etc.
-  xdg.configFile."alacritty/alacritty.yml".source = mkOutOfStoreSymlink "${nixConfigDir}/config/alacritty/alacritty.yml";
-  xdg.configFile.nvim.source = mkOutOfStoreSymlink "${nixConfigDir}/config/nvim";
+  xdg.configFile.alacritty.source = mkOutOfStoreSymlink "${nixConfigDir}/config/alacritty";
+  # xdg.configFile.nvim.source = mkOutOfStoreSymlink "${nixConfigDir}/config/nvim";
 
   # ZSH
   # https://nix-community.github.io/home-manager/options.html#opt-programs.zsh.enable
@@ -31,7 +33,9 @@ in
     enable = true;
     enableAutosuggestions = true;
     enableCompletion = true;
-    enableSyntaxHighlighting = true;
+    syntaxHighlighting = {
+        enable = true;
+    };
     autocd = true;
     history = {
       expireDuplicatesFirst = true;
@@ -115,7 +119,7 @@ in
     userName = "Ascander Dost";
     userEmail = "1815984+ascander@users.noreply.github.com";
     signing = {
-      key = "7406157BCA775D6B";
+      key = "84ACF2EE";
       signByDefault = true;
     };
     aliases = {
@@ -180,57 +184,23 @@ in
   # https://nix-community.github.io/home-manager/options.html#opt-programs.neovim.enable
   programs.neovim = {
     enable = true;
-    package = pkgs.unstable.neovim-unwrapped;
-    viAlias = true;
-    vimAlias = true;
-    vimdiffAlias = true;
+    package = pkgs.neovim-nightly;
+    defaultEditor = true;
     withNodeJs = true;
+    withPython3 = true;
+    withRuby = false;
+    # Plugins
     plugins =
       with pkgs.unstable;
       with vimPlugins;
       [
-        cmp-buffer
-        cmp-nvim-lsp
-        cmp-nvim-lsp-signature-help
-        cmp-path
-        cmp_luasnip
-        comment-nvim
-        friendly-snippets
-        kanagawa-nvim
-        lspkind-nvim
-        lualine-nvim
-        luasnip
-        markdown-preview-nvim
-        nightfox-nvim
-        nvim-cmp
-        nvim-lspconfig
-        nvim-metals
-        (nvim-treesitter.withPlugins (plugins: with plugins; [
-          tree-sitter-bash
-          tree-sitter-dockerfile
-          tree-sitter-java
-          tree-sitter-kotlin
-          tree-sitter-lua
-          tree-sitter-markdown
-          tree-sitter-nix
-          tree-sitter-python
-          tree-sitter-scala
-          tree-sitter-toml
-          tree-sitter-yaml
-        ]))
-        nvim-treesitter-textobjects
-        nvim-web-devicons
-        onedark-nvim
-        rose-pine
-        symbols-outline-nvim
-        telescope
-        telescope-fzf-native-nvim
-        vim-easy-align
-        vim-fugitive
-        vim-nix
-        vim-rhubarb
-        vim-surround
         vim-tmux-navigator
+      ];
+    # Command line utilities, language servers, etc.
+    extraPackages = 
+      with pkgs.unstable;
+      [
+        ripgrep
       ];
   };
 
@@ -242,38 +212,53 @@ in
 
   # Packages
   home.packages = with pkgs; [
+    # Nix stuff
+    nix-zsh-completions
+    nixpkgs-fmt
+
+    # ZSH plugins
+    zsh-autocomplete
+    zsh-autosuggestions
+    zsh-completions
+    zsh-history-substring-search
+    zsh-syntax-highlighting
+    zsh-vi-mode
+
+    # Command line utilities
     bat
     coursier
     delta
-    unstable.eza
     fd
     fzf
     gawk
-    gitAndTools.gh
-    glow
-    gnupg
+    gh
+    gh-dash
     gnugrep
+    gnupg
     gtop
     httpie
     jq
-    openjdk8
-    ncspot
+    pstree
+    tree
+    unstable.eza
+    zoxide
+
+    # Neovim requirements
+    glow
+    reattach-to-user-namespace
+    stylua
+    tree-sitter
+    unstable.lazygit
+
+    # Language servers
     nil
-    nix-zsh-completions
-    nixpkgs-fmt
     nodePackages.bash-language-server
     nodePackages.yaml-language-server
-    nodePackages.mermaid-cli
-    pinentry_mac
     pyright
-    reattach-to-user-namespace
-    ripgrep
-    stylua
     unstable.lua-language-server
-    tree
-    tree-sitter
-    zoxide
-    zsh-completions
-    zsh-syntax-highlighting
+
+    # Misc
+    # openjdk8
+    pinentry_mac
   ];
 }

@@ -4,10 +4,6 @@ let
   brewEnabled = config.homebrew.enable;
 in
 {
-  environment.shellInit = mkIf brewEnabled ''
-    eval "$(${config.homebrew.brewPrefix}/brew shellenv)"
-  '';
-
   homebrew.enable = true;
   homebrew.global.brewfile = true;
   homebrew.onActivation.cleanup = "zap";
@@ -29,7 +25,7 @@ in
   # Prefer applications from the Mac App Store
   homebrew.masApps = {
     Slack = 803453959;
-    "Things 3" = 904280696;
+    "Things 4" = 904280696;
   };
 
   # Use Homebrew Casks for applications not available in the Mac App Store
@@ -37,9 +33,10 @@ in
   # Note: apps installed via Homebrew are Spotlight-indexed, whereas those
   # installed via nix-darwin or home-manager are not, by default.
   homebrew.casks = [
+    "1password"
     "alacritty"
+    "amethyst"
     "arc"
-    "intellij-idea-ce"
     "karabiner-elements"
     "obsidian"
     "signal"
@@ -48,8 +45,6 @@ in
 
   # A last resort; for packages that aren't available (or broken) in `nixpkgs`
   homebrew.brews = [
-    "jenv"
-    "mvn"
     "poetry"
     "pyenv"
   ];
