@@ -19,6 +19,8 @@ in
   xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
   xdg.configFile."fd/ignore".source = ../config/fd/ignore;
   xdg.configFile."direnv/direnvrc".source = ../config/direnv/direnvrc;
+  xdg.configFile."gh/config.yml".source = ../config/gh/config.yml;
+  xdg.configFile."gh/hosts.yml".source = ../config/gh/hosts.yml;
 
   # Dotfiles (unstable)
   # This allows direct editing for testing, troubleshooting, etc.
