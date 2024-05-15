@@ -29,7 +29,7 @@ in {
   # Dotfiles (unstable)
   # This allows direct editing for testing, troubleshooting, etc.
   xdg.configFile.alacritty.source = mkOutOfStoreSymlink "${nixConfigDir}/config/alacritty";
-  # xdg.configFile.nvim.source = mkOutOfStoreSymlink "${nixConfigDir}/config/nvim";
+  xdg.configFile.nvim.source = mkOutOfStoreSymlink "${nixConfigDir}/config/nvim";
 
   # ZSH
   # https://nix-community.github.io/home-manager/options.html#opt-programs.zsh.enable
@@ -205,18 +205,22 @@ in {
     enable = true;
     package = pkgs.neovim-nightly;
     defaultEditor = true;
-    withNodeJs = true;
+    withNodeJs = false;
     withPython3 = true;
     withRuby = false;
     # Plugins
-    plugins = with pkgs.unstable;
-    with vimPlugins; [
-      vim-tmux-navigator
-    ];
+    plugins =
+      with pkgs.unstable;
+      with vimPlugins;
+      [
+        vim-tmux-navigator
+      ];
     # Command line utilities, language servers, etc.
-    extraPackages = with pkgs.unstable; [
-      ripgrep
-    ];
+    extraPackages =
+      with pkgs.unstable;
+      [
+        ripgrep
+      ];
   };
 
   # Direnv
@@ -261,6 +265,7 @@ in {
     # Neovim requirements
     glow
     reattach-to-user-namespace
+    ripgrep
     stylua
     tree-sitter
     unstable.lazygit
