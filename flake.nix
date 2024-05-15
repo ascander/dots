@@ -13,6 +13,10 @@
     # See: https://github.com/nix-community/home-manager/issues/3928
     home-manager.url = "github:nix-community/home-manager/release-23.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Neovim
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    neovim-nightly-overlay.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs:
     let
@@ -23,25 +27,25 @@
       # Configuration for 'nixpkgs'
       nixpkgsConfig = {
         config = { allowUnfree = true; };
-        overlays = attrValues self.overlays ++ singleton (
-          # Substitute x86 versions of packages that don't build on Apple Silicon yet
-          final: prev: (optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-            inherit (final.pkgs-x86);
-          }) // {
-            # Add other overlays here if needed.
-          }
-        );
+        overlays = attrValues self.overlays ++ [
+          inputs.neovim-nightly-overlay.overlay
+        ];      
       };
     in
     {
       overlays = {
-        # Adds access to (unstable) x86 packages through 'pkgs.x86' if running Apple Silicon
-        apple-silicon = _: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-          x86 = import inputs.nixpkgs-unstable {
-            system = "x86_64-darwin";
-            inherit (nixpkgsConfig) config;
-          };
-        };
+        # # Adds access to (unstable) x86 packages through 'pkgs.x86' if running Apple Silicon
+        # apple-silicon = _: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
+        #   x86 = import inputs.nixpkgs-unstable {
+        #     system = "x86_64-darwin";
+        #     inherit (nixpkgsConfig) config;
+        #   };
+        # };
+
+        # # Substitute x86 versions of packages that don't build on Apple Silicon yet
+        # sub-x86 = final: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
+        #   inherit (final.x86);
+        # };
 
         # Adds access to unstable packages through 'pkgs.unstable'
         pkgs-unstable = _: prev: {
