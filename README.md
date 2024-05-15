@@ -16,3 +16,17 @@ nix build .#darwinConfigurations.{hostname}.system && ./result/sw/bin/darwin-reb
 ```
 
 where `{hostname}` is a Darwin configuration in `flake.nix`.
+
+### Updating
+
+Update all flake inputs by running:
+
+```shell
+nix flake update
+```
+
+Update the flake input `{input}` by running:
+
+```shell
+nix flake lock --update-input {input}
+```
