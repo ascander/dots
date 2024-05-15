@@ -180,61 +180,27 @@ in
 
   # Neovim
   # https://nix-community.github.io/home-manager/options.html#opt-programs.neovim.enable
-  # programs.neovim = {
-  #   enable = true;
-  #   package = pkgs.neovim-nightly;
-  #   viAlias = true;
-  #   vimAlias = true;
-  #   vimdiffAlias = true;
-  #   withNodeJs = true;
-  #   plugins =
-  #     with pkgs.unstable;
-  #     with vimPlugins;
-  #     [
-  #       cmp-buffer
-  #       cmp-nvim-lsp
-  #       cmp-nvim-lsp-signature-help
-  #       cmp-path
-  #       cmp_luasnip
-  #       comment-nvim
-  #       friendly-snippets
-  #       kanagawa-nvim
-  #       lspkind-nvim
-  #       lualine-nvim
-  #       luasnip
-  #       markdown-preview-nvim
-  #       nightfox-nvim
-  #       nvim-cmp
-  #       nvim-lspconfig
-  #       nvim-metals
-  #       (nvim-treesitter.withPlugins (plugins: with plugins; [
-  #         tree-sitter-bash
-  #         tree-sitter-dockerfile
-  #         tree-sitter-java
-  #         tree-sitter-kotlin
-  #         tree-sitter-lua
-  #         tree-sitter-markdown
-  #         tree-sitter-nix
-  #         tree-sitter-python
-  #         tree-sitter-scala
-  #         tree-sitter-toml
-  #         tree-sitter-yaml
-  #       ]))
-  #       nvim-treesitter-textobjects
-  #       nvim-web-devicons
-  #       onedark-nvim
-  #       rose-pine
-  #       symbols-outline-nvim
-  #       telescope
-  #       telescope-fzf-native-nvim
-  #       vim-easy-align
-  #       vim-fugitive
-  #       vim-nix
-  #       vim-rhubarb
-  #       vim-surround
-  #       vim-tmux-navigator
-  #     ];
-  # };
+  programs.neovim = {
+    enable = true;
+    package = pkgs.neovim-nightly;
+    defaultEditor = true;
+    withNodeJs = true;
+    withPython3 = true;
+    withRuby = false;
+    # Plugins
+    plugins =
+      with pkgs.unstable;
+      with vimPlugins;
+      [
+        vim-tmux-navigator
+      ];
+    # Command line utilities, language servers, etc.
+    extraPackages = 
+      with pkgs.unstable;
+      [
+        ripgrep
+      ];
+  };
 
   # Direnv
   # https://nix-community.github.io/home-manager/options.html#opt-programs.direnv.enable
@@ -276,10 +242,8 @@ in
     zoxide
 
     # Neovim requirements
-    neovim-nightly
     glow
     reattach-to-user-namespace
-    ripgrep
     stylua
     tree-sitter
     unstable.lazygit
