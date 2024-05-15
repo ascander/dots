@@ -45,7 +45,6 @@ in
 
   # A last resort; for packages that aren't available (or broken) in `nixpkgs`
   homebrew.brews = [
-    "neovim"
     "poetry"
     "pyenv"
   ];
