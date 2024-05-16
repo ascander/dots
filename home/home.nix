@@ -216,9 +216,20 @@ in {
 	# Editor
 	pkgs.vimPlugins.nvim-tree
 	comment-nvim
+	telescope-nvim
+	telescope-fzf-native-nvim
 
 	# UI
         vim-tmux-navigator
+
+	# Colorschemes
+	kanagawa-nvim
+	nightfox-nvim
+	rose-pine
+	tokyonight-nvim
+
+	# Dependencies
+	plenary-nvim
       ];
     # Command line utilities, language servers, etc.
     extraPackages =
