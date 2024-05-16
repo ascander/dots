@@ -107,7 +107,7 @@ in
       [
         {
           plugin = fingers;
-          extraConfig = "set -g @fingers-copy-command 'pbcopy'";
+          extraConfig = "set -g @fingers-main-action 'pbcopy'";
         }
         {
           plugin = power-theme;
