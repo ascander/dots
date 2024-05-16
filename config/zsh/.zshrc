@@ -40,6 +40,7 @@ ide () {
 }
 
 # Tmux aliases
+alias tm='tmux'
 alias tl='tmux list-sessions'
 alias ts='tmux new-session -s'
 alias ta='tmux attach -t'
@@ -47,6 +48,7 @@ alias tk='tmux kill-session -t'
 
 # Git aliases
 # Taken from: https://github.com/holman/dotfiles/blob/master/git/aliases.zsh
+alias gg='lazygit'
 alias ga='git add'
 alias gc='git commit'
 alias gca='git commit -a'
@@ -77,6 +79,8 @@ if (( $+commands[pyenv] )); then
 fi
 
 # Nix aliases
+alias nb='nix build'
+alias nd='nix develop'
 alias ns='nix-shell'
 alias ne='nix-env'
 
