@@ -213,6 +213,11 @@ in {
       with pkgs.unstable;
       with vimPlugins;
       [
+	# Editor
+	pkgs.vimPlugins.nvim-tree
+	comment-nvim
+
+	# UI
         vim-tmux-navigator
       ];
     # Command line utilities, language servers, etc.
