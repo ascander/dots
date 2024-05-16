@@ -21,6 +21,7 @@ in
   xdg.configFile."direnv/direnvrc".source = ../config/direnv/direnvrc;
   xdg.configFile."gh/config.yml".source = ../config/gh/config.yml;
   xdg.configFile."gh/hosts.yml".source = ../config/gh/hosts.yml;
+  xdg.configFile."lazygit/config.yml".source = ../config/lazygit/config.yml;
 
   # Dotfiles (unstable)
   # This allows direct editing for testing, troubleshooting, etc.
@@ -64,7 +65,7 @@ in
       MANPAGER = "sh -c 'col -bx | bat -l man -p'";
       GPG_TTY = "$(tty)";
 
-      JAVA_HOME = "${pkgs.openjdk8}";
+      XDG_CONFIG_HOME = "$HOME/.config";
       TERMINFO_DIRS = "$HOME/.local/share/terminfo:${pkgs.unstable.alacritty.terminfo.outPath}/share/terminfo";
     };
     initExtra = builtins.readFile ../config/zsh/.zshrc;
@@ -96,19 +97,34 @@ in
     enable = true;
     clock24 = true;
     keyMode = "vi";
+    mouse = true;
     shortcut = "a";
     terminal = "tmux-256color";
     escapeTime = 10;
-    plugins = with pkgs; [
-      {
-        plugin = tmuxPlugins.fingers;
-        extraConfig = "set -g @fingers-copy-command 'pbcopy'";
-      }
-      {
-        plugin = tmuxPlugins.power-theme;
-        extraConfig = "set -g @tmux_power_theme 'default'";
-      }
-    ];
+    plugins =
+      with pkgs.unstable;
+      with tmuxPlugins;
+      [
+        {
+          plugin = fingers;
+          extraConfig = "set -g @fingers-copy-command 'pbcopy'";
+        }
+        {
+          plugin = power-theme;
+          extraConfig = "set -g @tmux_power_theme 'default'";
+        }
+	{
+	  plugin = resurrect;
+	  extraConfig = "set -g @resurrect-strategy-nvim 'session'";
+	}
+	{
+	  plugin = continuum;
+	  extraConfig = ''
+	    set -g @continuum-restore 'on'
+	    set -g @continuum-save-interval '60' # minutes
+	  '';
+	}
+      ];
     extraConfig = builtins.readFile ../config/tmux/tmux.conf;
   };
 
@@ -197,7 +213,7 @@ in
         vim-tmux-navigator
       ];
     # Command line utilities, language servers, etc.
-    extraPackages = 
+    extraPackages =
       with pkgs.unstable;
       [
         ripgrep
