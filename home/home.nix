@@ -235,7 +235,8 @@ in {
     extraPackages =
       with pkgs.unstable;
       [
-        ripgrep
+        fd
+	ripgrep
       ];
   };
 
