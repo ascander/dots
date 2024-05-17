@@ -216,6 +216,7 @@ in {
 	# Editor
 	pkgs.vimPlugins.nvim-tree
 	comment-nvim
+	nvim-ts-autotag
 	telescope-nvim
 	telescope-fzf-native-nvim
 
