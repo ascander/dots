@@ -164,3 +164,10 @@ vim.keymap.set('v', '<leader>gy', function() require("gitlinker").get_buf_range_
 vim.keymap.set('n', '<leader>gY', function() require("gitlinker").get_buf_range_url("n", { action_callback = require("gitlinker.actions").open_in_browser }) end, opts)
 vim.keymap.set('v', '<leader>gY', function() require("gitlinker").get_buf_range_url("v", { action_callback = require("gitlinker.actions").open_in_browser }) end, opts)
 
+-- Git-conflict
+vim.keymap.set("n", "]x", "<cmd>GitConflictNextConflict<CR>", opts)
+vim.keymap.set("n", "[x", "<cmd>GitConflictPrevConflict<CR>", opts)
+vim.keymap.set("n", "co", "<cmd>GitConflictChooseOurs<CR>", opts)
+vim.keymap.set("n", "ct", "<cmd>GitConflictChooseTheirs<CR>", opts)
+vim.keymap.set("n", "cn", "<cmd>GitConflictChooseNone<CR>", opts)
+vim.keymap.set("n", "cb", "<cmd>GitConflictChooseBoth<CR>", opts)
