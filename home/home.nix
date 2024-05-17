@@ -216,12 +216,16 @@ in {
 	# Editor
 	pkgs.vimPlugins.nvim-tree
 	comment-nvim
+	nvim-treesitter.withAllGrammars
+	nvim-treesitter-textobjects
 	nvim-ts-autotag
+	nvim-ts-context-commentstring
 	telescope-nvim
 	telescope-fzf-native-nvim
 
 	# UI
         vim-tmux-navigator
+	nvim-treesitter-context
 
 	# Colorschemes
 	kanagawa-nvim
