@@ -243,6 +243,9 @@ in {
 	rose-pine
 	tokyonight-nvim
 
+	# Misc/Util
+	persistence-nvim
+
 	# Dependencies
 	plenary-nvim
       ];

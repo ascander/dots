@@ -181,3 +181,8 @@ vim.keymap.set("n", "<leader>up", function()
 		vim.notify("Enabled auto pairs")
 	end
 end, opts)
+
+-- Persistence
+vim.keymap.set("n", "<leader>qr", function() require("persistence").load() end, opts)
+vim.keymap.set("n", "<leader>ql", function() require("persistence").load({ last = true }) end, opts)
+vim.keymap.set("n", "<leader>qd", function() require("persistence").stop() end, opts)
