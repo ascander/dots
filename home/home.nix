@@ -222,6 +222,7 @@ in {
 	nvim-ts-context-commentstring
 	telescope-nvim
 	telescope-fzf-native-nvim
+	mini-nvim
 
 	# Git
 	git-conflict-nvim
