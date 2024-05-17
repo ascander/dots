@@ -157,3 +157,10 @@ vim.keymap.set('v', '<leader>sw', '<cmd>Telescope grep_string<CR>', opts)
 vim.keymap.set('n', '<leader>uc', '<cmd>Telescope colorscheme enable_preview=true<CR>', opts)
 vim.keymap.set('n', '<leader>ss', function() require("telescope.builtin").lsp_document_symbols() end, opts)
 vim.keymap.set('n', '<leader>sS', function() require("telescope.builtin").lsp_dynamic_workspace_symbols() end, opts)
+
+-- Gitlinker
+vim.keymap.set('n', '<leader>gy', function() require("gitlinker").get_buf_range_url("n", {}) end, opts)
+vim.keymap.set('v', '<leader>gy', function() require("gitlinker").get_buf_range_url("v", {}) end, opts)
+vim.keymap.set('n', '<leader>gY', function() require("gitlinker").get_buf_range_url("n", { action_callback = require("gitlinker.actions").open_in_browser }) end, opts)
+vim.keymap.set('v', '<leader>gY', function() require("gitlinker").get_buf_range_url("v", { action_callback = require("gitlinker.actions").open_in_browser }) end, opts)
+
