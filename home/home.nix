@@ -223,6 +223,11 @@ in {
 	telescope-nvim
 	telescope-fzf-native-nvim
 
+	# Git
+	git-conflict-nvim
+	gitsigns-nvim
+	gitlinker-nvim
+
 	# UI
         vim-tmux-navigator
 	lualine-nvim
