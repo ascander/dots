@@ -171,3 +171,13 @@ vim.keymap.set("n", "co", "<cmd>GitConflictChooseOurs<CR>", opts)
 vim.keymap.set("n", "ct", "<cmd>GitConflictChooseTheirs<CR>", opts)
 vim.keymap.set("n", "cn", "<cmd>GitConflictChooseNone<CR>", opts)
 vim.keymap.set("n", "cb", "<cmd>GitConflictChooseBoth<CR>", opts)
+
+-- Mini.pairs
+vim.keymap.set("n", "<leader>up", function()
+	vim.g.minipairs_disable = not vim.g.minipairs_disable
+	if vim.g.minipairs_disable then
+		vim.notify("Disabled auto pairs")
+	else
+		vim.notify("Enabled auto pairs")
+	end
+end, opts)
