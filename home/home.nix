@@ -230,6 +230,8 @@ in {
 	gitlinker-nvim
 
 	# UI
+	dashboard-nvim
+	indent-blankline-nvim
         vim-tmux-navigator
 	lualine-nvim
 	nvim-treesitter-context
