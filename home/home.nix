@@ -225,7 +225,9 @@ in {
 
 	# UI
         vim-tmux-navigator
+	lualine-nvim
 	nvim-treesitter-context
+	nvim-web-devicons
 
 	# Colorschemes
 	kanagawa-nvim

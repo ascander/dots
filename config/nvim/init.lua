@@ -11,6 +11,7 @@ vim.g.loaded_netrwPlugin = 1
 require("user.options")
 require("user.keymaps")
 require("user.colorscheme")
+require("user.lualine")
 require("user.nvim-tree")
 require("user.comment")
 require("user.treesitter")
