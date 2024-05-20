@@ -249,6 +249,7 @@ in {
 
 	# Misc/Util
 	persistence-nvim
+	which-key-nvim
 
 	# Dependencies
 	plenary-nvim
