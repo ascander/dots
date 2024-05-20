@@ -44,12 +44,18 @@ local opts = {
 		  { action = "Telescope oldfiles",                   desc = " Recent Files",    icon = " ", key = "r" },
 		  { action = "Telescope live_grep",                  desc = " Find Text",       icon = " ", key = "g" },
 		  { action = "e ~/.config/nvim",                     desc = " Config",          icon = " ", key = "c" },
-		  -- { action = 'lua require("persistence").load()',    desc = " Restore Session", icon = " ", key = "s" },
+		  { action = 'lua require("persistence").load()',    desc = " Restore Session", icon = " ", key = "s" },
 		  { action = "qa",                                   desc = " Quit",            icon = " ", key = "q" },
 		},
 		footer = { "It is a foolish dog that barks at flying birds." },
 	}
 
 }
+
+-- Add spacing for center section
+for _, button in ipairs(opts.config.center) do
+	button.desc = button.desc .. string.rep(" ", 43 - #button.desc)
+	button.key_format = " %s"
+end
 
 dashboard.setup(opts)
