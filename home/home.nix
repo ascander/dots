@@ -239,6 +239,7 @@ in {
 	lualine-nvim
 	nvim-treesitter-context
 	nvim-web-devicons
+	todo-comments-nvim
 
 	# Colorschemes
 	kanagawa-nvim

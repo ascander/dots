@@ -193,3 +193,11 @@ end, opts)
 vim.keymap.set("n", "<leader>qr", function() require("persistence").load() end, opts)
 vim.keymap.set("n", "<leader>ql", function() require("persistence").load({ last = true }) end, opts)
 vim.keymap.set("n", "<leader>qd", function() require("persistence").stop() end, opts)
+
+-- Todo-comments.nvim
+vim.keymap.set("n", "]t", function() require("todo-comments").jump_next() end, opts)
+vim.keymap.set("n", "[t", function() require("todo-comments").jump_prev() end, opts)
+vim.keymap.set("n", "<leader>xt", "<cmd>TodoTrouble<CR>", opts)
+vim.keymap.set("n", "<leader>xT", "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<CR>", opts)
+vim.keymap.set("n", "<leader>st", "<cmd>TodoTelescope<CR>", opts)
+vim.keymap.set("n", "<leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<CR>", opts)
