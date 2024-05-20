@@ -224,6 +224,9 @@ in {
 	telescope-fzf-native-nvim
 	mini-nvim
 
+	# Navigation
+	flash-nvim
+
 	# Git
 	git-conflict-nvim
 	gitsigns-nvim

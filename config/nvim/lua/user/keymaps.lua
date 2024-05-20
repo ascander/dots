@@ -120,6 +120,13 @@ vim.keymap.set("n", "<leader><tab>[", "<cmd>tabprevious<CR>", { desc = "Previous
 -- NvimTree
 vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<CR>', opts)
 
+-- Flash
+vim.keymap.set({ "n", "x", "o"}, "s", function() require("flash").jump() end, opts)
+vim.keymap.set({ "n", "x", "o"}, "S", function() require("flash").treesitter() end, opts)
+vim.keymap.set("o", "r", function() require("flash").remote() end, opts)
+vim.keymap.set({ "x", "o" }, "R", function() require("flash").treesitter_search() end, opts)
+vim.keymap.set("c", "<C-s>", function() require("flash").toggle() end, opts)
+
 -- Telescope
 -- Favorites; set easy maps for common actions
 vim.keymap.set('n', '<leader>,', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<CR>', opts)
