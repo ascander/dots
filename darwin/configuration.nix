@@ -1,10 +1,10 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   # Fonts
   # NOTE: this removes any manually added fonts
   fonts.fontDir.enable = true;
   fonts.fonts = with pkgs; [
     cooper-hewitt
-    (nerdfonts.override { fonts = [ "FiraMono" "FiraCode" "IBMPlexMono" ]; })
+    (nerdfonts.override {fonts = ["FiraMono" "FiraCode" "IBMPlexMono"];})
     source-sans
     source-serif
   ];
