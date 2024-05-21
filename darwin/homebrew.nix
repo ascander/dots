@@ -1,9 +1,11 @@
-{ config, lib, ... }:
-let
+{
+  config,
+  lib,
+  ...
+}: let
   inherit (lib) mkIf;
   brewEnabled = config.homebrew.enable;
-in
-{
+in {
   homebrew.enable = true;
   homebrew.global.brewfile = true;
   homebrew.onActivation.cleanup = "zap";
@@ -49,4 +51,3 @@ in
     "pyenv"
   ];
 }
-

@@ -1,10 +1,13 @@
-{ config, lib, pkgs, ... }:
-let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
   inherit (config.lib.file) mkOutOfStoreSymlink;
 
   nixConfigDir = "/Users/adost/code/dots";
-in
-{
+in {
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
@@ -35,7 +38,7 @@ in
     enableAutosuggestions = true;
     enableCompletion = true;
     syntaxHighlighting = {
-        enable = true;
+      enable = true;
     };
     autocd = true;
     history = {
@@ -101,30 +104,28 @@ in
     shortcut = "a";
     terminal = "tmux-256color";
     escapeTime = 10;
-    plugins =
-      with pkgs.unstable;
-      with tmuxPlugins;
-      [
-        {
-          plugin = fingers;
-          extraConfig = "set -g @fingers-main-action 'pbcopy'";
-        }
-        {
-          plugin = power-theme;
-          extraConfig = "set -g @tmux_power_theme 'default'";
-        }
-	{
-	  plugin = resurrect;
-	  extraConfig = "set -g @resurrect-strategy-nvim 'session'";
-	}
-	{
-	  plugin = continuum;
-	  extraConfig = ''
-	    set -g @continuum-restore 'on'
-	    set -g @continuum-save-interval '60' # minutes
-	  '';
-	}
-      ];
+    plugins = with pkgs.unstable;
+    with tmuxPlugins; [
+      {
+        plugin = fingers;
+        extraConfig = "set -g @fingers-main-action 'pbcopy'";
+      }
+      {
+        plugin = power-theme;
+        extraConfig = "set -g @tmux_power_theme 'default'";
+      }
+      {
+        plugin = resurrect;
+        extraConfig = "set -g @resurrect-strategy-nvim 'session'";
+      }
+      {
+        plugin = continuum;
+        extraConfig = ''
+          set -g @continuum-restore 'on'
+          set -g @continuum-save-interval '60' # minutes
+        '';
+      }
+    ];
     extraConfig = builtins.readFile ../config/tmux/tmux.conf;
   };
 
@@ -206,18 +207,14 @@ in
     withPython3 = true;
     withRuby = false;
     # Plugins
-    plugins =
-      with pkgs.unstable;
-      with vimPlugins;
-      [
-        vim-tmux-navigator
-      ];
+    plugins = with pkgs.unstable;
+    with vimPlugins; [
+      vim-tmux-navigator
+    ];
     # Command line utilities, language servers, etc.
-    extraPackages =
-      with pkgs.unstable;
-      [
-        ripgrep
-      ];
+    extraPackages = with pkgs.unstable; [
+      ripgrep
+    ];
   };
 
   # Direnv
