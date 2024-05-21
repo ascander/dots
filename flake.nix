@@ -2,27 +2,19 @@
   description = "Ascander's darwin system";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-23.11-darwin";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
-    darwin.url = "github:lnl7/nix-darwin/master";
+    # Nix darwin
+    darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Use the `home-manager` branch corresponding to the 'nixpkgs' branch
-    #
-    # See: https://github.com/nix-community/home-manager/issues/3928
-    home-manager.url = "github:nix-community/home-manager/release-23.11";
+    # Home manager
+    home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # Neovim nightly build
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    neovim-nightly-overlay.inputs.nixpkgs.follows = "nixpkgs-unstable";
-
-    # Neovim plugins
-    nvim-tree = {
-      url = "github:nvim-tree/nvim-tree.lua";
-      flake = false;
-    };
+    neovim-nightly-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs =
     { self
