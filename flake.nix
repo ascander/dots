@@ -36,9 +36,9 @@
     };
   in {
     overlays = {
-      # # Adds access to (unstable) x86 packages through 'pkgs.x86' if running Apple Silicon
+      # # Adds access to x86 packages through 'pkgs.x86' if running Apple Silicon
       # apple-silicon = _: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-      #   x86 = import inputs.nixpkgs-unstable {
+      #   x86 = import inputs.nixpkgs {
       #     system = "x86_64-darwin";
       #     inherit (nixpkgsConfig) config;
       #   };
@@ -48,14 +48,6 @@
       # sub-x86 = final: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
       #   inherit (final.x86);
       # };
-
-      # Adds access to unstable packages through 'pkgs.unstable'
-      pkgs-unstable = _: prev: {
-        unstable = import inputs.nixpkgs-unstable {
-          inherit (prev.stdenv) system;
-          inherit (nixpkgsConfig) config;
-        };
-      };
     };
 
     darwinModules = {
