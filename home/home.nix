@@ -15,7 +15,7 @@ in {
   # You can update Home Manager without changing this value. See the Home
   # Manager release notes for a list of state version changes in each release.
   #
-  # See https://nix-community.github.io/home-manager/release-notes.html
+  # See https://nix-community.github.io/home-manager/release-notes.xhtml
   home.stateVersion = "22.11";
 
   # Dotfiles (stable)
@@ -32,7 +32,7 @@ in {
   xdg.configFile.nvim.source = mkOutOfStoreSymlink "${nixConfigDir}/config/nvim";
 
   # ZSH
-  # https://nix-community.github.io/home-manager/options.html#opt-programs.zsh.enable
+  # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.zsh.enable
   programs.zsh = {
     enable = true;
     enableAutosuggestions = true;
@@ -66,6 +66,7 @@ in {
       VISUAL = "nvim";
       PAGER = "less";
       MANPAGER = "sh -c 'col -bx | bat -l man -p'";
+      MANROFFOPT="-c";
       GPG_TTY = "$(tty)";
 
       XDG_CONFIG_HOME = "$HOME/.config";
@@ -83,7 +84,7 @@ in {
   };
 
   # Tmux
-  # https://nix-community.github.io/home-manager/options.html#opt-programs.tmux.enable
+  # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.tmux.enable
   #
   # NOTE:
   # The 'tmux-256color' terminal is not available on macOS systems by default.
@@ -132,7 +133,7 @@ in {
   };
 
   # Git
-  # https://nix-community.github.io/home-manager/options.html#opt-programs.git.enable
+  # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.git.enable
   programs.git = {
     enable = true;
     userName = "Ascander Dost";
@@ -200,7 +201,8 @@ in {
   };
 
   # Neovim
-  # https://nix-community.github.io/home-manager/options.html#opt-programs.neovim.enable
+  # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.neovim.enable
+  # https://github.com/nix-community/neovim-nightly-overlay
   programs.neovim = {
     enable = true;
     package = pkgs.neovim-nightly;
@@ -260,8 +262,8 @@ in {
   };
 
   # Direnv
-  # https://nix-community.github.io/home-manager/options.html#opt-programs.direnv.enable
-  # https://nix-community.github.io/home-manager/options.html#opt-programs.direnv.nix-direnv.enable
+  # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.direnv.enable
+  # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.direnv.nix-direnv.enable
   programs.direnv.enable = true;
   programs.direnv.nix-direnv.enable = true;
 
@@ -314,7 +316,6 @@ in {
     unstable.lua-language-server
 
     # Misc
-    # openjdk8
     pinentry_mac
   ];
 }
