@@ -73,7 +73,7 @@ in
       GPG_TTY = "$(tty)";
 
       XDG_CONFIG_HOME = "$HOME/.config";
-      TERMINFO_DIRS = "$HOME/.local/share/terminfo:${pkgs.unstable.alacritty.terminfo.outPath}/share/terminfo";
+      TERMINFO_DIRS = "$HOME/.local/share/terminfo:${pkgs.alacritty.terminfo.outPath}/share/terminfo";
     };
     initExtra = builtins.readFile ../config/zsh/.zshrc;
   };
@@ -82,7 +82,6 @@ in
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.starship.enable
   programs.starship = {
     enable = true;
-    package = pkgs.unstable.starship;
     settings = builtins.fromTOML (builtins.readFile ../config/starship/starship.toml);
   };
 
@@ -110,29 +109,29 @@ in
     shortcut = "a";
     terminal = "tmux-256color";
     escapeTime = 10;
-    plugins = with pkgs.unstable;
-      with tmuxPlugins; [
-        {
-          plugin = fingers;
-          extraConfig = "set -g @fingers-main-action 'pbcopy'";
-        }
-        {
-          plugin = power-theme;
-          extraConfig = "set -g @tmux_power_theme 'default'";
-        }
-        {
-          plugin = resurrect;
-          extraConfig = "set -g @resurrect-strategy-nvim 'session'";
-        }
-        # FIXME: troubleshoot weirdness around duplicate sessions
-        # {
-        #   plugin = continuum;
-        #   extraConfig = ''
-        #     set -g @continuum-restore 'on'
-        #     set -g @continuum-save-interval '60' # minutes
-        #   '';
-        # }
-      ];
+    plugins = with pkgs;
+    with tmuxPlugins; [
+      {
+        plugin = fingers;
+        extraConfig = "set -g @fingers-main-action 'pbcopy'";
+      }
+      {
+        plugin = power-theme;
+        extraConfig = "set -g @tmux_power_theme 'default'";
+      }
+      {
+        plugin = resurrect;
+        extraConfig = "set -g @resurrect-strategy-nvim 'session'";
+      }
+      # FIXME: troubleshoot weirdness around duplicate sessions
+      # {
+      #   plugin = continuum;
+      #   extraConfig = ''
+      #     set -g @continuum-restore 'on'
+      #     set -g @continuum-save-interval '60' # minutes
+      #   '';
+      # }
+    ];
     extraConfig = builtins.readFile ../config/tmux/tmux.conf;
   };
 
@@ -216,12 +215,15 @@ in
     withNodeJs = false;
     withPython3 = true;
     withRuby = false;
-    extraPackages = with pkgs.unstable; [
-      coursier
-      nodejs_22
-      python311Packages.pynvim
-      nixd # not available in the Mason registry
-      wget
+    # Plugins
+    plugins = with pkgs;
+    with vimPlugins; [
+      vim-tmux-navigator
+    ];
+    # Command line utilities, language servers, etc.
+    extraPackages = with pkgs; [
+      ripgrep
+      tree-sitter
     ];
   };
 
@@ -261,15 +263,21 @@ in
     jq
     pstree
     tree
-    unstable.eza
+    eza
     zoxide
 
     # Neovim requirements
     glow
     reattach-to-user-namespace
-    ripgrep
-    tree-sitter
-    unstable.lazygit
+    stylua
+    lazygit
+
+    # Language servers
+    nil
+    nodePackages.bash-language-server
+    nodePackages.yaml-language-server
+    pyright
+    lua-language-server
 
     # Misc
     pinentry_mac
