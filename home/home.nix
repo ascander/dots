@@ -209,58 +209,54 @@ in {
     withPython3 = true;
     withRuby = false;
     # Plugins
-    plugins =
-      with pkgs.unstable;
-      with vimPlugins;
-      [
-	# Editor
-	pkgs.vimPlugins.nvim-tree
-	comment-nvim
-	nvim-treesitter.withAllGrammars
-	nvim-treesitter-textobjects
-	nvim-ts-autotag
-	nvim-ts-context-commentstring
-	telescope-nvim
-	telescope-fzf-native-nvim
-	mini-nvim
+    plugins = with pkgs.unstable;
+    with vimPlugins; [
+      # Editor
+      pkgs.vimPlugins.nvim-tree
+      comment-nvim
+      nvim-treesitter.withAllGrammars
+      nvim-treesitter-textobjects
+      nvim-ts-autotag
+      nvim-ts-context-commentstring
+      telescope-nvim
+      telescope-fzf-native-nvim
+      mini-nvim
 
-	# Navigation
-	flash-nvim
+      # Navigation
+      flash-nvim
 
-	# Git
-	git-conflict-nvim
-	gitsigns-nvim
-	gitlinker-nvim
+      # Git
+      git-conflict-nvim
+      gitsigns-nvim
+      gitlinker-nvim
 
-	# UI
-	dashboard-nvim
-	indent-blankline-nvim
-        vim-tmux-navigator
-	lualine-nvim
-	nvim-treesitter-context
-	nvim-web-devicons
-	todo-comments-nvim
+      # UI
+      dashboard-nvim
+      indent-blankline-nvim
+      vim-tmux-navigator
+      lualine-nvim
+      nvim-treesitter-context
+      nvim-web-devicons
+      todo-comments-nvim
 
-	# Colorschemes
-	kanagawa-nvim
-	nightfox-nvim
-	rose-pine
-	tokyonight-nvim
+      # Colorschemes
+      kanagawa-nvim
+      nightfox-nvim
+      rose-pine
+      tokyonight-nvim
 
-	# Misc/Util
-	persistence-nvim
-	which-key-nvim
+      # Misc/Util
+      persistence-nvim
+      which-key-nvim
 
-	# Dependencies
-	plenary-nvim
-      ];
+      # Dependencies
+      plenary-nvim
+    ];
     # Command line utilities, language servers, etc.
-    extraPackages =
-      with pkgs.unstable;
-      [
-        fd
-	ripgrep
-      ];
+    extraPackages = with pkgs.unstable; [
+      fd
+      ripgrep
+    ];
   };
 
   # Direnv
