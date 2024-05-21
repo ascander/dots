@@ -4,14 +4,15 @@
 
 This document contains notes/tasks/etc. as relevant to migrating from my current [LazyVim](https://github.com/ascander/nvim) distribution to one managed by Nix. A few goals:
 
-- Support for vim plugins as flake inputs, for updating outside of waiting for things to land in `nixpkgs`
-- Managing all plugins, tree-sitter grammars, language servers, linters, etc. via Nix
-- Configuring Neovim and plugins in Lua
-- Lazy loading of plugins as possible in Nix
+- Allow plugins as flake inputs
+- Manage all plugins/executables via Nix
+- Local Lua-based configuration for Neovim
+
+Waiting for Neovim plugins to land in `nixpkgs` is annoying, so I want to be able to define plugins as flake inputs and build them in an overlay. I've seen this approach in other Neovim flake-based setups, and I think it's a nice addition for plugins not in nixpkgs, and/or plugins that are more volatile. I want my Lua config to be updatable without regenerating the system, and my existing approach of using `mkOutOfStoreSymlink` is working just fine for me.
 
 ## Distribution
 
-Home manager programs.neovim using the neovim nightly overlay to use Neovim 0.10 as the package
+Home manager `programs.neovim` using [neovim-nightly-overlay](https://github.com/nix-community/neovim-nightly-overlay) for Neovim, plugins, and executables. Local Lua-based config symlinked using `mkOutOfStoreSymlink` for configuration.
 
 ## Plugins (check if migrated)
 
@@ -89,11 +90,3 @@ Home manager programs.neovim using the neovim nightly overlay to use Neovim 0.10
 - replaced `nvim-tmux-navigation` with `vim-tmux-navigator`
 - `vim-startuptime` does not seem to work; progress is stuck on 0%; need to troubleshoot further
 
-### LSP plugin set
-
-- [ ] aerial.nvim
-- [ ] neodev.nvim
-- [ ] nvim-lspconfig
-- [ ] nvim-metals
-- [ ] semshi
-- [ ] language servers: bashls, lua-language-server, pyright, ruff-lsp, vscode-json-language-server, yaml-language-server
