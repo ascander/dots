@@ -36,6 +36,7 @@ vim.keymap.set("n", "[b", "<cmd>bprevious<CR>", { desc = "Prev Buffer" })
 vim.keymap.set("n", "]b", "<cmd>bnext<CR>", { desc = "Next Buffer" })
 vim.keymap.set("n", "<leader>bb", "<cmd>e #<CR>", { desc = "Switch to Other Buffer" })
 vim.keymap.set("n", "<leader>`", "<cmd>e #<CR>", { desc = "Switch to Other Buffer" })
+vim.keymap.set("n", "<leader>bd", UI.bufremove, { desc = "Delete Buffer" })
 
 -- Clear search, diff update and redraw
 -- taken from runtime/lua/_editor.lua

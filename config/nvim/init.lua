@@ -7,6 +7,9 @@ vim.loader.enable()
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+-- Load UI utils
+_G.UI = require("util.ui")
+
 -- Load modules
 require("user.options")
 require("user.keymaps")
