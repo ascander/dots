@@ -214,7 +214,7 @@ in {
     # Plugins
     plugins = with pkgs.unstable;
     with vimPlugins; [
-      # Editor
+      # Editing
       pkgs.vimPlugins.nvim-tree
       comment-nvim
       nvim-treesitter.withAllGrammars
@@ -224,8 +224,6 @@ in {
       telescope-nvim
       telescope-fzf-native-nvim
       mini-nvim
-
-      # Navigation
       flash-nvim
 
       # Git
@@ -248,17 +246,42 @@ in {
       rose-pine
       tokyonight-nvim
 
+      # Autocompletion
+      nvim-cmp
+      cmp-buffer
+      cmp-nvim-lsp
+      cmp-nvim-lsp-signature-help
+      cmp-path
+      cmp_luasnip
+      friendly-snippets
+      luasnip
+
+      # LSP
+      aerial-nvim
+      neodev-nvim
+      nvim-lspconfig
+      nvim-metals
+      trouble-nvim
+      vim-illuminate
+
       # Misc/Util
       persistence-nvim
-      which-key-nvim
-
-      # Dependencies
       plenary-nvim
+      which-key-nvim
     ];
     # Command line utilities, language servers, etc.
     extraPackages = with pkgs.unstable; [
+      # commands
       fd
       ripgrep
+
+      # language servers
+      metals
+      nodePackages.bash-language-server
+      vscode-langservers-extracted # HTML/CSS/JSON/ESLint
+      lua-language-server
+      nixd
+      yaml-language-server
     ];
   };
 
