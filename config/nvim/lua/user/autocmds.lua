@@ -115,16 +115,12 @@ vim.api.nvim_create_autocmd("FileType", {
   group = augroup "no_mini_indentscope",
   pattern = {
     "help",
-    "alpha",
     "dashboard",
-    "neo-tree",
     "Trouble",
     "trouble",
-    "lazy",
-    "mason",
     "notify",
     "toggleterm",
-    "lazyterm",
+    "NvimTree",
   },
   callback = function()
     vim.b.miniindentscope_disable = true
