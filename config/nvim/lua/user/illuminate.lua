@@ -1,15 +1,36 @@
-local ok, illuminate = pcall(require, "illuminate")
-if not ok then
-  return
+local M = {
+  "RRethy/vim-illuminate",
+  event = "VeryLazy",
+}
+
+function M.config()
+  require("illuminate").configure {
+    filetypes_denylist = {
+      "mason",
+      "harpoon",
+      "DressingInput",
+      "NeogitCommitMessage",
+      "qf",
+      "dirvish",
+      "oil",
+      "minifiles",
+      "fugitive",
+      "alpha",
+      "NvimTree",
+      "lazy",
+      "NeogitStatus",
+      "Trouble",
+      "netrw",
+      "lir",
+      "DiffviewFiles",
+      "Outline",
+      "Jaq",
+      "spectre_panel",
+      "toggleterm",
+      "DressingSelect",
+      "TelescopePrompt",
+    },
+  }
 end
 
-illuminate.configure {
-  filetypes_denylist = {
-    "qf",
-    "dashboard",
-    "Trouble",
-    "toggleterm",
-    "NvimTree",
-    "TelescopePrompt",
-  }
-}
+return M
