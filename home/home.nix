@@ -213,6 +213,7 @@ in {
     withRuby = false;
     extraPackages = with pkgs.unstable; [
       python311Packages.pynvim
+      wget
     ];
   };
   # programs.neovim = {
