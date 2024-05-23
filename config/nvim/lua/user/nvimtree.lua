@@ -67,7 +67,6 @@ nvt.setup {
     update_root = true,
     ignore_list = {},
   },
-
   diagnostics = {
     enable = true,
     show_on_dirs = false,
