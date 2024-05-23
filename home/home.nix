@@ -283,6 +283,9 @@ in {
       lua-language-server
       nixd
       yaml-language-server
+
+      # linters/formatters
+      stylua
     ];
   };
 
@@ -329,7 +332,6 @@ in {
     glow
     reattach-to-user-namespace
     ripgrep
-    stylua
     tree-sitter
     unstable.lazygit
 
