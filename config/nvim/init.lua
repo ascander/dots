@@ -10,27 +10,33 @@ vim.g.loaded_netrwPlugin = 1
 -- Load UI utils
 _G.UI = require "util.ui"
 
--- Load modules
+-- Core modules
 require "user.options"
 require "user.keymaps"
-require "user.colorscheme"
 require "user.autocmds"
-require "user.lualine"
+
+-- Editor
 require "user.telescope"
 require "user.treesitter"
+require "user.flash"
 require "user.nvimtree"
 require "user.gitsigns"
 require "user.gitlinker"
 require "user.gitconflict"
-require "user.mini"
 require "user.comment"
+require "user.mini"
 require "user.autotag"
-require "user.indent-blankline"
-require "user.dashboard"
 require "user.persistence"
-require "user.flash"
-require "user.todocomments"
+
+-- UI
+require "user.colorscheme"
+require "user.lualine"
+require "user.dashboard"
+require "user.indent-blankline"
 require "user.whichkey"
+require "user.todocomments"
 require "user.illuminate"
+
+-- LSP
 require "user.lspconfig"
 require "user.cmp"
