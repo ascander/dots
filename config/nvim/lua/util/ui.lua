@@ -23,7 +23,7 @@ function M.bufremove(buf)
         return
       end
       -- Try using alternate buffer
-      local alt = vim.fn.bufnr("#")
+      local alt = vim.fn.bufnr "#"
       if alt ~= buf and vim.fn.buflisted(alt) == 1 then
         vim.api.nvim_win_set_buf(win, alt)
         return
@@ -46,4 +46,3 @@ function M.bufremove(buf)
 end
 
 return M
-

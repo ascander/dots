@@ -3,10 +3,10 @@ if not status_ok then
   return
 end
 
-local actions = require("telescope.actions")
-local builtin = require("telescope.builtin")
+local actions = require "telescope.actions"
+local builtin = require "telescope.builtin"
 
-telescope.setup({
+telescope.setup {
   defaults = {
     prompt_prefix = " ",
     selection_caret = " ",
@@ -16,25 +16,25 @@ telescope.setup({
     mappings = {
       i = {
         ["<C-n>"] = actions.cycle_history_next,
-	["<C-p>"] = actions.cycle_history_prev,
+        ["<C-p>"] = actions.cycle_history_prev,
 
-	["<C-j>"] = actions.move_selection_next,
-	["<C-k>"] = actions.move_selection_previous,
+        ["<C-j>"] = actions.move_selection_next,
+        ["<C-k>"] = actions.move_selection_previous,
       },
 
       n = {
-	["q"] = actions.close,
+        ["q"] = actions.close,
       },
     },
     extensions = {
       fzf = {
         fuzzy = true,
-	override_generic_sorter = true,
-	override_file_sorter = true,
-	case_mode = "smart_case",
+        override_generic_sorter = true,
+        override_file_sorter = true,
+        case_mode = "smart_case",
       },
     },
   },
-})
+}
 
-telescope.load_extension('fzf')
+telescope.load_extension "fzf"

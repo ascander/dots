@@ -1,13 +1,13 @@
 -- Set <space> as the leader key
 -- See `:help mapleader`
 -- NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 local opts = { noremap = true, silent = true }
 
 -- Clear highlight on pressing <Esc> in normal mode
-vim.keymap.set({ "i", "n" }, '<Esc>', '<cmd>nohlsearch<CR><Esc>', opts)
+vim.keymap.set({ "i", "n" }, "<Esc>", "<cmd>nohlsearch<CR><Esc>", opts)
 
 -- Better up/down
 vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
@@ -84,7 +84,7 @@ local diagnostic_goto = function(next, severity)
   local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
   severity = severity and vim.diagnostic.severity[severity] or nil
   return function()
-    go({ severity = severity })
+    go { severity = severity }
   end
 end
 
@@ -119,58 +119,80 @@ vim.keymap.set("n", "<leader><tab>d", "<cmd>tabclose<CR>", { desc = "Close Tab" 
 vim.keymap.set("n", "<leader><tab>[", "<cmd>tabprevious<CR>", { desc = "Previous Tab" })
 
 -- NvimTree
-vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<CR>', opts)
+vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", opts)
 
 -- Flash
-vim.keymap.set({ "n", "x", "o"}, "s", function() require("flash").jump() end, opts)
-vim.keymap.set({ "n", "x", "o"}, "S", function() require("flash").treesitter() end, opts)
-vim.keymap.set("o", "r", function() require("flash").remote() end, opts)
-vim.keymap.set({ "x", "o" }, "R", function() require("flash").treesitter_search() end, opts)
-vim.keymap.set("c", "<C-s>", function() require("flash").toggle() end, opts)
+vim.keymap.set({ "n", "x", "o" }, "s", function()
+  require("flash").jump()
+end, opts)
+vim.keymap.set({ "n", "x", "o" }, "S", function()
+  require("flash").treesitter()
+end, opts)
+vim.keymap.set("o", "r", function()
+  require("flash").remote()
+end, opts)
+vim.keymap.set({ "x", "o" }, "R", function()
+  require("flash").treesitter_search()
+end, opts)
+vim.keymap.set("c", "<C-s>", function()
+  require("flash").toggle()
+end, opts)
 
 -- Telescope
 -- Favorites; set easy maps for common actions
-vim.keymap.set('n', '<leader>,', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<CR>', opts)
-vim.keymap.set('n', '<leader>/', '<cmd>Telescope live_grep<CR>', opts)
-vim.keymap.set('n', '<leader>:', '<cmd>Telescope command_history<CR>', opts)
-vim.keymap.set('n', '<leader>;', '<cmd>Telescope resume<CR>', opts)
-vim.keymap.set('n', '<leader><space>', '<cmd>Telescope find_files<CR>', opts)
+vim.keymap.set("n", "<leader>,", "<cmd>Telescope buffers sort_mru=true sort_lastused=true<CR>", opts)
+vim.keymap.set("n", "<leader>/", "<cmd>Telescope live_grep<CR>", opts)
+vim.keymap.set("n", "<leader>:", "<cmd>Telescope command_history<CR>", opts)
+vim.keymap.set("n", "<leader>;", "<cmd>Telescope resume<CR>", opts)
+vim.keymap.set("n", "<leader><space>", "<cmd>Telescope find_files<CR>", opts)
 -- Find
-vim.keymap.set('n', '<leader>fb', '<cmd>Telescope buffers sort_mru=true sort_lastused=true<CR>', opts)
-vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<CR>', opts)
-vim.keymap.set('n', '<leader>fg', '<cmd>Telescope git_files<CR>', opts)
-vim.keymap.set('n', '<leader>fr', '<cmd>Telescope oldfiles<CR>', opts)
+vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers sort_mru=true sort_lastused=true<CR>", opts)
+vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<CR>", opts)
+vim.keymap.set("n", "<leader>fg", "<cmd>Telescope git_files<CR>", opts)
+vim.keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<CR>", opts)
 -- Git
-vim.keymap.set('n', '<leader>gb', '<cmd>Telescope git_branches<CR>', opts)
-vim.keymap.set('n', '<leader>gc', '<cmd>Telescope git_commits<CR>', opts)
-vim.keymap.set('n', '<leader>gs', '<cmd>Telescope git_status<CR>', opts)
+vim.keymap.set("n", "<leader>gb", "<cmd>Telescope git_branches<CR>", opts)
+vim.keymap.set("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", opts)
+vim.keymap.set("n", "<leader>gs", "<cmd>Telescope git_status<CR>", opts)
 -- Search
-vim.keymap.set('n', '<leader>s"', '<cmd>Telescope registers<CR>', opts)
-vim.keymap.set('n', '<leader>sa', '<cmd>Telescope autocommands<CR>', opts)
-vim.keymap.set('n', '<leader>sb', '<cmd>Telescope current_buffer_fuzzy_find<CR>', opts)
-vim.keymap.set('n', '<leader>sc', '<cmd>Telescope command_history<CR>', opts)
-vim.keymap.set('n', '<leader>sC', '<cmd>Telescope commands<CR>', opts)
-vim.keymap.set('n', '<leader>sd', '<cmd>Telescope diagnostics bufnr=0<CR>', opts)
-vim.keymap.set('n', '<leader>sD', '<cmd>Telescope diagnostics<CR>', opts)
-vim.keymap.set('n', '<leader>sg', '<cmd>Telescope live_grep<CR>', opts)
-vim.keymap.set('n', '<leader>sh', '<cmd>Telescope help_tags<CR>', opts)
-vim.keymap.set('n', '<leader>sH', '<cmd>Telescope highlights<CR>', opts)
-vim.keymap.set('n', '<leader>sk', '<cmd>Telescope keymaps<CR>', opts)
-vim.keymap.set('n', '<leader>sm', '<cmd>Telescope marks<CR>', opts)
-vim.keymap.set('n', '<leader>sM', '<cmd>Telescope man_pages<CR>', opts)
-vim.keymap.set('n', '<leader>so', '<cmd>Telescope vim_options<CR>', opts)
-vim.keymap.set('n', '<leader>sR', '<cmd>Telescope resume<CR>', opts)
-vim.keymap.set('n', '<leader>sw', '<cmd>Telescope grep_string<CR>', opts)
-vim.keymap.set('v', '<leader>sw', '<cmd>Telescope grep_string<CR>', opts)
-vim.keymap.set('n', '<leader>uc', '<cmd>Telescope colorscheme enable_preview=true<CR>', opts)
-vim.keymap.set('n', '<leader>ss', function() require("telescope.builtin").lsp_document_symbols() end, opts)
-vim.keymap.set('n', '<leader>sS', function() require("telescope.builtin").lsp_dynamic_workspace_symbols() end, opts)
+vim.keymap.set("n", '<leader>s"', "<cmd>Telescope registers<CR>", opts)
+vim.keymap.set("n", "<leader>sa", "<cmd>Telescope autocommands<CR>", opts)
+vim.keymap.set("n", "<leader>sb", "<cmd>Telescope current_buffer_fuzzy_find<CR>", opts)
+vim.keymap.set("n", "<leader>sc", "<cmd>Telescope command_history<CR>", opts)
+vim.keymap.set("n", "<leader>sC", "<cmd>Telescope commands<CR>", opts)
+vim.keymap.set("n", "<leader>sd", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
+vim.keymap.set("n", "<leader>sD", "<cmd>Telescope diagnostics<CR>", opts)
+vim.keymap.set("n", "<leader>sg", "<cmd>Telescope live_grep<CR>", opts)
+vim.keymap.set("n", "<leader>sh", "<cmd>Telescope help_tags<CR>", opts)
+vim.keymap.set("n", "<leader>sH", "<cmd>Telescope highlights<CR>", opts)
+vim.keymap.set("n", "<leader>sk", "<cmd>Telescope keymaps<CR>", opts)
+vim.keymap.set("n", "<leader>sm", "<cmd>Telescope marks<CR>", opts)
+vim.keymap.set("n", "<leader>sM", "<cmd>Telescope man_pages<CR>", opts)
+vim.keymap.set("n", "<leader>so", "<cmd>Telescope vim_options<CR>", opts)
+vim.keymap.set("n", "<leader>sR", "<cmd>Telescope resume<CR>", opts)
+vim.keymap.set("n", "<leader>sw", "<cmd>Telescope grep_string<CR>", opts)
+vim.keymap.set("v", "<leader>sw", "<cmd>Telescope grep_string<CR>", opts)
+vim.keymap.set("n", "<leader>uc", "<cmd>Telescope colorscheme enable_preview=true<CR>", opts)
+vim.keymap.set("n", "<leader>ss", function()
+  require("telescope.builtin").lsp_document_symbols()
+end, opts)
+vim.keymap.set("n", "<leader>sS", function()
+  require("telescope.builtin").lsp_dynamic_workspace_symbols()
+end, opts)
 
 -- Gitlinker
-vim.keymap.set('n', '<leader>gy', function() require("gitlinker").get_buf_range_url("n", {}) end, opts)
-vim.keymap.set('v', '<leader>gy', function() require("gitlinker").get_buf_range_url("v", {}) end, opts)
-vim.keymap.set('n', '<leader>gY', function() require("gitlinker").get_buf_range_url("n", { action_callback = require("gitlinker.actions").open_in_browser }) end, opts)
-vim.keymap.set('v', '<leader>gY', function() require("gitlinker").get_buf_range_url("v", { action_callback = require("gitlinker.actions").open_in_browser }) end, opts)
+vim.keymap.set("n", "<leader>gy", function()
+  require("gitlinker").get_buf_range_url("n", {})
+end, opts)
+vim.keymap.set("v", "<leader>gy", function()
+  require("gitlinker").get_buf_range_url("v", {})
+end, opts)
+vim.keymap.set("n", "<leader>gY", function()
+  require("gitlinker").get_buf_range_url("n", { action_callback = require("gitlinker.actions").open_in_browser })
+end, opts)
+vim.keymap.set("v", "<leader>gY", function()
+  require("gitlinker").get_buf_range_url("v", { action_callback = require("gitlinker.actions").open_in_browser })
+end, opts)
 
 -- Git-conflict
 vim.keymap.set("n", "]x", "<cmd>GitConflictNextConflict<CR>", opts)
@@ -182,22 +204,32 @@ vim.keymap.set("n", "cb", "<cmd>GitConflictChooseBoth<CR>", opts)
 
 -- Mini.pairs
 vim.keymap.set("n", "<leader>up", function()
-	vim.g.minipairs_disable = not vim.g.minipairs_disable
-	if vim.g.minipairs_disable then
-		vim.notify("Disabled auto pairs")
-	else
-		vim.notify("Enabled auto pairs")
-	end
+  vim.g.minipairs_disable = not vim.g.minipairs_disable
+  if vim.g.minipairs_disable then
+    vim.notify "Disabled auto pairs"
+  else
+    vim.notify "Enabled auto pairs"
+  end
 end, opts)
 
 -- Persistence
-vim.keymap.set("n", "<leader>qr", function() require("persistence").load() end, opts)
-vim.keymap.set("n", "<leader>ql", function() require("persistence").load({ last = true }) end, opts)
-vim.keymap.set("n", "<leader>qd", function() require("persistence").stop() end, opts)
+vim.keymap.set("n", "<leader>qr", function()
+  require("persistence").load()
+end, opts)
+vim.keymap.set("n", "<leader>ql", function()
+  require("persistence").load { last = true }
+end, opts)
+vim.keymap.set("n", "<leader>qd", function()
+  require("persistence").stop()
+end, opts)
 
 -- Todo-comments.nvim
-vim.keymap.set("n", "]t", function() require("todo-comments").jump_next() end, opts)
-vim.keymap.set("n", "[t", function() require("todo-comments").jump_prev() end, opts)
+vim.keymap.set("n", "]t", function()
+  require("todo-comments").jump_next()
+end, opts)
+vim.keymap.set("n", "[t", function()
+  require("todo-comments").jump_prev()
+end, opts)
 vim.keymap.set("n", "<leader>xt", "<cmd>TodoTrouble<CR>", opts)
 vim.keymap.set("n", "<leader>xT", "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<CR>", opts)
 vim.keymap.set("n", "<leader>st", "<cmd>TodoTelescope<CR>", opts)
