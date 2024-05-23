@@ -204,6 +204,8 @@ in {
   # Neovim
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.neovim.enable
   # https://github.com/nix-community/neovim-nightly-overlay
+  #
+  # NOTE: plugin management is handled by `lazy.nvim` outside of Nix. Why be coy? 🤷
   programs.neovim = {
     enable = true;
     package = pkgs.neovim-nightly;
@@ -216,90 +218,6 @@ in {
       wget
     ];
   };
-  # programs.neovim = {
-  #   enable = true;
-  #   package = pkgs.neovim-nightly;
-  #   defaultEditor = true;
-  #   withNodeJs = false;
-  #   withPython3 = true;
-  #   withRuby = false;
-  #   # Plugins
-  #   plugins = with pkgs.unstable;
-  #   with vimPlugins; [
-  #     # Editing
-  #     pkgs.vimPlugins.nvim-tree
-  #     comment-nvim
-  #     nvim-treesitter.withAllGrammars
-  #     nvim-treesitter-textobjects
-  #     nvim-ts-autotag
-  #     nvim-ts-context-commentstring
-  #     telescope-nvim
-  #     telescope-fzf-native-nvim
-  #     mini-nvim
-  #     flash-nvim
-  #
-  #     # Git
-  #     git-conflict-nvim
-  #     gitsigns-nvim
-  #     gitlinker-nvim
-  #
-  #     # UI
-  #     dashboard-nvim
-  #     indent-blankline-nvim
-  #     vim-tmux-navigator
-  #     lualine-nvim
-  #     nvim-treesitter-context
-  #     nvim-web-devicons
-  #     todo-comments-nvim
-  #
-  #     # Colorschemes
-  #     kanagawa-nvim
-  #     nightfox-nvim
-  #     rose-pine
-  #     tokyonight-nvim
-  #
-  #     # Autocompletion
-  #     nvim-cmp
-  #     cmp-buffer
-  #     cmp-emoji
-  #     cmp-nvim-lsp
-  #     cmp-nvim-lsp-signature-help
-  #     cmp-path
-  #     cmp_luasnip
-  #     friendly-snippets
-  #     luasnip
-  #
-  #     # LSP
-  #     aerial-nvim
-  #     neodev-nvim
-  #     nvim-lspconfig
-  #     nvim-metals
-  #     trouble-nvim
-  #     vim-illuminate
-  #
-  #     # Misc/Util
-  #     persistence-nvim
-  #     plenary-nvim
-  #     which-key-nvim
-  #   ];
-  #   # Command line utilities, language servers, etc.
-  #   extraPackages = with pkgs.unstable; [
-  #     # commands
-  #     fd
-  #     ripgrep
-  #
-  #     # language servers
-  #     metals
-  #     nodePackages.bash-language-server
-  #     vscode-langservers-extracted # HTML/CSS/JSON/ESLint
-  #     lua-language-server
-  #     nixd
-  #     yaml-language-server
-  #
-  #     # linters/formatters
-  #     stylua
-  #   ];
-  # };
 
   # Direnv
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.direnv.enable
@@ -346,13 +264,6 @@ in {
     ripgrep
     tree-sitter
     unstable.lazygit
-
-    # Language servers
-    nil
-    nodePackages.bash-language-server
-    nodePackages.yaml-language-server
-    pyright
-    unstable.lua-language-server
 
     # Misc
     pinentry_mac
