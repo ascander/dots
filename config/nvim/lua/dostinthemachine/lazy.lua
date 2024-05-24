@@ -13,6 +13,7 @@ vim.opt.rtp:prepend(lazypath)
 
 local opts = {
   install = { colorscheme = { "terafox", "habamax" }},
+  change_detection = { notify = false },
   performance = {
     rtp = {
       disabled_plugins = {
