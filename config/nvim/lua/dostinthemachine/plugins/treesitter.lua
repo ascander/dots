@@ -5,7 +5,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     version = false, -- last release is way too old and doesn't work on Windows
     build = ":TSUpdate",
-    event = { "BufReadPost", "BufWritePost", "BufNewFile", "VeryLazy" },
+    event = "VeryLazy",
     lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
     init = function(plugin)
       -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
@@ -60,15 +60,6 @@ return {
           node_decremental = "<bs>",
         },
       },
-      -- textobjects = {
-      --   move = {
-      --     enable = true,
-      --     goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer" },
-      --     goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer" },
-      --     goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer" },
-      --     goto_previous_end = { ["[F"] = "@function.outer", ["[C"] = "@class.outer" },
-      --   },
-      -- },
     },
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
@@ -112,7 +103,7 @@ return {
   -- https://github.com/windwp/nvim-ts-autotag
   {
     "windwp/nvim-ts-autotag",
-    event = { "BufReadPost", "BufWritePost", "BufNewFile", "VeryLazy" },
+    event = "VeryLazy",
     opts = {},
   },
 }

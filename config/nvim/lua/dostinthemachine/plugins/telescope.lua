@@ -49,7 +49,7 @@ return {
       { "<leader>sq", "<cmd>Telescope quickfix<cr>", desc = "Quickfix List" },
       -- { "<leader>sw", LazyVim.telescope("grep_string", { word_match = "-w" }), desc = "Word (Root Dir)" },
       -- { "<leader>sW", LazyVim.telescope("grep_string", { cwd = false, word_match = "-w" }), desc = "Word (cwd)" },
-      { "<leader>uC", "<cmd>Telescope colorscheme enable_preview=true", desc = "Colorscheme with Preview" },
+      { "<leader>uC", "<cmd>Telescope colorscheme enable_preview=true<cr>", desc = "Colorscheme with Preview" },
     },
     opts = function()
       local actions = require "telescope.actions"
