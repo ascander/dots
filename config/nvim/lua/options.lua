@@ -1,0 +1,1 @@
+-- Core Neovim options go here

@@ -1,0 +1,2 @@
+-- Bootstrap lazy.nvim here
+-- Import plugin specs here
