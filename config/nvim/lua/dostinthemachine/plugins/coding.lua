@@ -1,4 +1,16 @@
 return {
+  -- Comment.nvim
+  --
+  -- support for commenting
+  -- TODO: research builtin commenting
+  {
+    'numToStr/Comment.nvim',
+    opts = {
+      -- add any options here
+    },
+    lazy = false,
+  },
+
   -- gitsigns.nvim
   -- https://github.com/lewis6991/gitsigns.nvim
   -- git indicators in buffers
