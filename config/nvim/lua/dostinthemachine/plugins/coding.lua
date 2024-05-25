@@ -5,10 +5,8 @@ return {
   -- TODO: research builtin commenting
   {
     'numToStr/Comment.nvim',
-    opts = {
-      -- add any options here
-    },
-    lazy = false,
+    event = "VeryLazy",
+    config = true,
   },
 
   -- gitsigns.nvim

@@ -16,7 +16,7 @@ Home manager `programs.neovim` using [neovim-nightly-overlay](https://github.com
 
 ## Plugins (check if migrated)
 
-- [ ] Comment.nvim (managing comment strings)
+- [x] Comment.nvim (managing comment strings)
 - [ ] LuaSnip (snippet engine)
 - [ ] aerial.nvim (LSP symbol outline)
 - [ ] auto-save.nvim (auto-save buffers)
