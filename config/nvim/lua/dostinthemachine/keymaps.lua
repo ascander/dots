@@ -64,9 +64,6 @@ map("i", ",", ",<c-g>u")
 map("i", ".", ".<c-g>u")
 map("i", ";", ";<c-g>u")
 
--- Save file
-map({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<CR><Esc>", { desc = "Save File" })
-
 -- keywordprg
 map("n", "<leader>K", "<cmd>norm! K<CR>", { desc = "Keywordprg" })
 
