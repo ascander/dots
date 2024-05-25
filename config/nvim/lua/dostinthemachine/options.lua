@@ -23,7 +23,7 @@ opt.showmode = false
 opt.cursorline = true
 opt.signcolumn = "yes"
 opt.report = 0
-opt.shortmess = "ltToOcCI"
+opt.shortmess:append({ W = true, I = true, c = true, C = true })
 
 -- Tabs, spaces, indentation
 opt.smartindent = true
@@ -35,8 +35,6 @@ opt.list = true
 opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 -- Memory, CPU
-opt.lazyredraw = true
-opt.synmaxcol = 360
-opt.updatetime = 250
+opt.updatetime = 200
 opt.timeoutlen = 300
 opt.undofile = true

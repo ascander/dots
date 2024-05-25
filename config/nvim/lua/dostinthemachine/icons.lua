@@ -98,7 +98,7 @@ return {
     File = " ",
     FileSymlink = "",
     Files = " ",
-    FindFile = "󰈞",
+    FindFile = "󰈞 ",
     FindText = "󰊄 ",
     Fire = "",
     Folder = "󰉋 ",
