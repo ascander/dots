@@ -14,6 +14,7 @@ return {
     },
     config = function()
       require("neoconf").setup {}
+      local icons = require("dostinthemachine.icons")
 
       -- Setup LSP keymaps
       vim.api.nvim_create_autocmd('LspAttach', {
@@ -77,6 +78,36 @@ return {
           end
         end,
       })
+
+      -- Default diagnostics config
+      local default_diagnostic_config = {
+        signs = {
+          active = true,
+          values = {
+            { name = "DiagnosticSignError", text = icons.diagnostics.Error },
+            { name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
+            { name = "DiagnosticSignHint", text = icons.diagnostics.Hint },
+            { name = "DiagnosticSignInfo", text = icons.diagnostics.Info },
+          }
+        },
+        virtual_text = false,
+        update_in_insert = false,
+        underline = true,
+        severity_sort = true,
+        float = {
+          focusable = true,
+          style = "minimal",
+          border = "rounded",
+          source = "always",
+          header = "",
+          prefix = ""
+        }
+      }
+      vim.diagnostic.config(default_diagnostic_config)
+
+      for _, sign in ipairs(vim.tbl_get(vim.diagnostic.config() or {}, "signs", "values") or {}) do
+        vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
+      end
 
       -- LSP servers and clients are able to communicate to each other what features they support.
       --  By default, Neovim doesn't support everything that is in the LSP specification.
