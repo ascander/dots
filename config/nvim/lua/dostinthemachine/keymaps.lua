@@ -1,4 +1,5 @@
 -- Sets a keymap using Neovim's API
+-- TODO: add logic to delete 'noremap' if 'remap = true' is passed
 ---@param mode
 ---@param lhs
 ---@param rhs
@@ -20,26 +21,26 @@ map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, 
 map({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 
 -- Resize window using <ctrl> arrow keys
-map("n", "<C-Up>", "<cmd>resize +2<CR>", { desc = "Increase Window Height" })
-map("n", "<C-Down>", "<cmd>resize -2<CR>", { desc = "Decrease Window Height" })
-map("n", "<C-Left>", "<cmd>vertical resize -2<CR>", { desc = "Decrease Window Width" })
-map("n", "<C-Right>", "<cmd>vertical resize +2<CR>", { desc = "Increase Window Width" })
+map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
+map("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
+map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
+map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
 
 -- Move Lines
-map("n", "<A-j>", "<cmd>m .+1<CR>==", { desc = "Move Down" })
-map("n", "<A-k>", "<cmd>m .-2<CR>==", { desc = "Move Up" })
-map("i", "<A-j>", "<esc><cmd>m .+1<CR>==gi", { desc = "Move Down" })
-map("i", "<A-k>", "<esc><cmd>m .-2<CR>==gi", { desc = "Move Up" })
-map("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move Down" })
-map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move Up" })
+-- map("n", "<A-j>", "<cmd>m .+1<CR>==", { desc = "Move Down" })
+-- map("n", "<A-k>", "<cmd>m .-2<CR>==", { desc = "Move Up" })
+-- map("i", "<A-j>", "<esc><cmd>m .+1<CR>==gi", { desc = "Move Down" })
+-- map("i", "<A-k>", "<esc><cmd>m .-2<CR>==gi", { desc = "Move Up" })
+-- map("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move Down" })
+-- map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move Up" })
 
 -- Buffers
-map("n", "<S-h>", "<cmd>bprevious<CR>", { desc = "Prev Buffer" })
-map("n", "<S-l>", "<cmd>bnext<CR>", { desc = "Next Buffer" })
-map("n", "[b", "<cmd>bprevious<CR>", { desc = "Prev Buffer" })
-map("n", "]b", "<cmd>bnext<CR>", { desc = "Next Buffer" })
-map("n", "<leader>bb", "<cmd>e #<CR>", { desc = "Switch to Other Buffer" })
-map("n", "<leader>`", "<cmd>e #<CR>", { desc = "Switch to Other Buffer" })
+map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
+map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
+map("n", "[b", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
+map("n", "]b", "<cmd>bnext<cr>", { desc = "Next Buffer" })
+map("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
+map("n", "<leader>`", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
 map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Delete Buffer" })
 
 -- Clear search, diff update and redraw
@@ -47,7 +48,7 @@ map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Delete Buffer" })
 map(
   "n",
   "<leader>ur",
-  "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
+  "<cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><cr>",
   { desc = "Redraw / Clear hlsearch / Diff Update" }
 )
 
@@ -65,18 +66,18 @@ map("i", ".", ".<c-g>u")
 map("i", ";", ";<c-g>u")
 
 -- keywordprg
-map("n", "<leader>K", "<cmd>norm! K<CR>", { desc = "Keywordprg" })
+map("n", "<leader>K", "<cmd>norm! K<cr>", { desc = "Keywordprg" })
 
 -- Better indenting
 map("v", "<", "<gv")
 map("v", ">", ">gv")
 
 -- New file
-map("n", "<leader>fn", "<cmd>enew<CR>", { desc = "New File" })
+map("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File" })
 
 -- Quickfix lists
-map("n", "<leader>xl", "<cmd>lopen<CR>", { desc = "Location List" })
-map("n", "<leader>xq", "<cmd>copen<CR>", { desc = "Quickfix List" })
+map("n", "<leader>xl", "<cmd>lopen<cr>", { desc = "Location List" })
+map("n", "<leader>xq", "<cmd>copen<cr>", { desc = "Quickfix List" })
 map("n", "[q", vim.cmd.cprev, { desc = "Previous Quickfix" })
 map("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
 
@@ -98,7 +99,7 @@ map("n", "]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
 map("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
 
 -- Quit
-map("n", "<leader>qq", "<cmd>qa<CR>", { desc = "Quit All" })
+map("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit All" })
 
 -- Highlights under cursor
 map("n", "<leader>ui", vim.show_pos, { desc = "Inspect Pos" })
@@ -112,9 +113,9 @@ map("n", "<leader>-", "<C-W>s", { desc = "Split Window Below", remap = true })
 map("n", "<leader>|", "<C-W>v", { desc = "Split Window Right", remap = true })
 
 -- Tabs
-map("n", "<leader><tab>l", "<cmd>tablast<CR>", { desc = "Last Tab" })
-map("n", "<leader><tab>f", "<cmd>tabfirst<CR>", { desc = "First Tab" })
-map("n", "<leader><tab><tab>", "<cmd>tabnew<CR>", { desc = "New Tab" })
-map("n", "<leader><tab>]", "<cmd>tabnext<CR>", { desc = "Next Tab" })
-map("n", "<leader><tab>d", "<cmd>tabclose<CR>", { desc = "Close Tab" })
-map("n", "<leader><tab>[", "<cmd>tabprevious<CR>", { desc = "Previous Tab" })
+map("n", "<leader><tab>l", "<cmd>tablast<cr>", { desc = "Last Tab" })
+map("n", "<leader><tab>f", "<cmd>tabfirst<cr>", { desc = "First Tab" })
+map("n", "<leader><tab><tab>", "<cmd>tabnew<cr>", { desc = "New Tab" })
+map("n", "<leader><tab>]", "<cmd>tabnext<cr>", { desc = "Next Tab" })
+map("n", "<leader><tab>d", "<cmd>tabclose<cr>", { desc = "Close Tab" })
+map("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
