@@ -1,19 +1,22 @@
 return {
   -- telescope.nvim
   -- https://github.com/nvim-telescope/telescope.nvim
+  -- Fuzzy finder (files, LSP, etc.)
   {
-    "nvim-telescope/telescope.nvim",
+    'nvim-telescope/telescope.nvim',
     cmd = "Telescope",
+    version = false,
     dependencies = {
-      { "nvim-lua/plenary.nvim" },
-      { "nvim-tree/nvim-web-devicons" },
-      { 
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "make",
+      'nvim-lua/plenary.nvim',
+      {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        build = 'make',
         cond = function()
-          return vim.fn.executable "make" == 1
+          return vim.fn.executable 'make' == 1
         end,
       },
+      { 'nvim-telescope/telescope-ui-select.nvim' },
+      { 'nvim-tree/nvim-web-devicons' },
     },
     keys = {
       -- convenience keymaps for frequently used commands
@@ -52,39 +55,32 @@ return {
       { "<leader>uC", "<cmd>Telescope colorscheme enable_preview=true<cr>", desc = "Colorscheme with Preview" },
     },
     opts = function()
-      local actions = require "telescope.actions"
+      local actions = require("telescope.actions")
+      local themes = require("telescope.themes")
 
       return {
         defaults = {
           prompt_prefix = " ",
-          selection_caret = " ",
-          -- open files in the first window that is an actual file.
-          -- use the current window if no other window is available.
-          -- https://github.com/LazyVim/LazyVim/blob/0f6ff53ce336082869314db11e9dfa487cf83292/lua/lazyvim/plugins/editor.lua#L264
-          get_selection_window = function()
-            local wins = vim.api.nvim_list_wins()
-            table.insert(wins, 1, vim.api.nvim_get_current_win())
-            for _, win in ipairs(wins) do
-              local buf = vim.api.nvim_win_get_buf(win)
-              if vim.bo[buf].buftype == "" then
-                return win
-              end
-            end
-            return 0
-          end,
+          selection_caret = " ",
           mappings = {
             i = {
               ["<C-j>"] = actions.cycle_history_next,
               ["<C-k>"] = actions.cycle_history_prev,
-              ["<C-f>"] = actions.preview_scrolling_down,
-              ["<C-b>"] = actions.preview_scrolling_up,
+              ["<esc>"] = actions.close,
             },
-            n = {
-              ["q"] = actions.close,
-            },
-          },
+          }
         },
+        extensions = {
+          ["ui-select"] = { themes.get_dropdown() },
+        }
       }
-    end
-  }
+    end,
+    config = function(_, opts)
+      require('telescope').setup(opts)
+
+      -- Enable Telescope extensions
+      pcall(require('telescope').load_extension, 'fzf')
+      pcall(require('telescope').load_extension, 'ui-select')
+    end,
+  },
 }
