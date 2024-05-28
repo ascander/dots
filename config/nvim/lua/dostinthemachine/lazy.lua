@@ -12,7 +12,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local opts = {
-  install = { colorscheme = { "terafox" }},
+  install = { colorscheme = { "nordfox" }},
   change_detection = { notify = false },
   performance = {
     rtp = {
