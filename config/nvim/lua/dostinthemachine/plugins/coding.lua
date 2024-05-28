@@ -9,7 +9,7 @@ return {
 
   -- gitsigns.nvim
   -- https://github.com/lewis6991/gitsigns.nvim
-  -- git indicators in buffers
+  -- Git integration for Neovim buffers
   {
     "lewis6991/gitsigns.nvim",
     event = "VeryLazy",
@@ -51,6 +51,7 @@ return {
 
   -- gitlinker.nvim
   -- https://github.com/ruifm/gitlinker.nvim
+  -- Generate Git permalinks
   {
     "ruifm/gitlinker.nvim",
     event = "VeryLazy",
@@ -120,6 +121,7 @@ return {
 
   --  git-conflict.nvim
   --  https://github.com/akinsho/git-conflict.nvim
+  --  Visualize and resolve Git merge conflicts
   {
     "akinsho/git-conflict.nvim",
     event = "VeryLazy",
