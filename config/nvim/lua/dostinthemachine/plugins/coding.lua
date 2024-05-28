@@ -1,12 +1,10 @@
 return {
-  -- Comment.nvim
-  --
-  -- support for commenting
-  -- TODO: research builtin commenting
+  -- TODO: set up ts_context_commentstring
+  -- see https://github.com/JoosepAlviste/nvim-ts-context-commentstring/wiki/Integrations#commentnvim
   {
-    'numToStr/Comment.nvim',
+    "numToStr/Comment.nvim",
     event = "VeryLazy",
-    config = true,
+    opts = {},
   },
 
   -- gitsigns.nvim
