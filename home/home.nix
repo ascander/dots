@@ -214,6 +214,7 @@ in {
     withPython3 = true;
     withRuby = false;
     extraPackages = with pkgs.unstable; [
+      coursier
       nodejs_22
       python311Packages.pynvim
       nixd # not available in the Mason registry
