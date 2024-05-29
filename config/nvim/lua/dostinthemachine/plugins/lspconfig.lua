@@ -27,6 +27,14 @@ return {
               { name = "DiagnosticSignInfo", text = icons.diagnostics.Info },
             },
           },
+          float = {
+            focusable = true,
+            style = "minimal",
+            border = "rounded",
+            source = "always",
+            header = "",
+            prefix = "",
+          },
         },
         servers = {
           basedpyright = {},
@@ -157,6 +165,9 @@ return {
       for _, sign in ipairs(vim.tbl_get(vim.diagnostic.config() or {}, "signs", "values") or {}) do
         vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
       end
+
+      -- Setup window styling for LSP and diagnostics
+      require("lspconfig.ui.windows").default_options.border = "rounded"
 
       -- LSP servers and clients are able to communicate to each other what features they support.
       --  By default, Neovim doesn't support everything that is in the LSP specification.
