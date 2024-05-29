@@ -4,18 +4,68 @@ return {
   -- Quickstart configs for Neovim LSP
   {
     'neovim/nvim-lspconfig',
-    event = "VeryLazy",
+    event = { "BufReadPost", "BufWritePost", "BufNewFile" },
     dependencies = {
-      { 'williamboman/mason.nvim' },
-      'williamboman/mason-lspconfig.nvim',
-      'WhoIsSethDaniel/mason-tool-installer.nvim',
-      { 'j-hui/fidget.nvim', opts = {} },
-      { "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" }},
-      { 'folke/neodev.nvim', opts = {} },
+      { "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
+      { "folke/neodev.nvim", opts = {} },
+      "mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
     },
-    config = function()
-      require("neoconf").setup {}
+    opts = function ()
       local icons = require("dostinthemachine.icons")
+      return {
+        diagnostics = {
+          underline = true,
+          update_in_insert = false,
+          virtual_text = false,
+          severity_sort = true,
+          signs = {
+            text = {
+              [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,
+              [vim.diagnostic.severity.WARN] = icons.diagnostics.Warn,
+              [vim.diagnostic.severity.HINT] = icons.diagnostics.Hint,
+              [vim.diagnostic.severity.INFO] = icons.diagnostics.Info,
+            },
+          },
+        },
+        servers = {
+          basedpyright = {},
+          bashls = {},
+          jsonls = {},
+          nixd = { mason = false }, -- not in the Mason registry
+          yamlls = {},
+
+          lua_ls = {
+            settings = {
+              Lua = {
+                workspace = {
+                  checkThirdParty = false,
+                },
+                codeLens = {
+                  enable = true,
+                },
+                completion = {
+                  callSnippet = "Replace",
+                },
+                doc = {
+                  privateName = { "^_" },
+                },
+                hint = {
+                  enable = true,
+                  setType = false,
+                  paramType = true,
+                  paramName = "Disable",
+                  semicolon = "Disable",
+                  arrayIndex = "Disable",
+                },
+              },
+            },
+          },
+        },
+      }
+    end,
+    config = function(_, opts)
+      require("neoconf").setup {}
 
       -- Setup LSP keymaps
       vim.api.nvim_create_autocmd('LspAttach', {
@@ -30,6 +80,7 @@ return {
           map("n", "gd", function() require("telescope.builtin").lsp_definitions({ reuse_win = true }) end, "Goto Definition")
           map("n", "gI", function() require("telescope.builtin").lsp_implementations({ reuse_win = true }) end,"Goto Implementations")
           map("n", "gy", function() require("telescope.builtin").lsp_type_definitions({ reuse_win = true }) end, "Goto Type Definition")
+          map("n", "gr", "<cmd>Telescope lsp_references<cr>", "References")
           map("n", "gD", vim.lsp.buf.declaration, "Goto Declaration")
           map("n", "K", vim.lsp.buf.hover, "Hover")
           map("n", "gK", vim.lsp.buf.signature_help, "Signature Help")
@@ -41,11 +92,12 @@ return {
           map("n", "<leader>cC", vim.lsp.codelens.refresh, "Refresh & Display Codelens")
           map("n", "<leader>cr", vim.lsp.buf.rename, "Rename")
 
-          -- The following two autocommands are used to highlight references of the
+          -- The following three autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
+          -- When the LSP server detaches, the highlights will be cleared (the third autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
             local highlight_augroup = vim.api.nvim_create_augroup('dostinthemachine_lsp_highlight', { clear = false })
@@ -75,36 +127,25 @@ return {
           --
           -- This may be unwanted, since they displace some of your code
           if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
-            map("n", '<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end, 'Toggle Inlay Hints')
+            map("n", '<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({})) end, 'Toggle Inlay Hints')
+          end
+
+          -- The following autocommand is used to refresh codelens on certain
+          -- events, if the language server supports them.
+          if client and client.server_capabilities.codeLensProvider and vim.lsp.codelens then
+            vim.lsp.codelens.refresh()
+            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+              buffer = event.buf,
+              group = vim.api.nvim_create_augroup("dostinthemachine_lsp_codelens", { clear = true }),
+              callback = vim.lsp.codelens.refresh
+            })
           end
         end,
       })
 
-      -- Default diagnostics config
-      local default_diagnostic_config = {
-        signs = {
-          active = true,
-          values = {
-            { name = "DiagnosticSignError", text = icons.diagnostics.Error },
-            { name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
-            { name = "DiagnosticSignHint", text = icons.diagnostics.Hint },
-            { name = "DiagnosticSignInfo", text = icons.diagnostics.Info },
-          }
-        },
-        virtual_text = false,
-        update_in_insert = false,
-        underline = true,
-        severity_sort = true,
-        float = {
-          focusable = true,
-          style = "minimal",
-          border = "rounded",
-          source = "always",
-          header = "",
-          prefix = ""
-        }
-      }
-      vim.diagnostic.config(default_diagnostic_config)
+      -- Setup diagnostics
+      local diagnostics_config = vim.deepcopy(opts.diagnostics)
+      vim.diagnostic.config(diagnostics_config)
 
       for _, sign in ipairs(vim.tbl_get(vim.diagnostic.config() or {}, "signs", "values") or {}) do
         vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
@@ -117,86 +158,56 @@ return {
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
-      -- Enable the following language servers
-      --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
+      -- Enable the language servers in `opts.servers` above.
       --
-      --  Add any additional override configuration in the following tables. Available keys are:
-      --  - cmd (table): Override the default command used to start the server
-      --  - filetypes (table): Override the default list of associated filetypes for the server
-      --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
-      --  - settings (table): Override the default settings passed when initializing the server.
-      --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
-      local servers = {
-        basedpyright = {},
-        bashls = {},
-        jsonls = {},
-        nixd = {},
-        yamlls = {},
+      -- Unless a server has been configured with `mason = false` we add it to
+      -- the list of servers for Mason to install.
+      local servers = vim.deepcopy(opts.servers)
 
-        lua_ls = {
-          settings = {
-            Lua = {
-              workspace = {
-                checkThirdParty = false,
-              },
-              codeLens = {
-                enable = true,
-              },
-              completion = {
-                callSnippet = "Replace",
-              },
-              doc = {
-                privateName = { "^_" },
-              },
-              hint = {
-                enable = true,
-                setType = false,
-                paramType = true,
-                paramName = "Disable",
-                semicolon = "Disable",
-                arrayIndex = "Disable",
-              },
-            },
-          },
-        },
-      }
+      -- Configures a language server
+      local function setup(server)
+        local server_opts = vim.tbl_deep_extend("force", {
+          capabilities = vim.deepcopy(capabilities),
+        }, servers[server] or {})
 
-      -- Ensure the servers and tools above are installed
-      --  To check the current status of installed tools and/or manually install
-      --  other tools, you can run
-      --    :Mason
+        require("lspconfig")[server].setup(server_opts)
+      end
+
+      -- Install all servers that are available through `mason-lspconfig`.
       --
-      --  You can press `g?` for help in this menu.
-      require('mason').setup()
+      -- If a server has been configured with `mason = false` or is not
+      -- available through `mason-lspconfig`, assume it will be installed
+      -- independently. All other servers are added to the `ensure_installed`
+      -- field of the `mason-lspconfig` options.
+      local have_mason, mlsp = pcall(require, "mason-lspconfig")
+      local all_mlsp_servers = {}
+      if have_mason then
+        all_mlsp_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package) 
+      end
 
-      -- You can add other tools here that you want Mason to install
-      -- for you, so that they are available from within Neovim.
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        'stylua',
-      })
-
-      -- Remove 'nixd' from the list of servers, since it's not in the Mason registry
-      for i, value in ipairs(ensure_installed) do
-        if value == "nixd" then
-          table.remove(ensure_installed, i)
+      -- Filter servers to populate `ensure_installed` for mason-lspconfig
+      local ensure_installed = {}
+      for server, server_opts in pairs(servers) do
+        if server_opts then
+          server_opts = server_opts == true and {} or server_opts
+          -- Run 'setup' manually on servers configured with `mason = false` or
+          -- are unavailable through `mason-lspconfig`
+          if server_opts.mason == false or not vim.tbl_contains(all_mlsp_servers, server) then
+            setup(server)
+          elseif server_opts.enabled ~= false then
+            ensure_installed[#ensure_installed + 1] = server
+          end
         end
       end
 
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
-      require('mason-lspconfig').setup {
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for tsserver)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
-      }
+      -- Setup mason-lspconfig
+      -- TODO: have this load the configured opts (see LazyVim.opts)
+      if have_mason then
+        mlsp.setup({
+          ensure_installed = vim.tbl_deep_extend("force", ensure_installed, {}),
+          handlers = { setup },
+        })
+      end
     end,
   },
 
