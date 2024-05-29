@@ -1,10 +1,18 @@
 return {
-  -- TODO: set up ts_context_commentstring
-  -- see https://github.com/JoosepAlviste/nvim-ts-context-commentstring/wiki/Integrations#commentnvim
   {
     "numToStr/Comment.nvim",
     event = "VeryLazy",
-    opts = {},
+    dependencies = {
+      { "nvim-tresitter/nvim-treesitter" },
+      { "JoosepAlviste/nvim-ts-context-commentstring", opts = { enable_autocmd = false, } },
+    },
+    opts = function ()
+      local tsintegration = require("ts_context_commentstring.integrations.comment_nvim")
+
+      return {
+        pre_hook = tsintegration.create_pre_hook()
+      }
+    end,
   },
 
   -- gitsigns.nvim
