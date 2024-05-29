@@ -53,6 +53,8 @@ return {
       -- { "<leader>sw", LazyVim.telescope("grep_string", { word_match = "-w" }), desc = "Word (Root Dir)" },
       -- { "<leader>sW", LazyVim.telescope("grep_string", { cwd = false, word_match = "-w" }), desc = "Word (cwd)" },
       { "<leader>uC", "<cmd>Telescope colorscheme enable_preview=true<cr>", desc = "Colorscheme with Preview" },
+      { "<leader>ss", function() require("telescope.builtin").lsp_document_symbols({}) end, desc = "Goto Symbol" },
+      { "<leader>sS", function() require("telescope.builtin").lsp_dynamic_workspace_symbols({}) end, desc = "Goto Symbol (Workspace)" },
     },
     opts = function()
       local actions = require("telescope.actions")
