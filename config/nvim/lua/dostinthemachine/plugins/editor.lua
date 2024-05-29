@@ -3,36 +3,17 @@ return {
   -- https://github.com/nvim-tree/nvim-tree.lua
   -- file explorer tree
   {
-  "nvim-tree/nvim-tree.lua",
-  cmd = "NvimTreeToggle",
-  keys = {
-    { "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "Explorer" },
-  },
-  opts = function()
-    local icons = require "dostinthemachine.icons"
+    "nvim-tree/nvim-tree.lua",
+    cmd = "NvimTreeToggle",
+    keys = {
+      { "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "Explorer" },
+    },
+    opts = function()
+      local icons = require "dostinthemachine.icons"
 
-    return {
-      hijack_netrw = false,
-      sync_root_with_cwd = true,
-      view = {
-        relativenumber = true,
-      },
-      renderer = {
-        add_trailing = false,
-        group_empty = false,
-        highlight_git = false,
-        full_name = false,
-        highlight_opened_files = "none",
-        root_folder_label = ":t",
-        indent_width = 2,
-        indent_markers = {
-          enable = false,
-          inline_arrows = true,
-          icons = {
-            corner = "└",
-            edge = "│",
-            item = "│",
-            none = " ",
+      return {
+        hijack_netrw = false,
+        sync_root_with_cwd = true,
         view = {
           relativenumber = true,
           width = {
@@ -41,64 +22,82 @@ return {
             padding = 2,
           },
         },
-        icons = {
-          git_placement = "before",
-          padding = " ",
-          symlink_arrow = " ➛ ",
-          glyphs = {
-            default = icons.ui.Text,
-            symlink = icons.ui.FileSymlink,
-            bookmark = icons.ui.BookMark,
-            folder = {
-              arrow_closed = icons.ui.ChevronRight,
-              arrow_open = icons.ui.ChevronShortDown,
-              default = icons.ui.Folder,
-              open = icons.ui.FolderOpen,
-              empty = icons.ui.EmptyFolder,
-              empty_open = icons.ui.EmptyFolderOpen,
-              symlink = icons.ui.FolderSymlink,
-              symlink_open = icons.ui.FolderOpen,
-            },
-            git = {
-              unstaged = icons.git.FileUnstaged,
-              staged = icons.git.FileStaged,
-              unmerged = icons.git.FileUnmerged,
-              renamed = icons.git.FileRenamed,
-              untracked = icons.git.FileUntracked,
-              deleted = icons.git.FileDeleted,
-              ignored = icons.git.FileIgnored,
+        renderer = {
+          add_trailing = false,
+          group_empty = false,
+          highlight_git = false,
+          full_name = false,
+          highlight_opened_files = "none",
+          root_folder_label = ":t",
+          indent_width = 2,
+          indent_markers = {
+            enable = false,
+            inline_arrows = true,
+            icons = {
+              corner = "└",
+              edge = "│",
+              item = "│",
+              none = " ",
             },
           },
+          icons = {
+            git_placement = "before",
+            padding = " ",
+            symlink_arrow = " ➛ ",
+            glyphs = {
+              default = icons.ui.Text,
+              symlink = icons.ui.FileSymlink,
+              bookmark = icons.ui.BookMark,
+              folder = {
+                arrow_closed = icons.ui.ChevronRight,
+                arrow_open = icons.ui.ChevronShortDown,
+                default = icons.ui.Folder,
+                open = icons.ui.FolderOpen,
+                empty = icons.ui.EmptyFolder,
+                empty_open = icons.ui.EmptyFolderOpen,
+                symlink = icons.ui.FolderSymlink,
+                symlink_open = icons.ui.FolderOpen,
+              },
+              git = {
+                unstaged = icons.git.FileUnstaged,
+                staged = icons.git.FileStaged,
+                unmerged = icons.git.FileUnmerged,
+                renamed = icons.git.FileRenamed,
+                untracked = icons.git.FileUntracked,
+                deleted = icons.git.FileDeleted,
+                ignored = icons.git.FileIgnored,
+              },
+            },
+          },
+          special_files = { "Cargo.toml", "Makefile", "README.md", "readme.md" },
+          symlink_destination = true,
         },
-        special_files = { "Cargo.toml", "Makefile", "README.md", "readme.md" },
-        symlink_destination = true,
-      },
-      update_focused_file = {
-        enable = true,
-        debounce_delay = 15,
-        update_root = true,
-        ignore_list = {},
-      },
+        update_focused_file = {
+          enable = true,
+          debounce_delay = 15,
+          update_root = true,
+          ignore_list = {},
+        },
 
-      diagnostics = {
-        enable = true,
-        show_on_dirs = false,
-        show_on_open_dirs = true,
-        debounce_delay = 50,
-        severity = {
-          min = vim.diagnostic.severity.HINT,
-          max = vim.diagnostic.severity.ERROR,
+        diagnostics = {
+          enable = true,
+          show_on_dirs = false,
+          show_on_open_dirs = true,
+          debounce_delay = 50,
+          severity = {
+            min = vim.diagnostic.severity.HINT,
+            max = vim.diagnostic.severity.ERROR,
+          },
+          icons = {
+            hint = icons.diagnostics.BoldHint,
+            info = icons.diagnostics.BoldInformation,
+            warning = icons.diagnostics.BoldWarning,
+            error = icons.diagnostics.BoldError,
+          },
         },
-        icons = {
-          hint = icons.diagnostics.BoldHint,
-          info = icons.diagnostics.BoldInformation,
-          warning = icons.diagnostics.BoldWarning,
-          error = icons.diagnostics.BoldError,
-        },
-      },
-    }
-  end
-},
+      }
+    end,
+  },
 
   -- flash.nvim
   -- https://github.com/folke/flash.nvim
@@ -108,7 +107,7 @@ return {
     event = "VeryLazy",
     -- vscode = true,
     ---@type Flash.Config
-    opts = { modes = { search = { enabled = true }}},
+    opts = { modes = { search = { enabled = true } } },
     -- stylua: ignore
     keys = {
       { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
@@ -122,48 +121,48 @@ return {
   -- mini.ai
   -- https://github.com/echasnovski/mini.ai
   {
-  "echasnovski/mini.ai",
-  event = "VeryLazy",
-  opts = function()
-    local ai = require("mini.ai")
-    return {
-      n_lines = 500,
-      custom_textobjects = {
-        o = ai.gen_spec.treesitter({
-          a = { "@block.outer", "@conditional.outer", "@loop.outer" },
-          i = { "@block.inner", "@conditional.inner", "@loop.inner" },
-        }, {}),
-        f = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }, {}),
-        c = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }, {}),
-        t = { "<([%p%w]-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" },
-        d = { "%f[%d]%d+" }, -- digits
-        e = { -- Word with case
-          {
-            "%u[%l%d]+%f[^%l%d]",
-            "%f[%S][%l%d]+%f[^%l%d]",
-            "%f[%P][%l%d]+%f[^%l%d]",
-            "^[%l%d]+%f[^%l%d]",
+    "echasnovski/mini.ai",
+    event = "VeryLazy",
+    opts = function()
+      local ai = require "mini.ai"
+      return {
+        n_lines = 500,
+        custom_textobjects = {
+          o = ai.gen_spec.treesitter({
+            a = { "@block.outer", "@conditional.outer", "@loop.outer" },
+            i = { "@block.inner", "@conditional.inner", "@loop.inner" },
+          }, {}),
+          f = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }, {}),
+          c = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }, {}),
+          t = { "<([%p%w]-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" },
+          d = { "%f[%d]%d+" }, -- digits
+          e = { -- Word with case
+            {
+              "%u[%l%d]+%f[^%l%d]",
+              "%f[%S][%l%d]+%f[^%l%d]",
+              "%f[%P][%l%d]+%f[^%l%d]",
+              "^[%l%d]+%f[^%l%d]",
+            },
+            "^().*()$",
           },
-          "^().*()$",
+          g = function() -- Whole buffer, similar to `gg` and 'G' motion
+            local from = { line = 1, col = 1 }
+            local to = {
+              line = vim.fn.line "$",
+              col = math.max(vim.fn.getline("$"):len(), 1),
+            }
+            return { from = from, to = to }
+          end,
+          u = ai.gen_spec.function_call(), -- u for "Usage"
+          U = ai.gen_spec.function_call { name_pattern = "[%w_]" }, -- without dot in function name
         },
-        g = function() -- Whole buffer, similar to `gg` and 'G' motion
-          local from = { line = 1, col = 1 }
-          local to = {
-            line = vim.fn.line("$"),
-            col = math.max(vim.fn.getline("$"):len(), 1),
-          }
-          return { from = from, to = to }
-        end,
-        u = ai.gen_spec.function_call(), -- u for "Usage"
-        U = ai.gen_spec.function_call({ name_pattern = "[%w_]" }), -- without dot in function name
-      },
-    }
-  end,
-  config = function(_, opts)
-    require("mini.ai").setup(opts)
+      }
+    end,
+    config = function(_, opts)
+      require("mini.ai").setup(opts)
 
-    -- register all text objects with which-key.nvim
-    local i = {
+      -- register all text objects with which-key.nvim
+      local i = {
         [" "] = "Whitespace",
         ['"'] = 'Balanced "',
         ["'"] = "Balanced '",
@@ -198,23 +197,23 @@ return {
 
       local ic = vim.deepcopy(i)
       local ac = vim.deepcopy(a)
-      for key, name in pairs({ n = "Next", l = "Last" }) do
+      for key, name in pairs { n = "Next", l = "Last" } do
         i[key] = vim.tbl_extend("force", { name = "Inside " .. name .. " textobject" }, ic)
         a[key] = vim.tbl_extend("force", { name = "Around " .. name .. " textobject" }, ac)
       end
 
-      require("which-key").register({
+      require("which-key").register {
         mode = { "o", "x" },
         i = i,
         a = a,
-      })
-  end,
-},
+      }
+    end,
+  },
 
   -- mini.align
   -- https://github.com/echasnovski/mini.align
   {
-    'echasnovski/mini.align',
+    "echasnovski/mini.align",
     version = false,
     event = "VeryLazy",
     config = true,
@@ -222,35 +221,35 @@ return {
 
   -- mini.pairs
   -- https://github.com/echasnovski/mini.pairs
-{
-  "echasnovski/mini.pairs",
-  event = "VeryLazy",
-  opts = {
-    mappings = {
-      ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^\\`].", register = { cr = false } },
+  {
+    "echasnovski/mini.pairs",
+    event = "VeryLazy",
+    opts = {
+      mappings = {
+        ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^\\`].", register = { cr = false } },
+      },
+    },
+    keys = {
+      {
+        "<leader>up",
+        function()
+          vim.g.minipairs_disable = not vim.g.minipairs_disable
+          if vim.g.minipairs_disable then
+            vim.notify("Disabled auto pairs", { title = "Option" })
+          else
+            vim.notify("Enabled auto pairs", { title = "Option" })
+          end
+        end,
+        desc = "Toggle Auto Pairs",
+      },
     },
   },
-  keys = {
-    {
-      "<leader>up",
-      function()
-        vim.g.minipairs_disable = not vim.g.minipairs_disable
-        if vim.g.minipairs_disable then
-          vim.notify("Disabled auto pairs", { title = "Option" })
-        else
-          vim.notify("Enabled auto pairs", { title = "Option" })
-        end
-      end,
-      desc = "Toggle Auto Pairs",
-    },
-  },
-},
 
   -- mini.surround
   -- https://github.com/echasnovski/mini.surround
-{
-  "echasnovski/mini.surround",
-  keys = {
+  {
+    "echasnovski/mini.surround",
+    keys = {
       { "gsa", desc = "Add Surrounding", mode = { "n", "v" } },
       { "gsd", desc = "Delete Surrounding" },
       { "gsf", desc = "Find Right Surrounding" },
@@ -259,19 +258,19 @@ return {
       { "gsr", desc = "Replace Surrounding" },
       { "gsn", desc = "Update `MiniSurround.config.n_lines`" },
     },
-  opts = {
-    -- stylua:ignore
-    mappings = {
-      add = "gsa",            -- Add surrounding in Normal and Visual modes
-      delete = "gsd",         -- Delete surrounding
-      find = "gsf",           -- Find surrounding (to the right)
-      find_left = "gsF",      -- Find surrounding (to the left)
-      highlight = "gsh",      -- Highlight surrounding
-      replace = "gsr",        -- Replace surrounding
-      update_n_lines = "gsn", -- Update `n_lines`
+    opts = {
+      -- stylua:ignore
+      mappings = {
+        add = "gsa", -- Add surrounding in Normal and Visual modes
+        delete = "gsd", -- Delete surrounding
+        find = "gsf", -- Find surrounding (to the right)
+        find_left = "gsF", -- Find surrounding (to the left)
+        highlight = "gsh", -- Highlight surrounding
+        replace = "gsr", -- Replace surrounding
+        update_n_lines = "gsn", -- Update `n_lines`
+      },
     },
   },
-},
 
   -- mini.pairs
   -- https://github.com/echasnovski/mini.pairs
@@ -328,7 +327,7 @@ return {
       },
     },
     config = function(_, opts)
-      local wk = require("which-key")
+      local wk = require "which-key"
       wk.setup(opts)
       wk.register(opts.defaults)
     end,
@@ -491,5 +490,5 @@ return {
     config = function()
       vim.g.startuptime_tries = 10
     end,
-  }
+  },
 }
