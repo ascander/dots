@@ -32,11 +32,14 @@ return {
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-emoji',
     },
     config = function()
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
+      local icons = require("dostinthemachine.icons")
+
       luasnip.config.setup {}
 
       cmp.setup {
@@ -99,6 +102,29 @@ return {
           { name = 'luasnip' },
           { name = 'path' },
           { name = 'buffer' },
+          { name = "emoji" },
+        },
+        ---@diagnostic disable: missing-fields
+        formatting = {
+          fields = { "kind", "abbr", 'menu'},
+          format = function (entry, vim_item)
+            vim_item.kind = icons.kind[vim_item.kind]
+            vim_item.menu = ({
+              nvim_lsp = "",
+              nvim_lua = "",
+              luasnip = "",
+              buffer = "",
+              path = "",
+              emoji = "",
+            })[entry.source.name]
+
+            if entry.source.name == "emoji" then
+              vim_item.kind = icons.misc.Smiley
+              vim_item.kind_hl_group = "CmpItemKindEmoji"
+            end
+
+            return vim_item
+          end
         },
       }
     end,
