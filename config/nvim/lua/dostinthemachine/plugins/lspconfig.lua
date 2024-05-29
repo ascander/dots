@@ -20,11 +20,11 @@ return {
           virtual_text = false,
           severity_sort = true,
           signs = {
-            text = {
-              [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,
-              [vim.diagnostic.severity.WARN] = icons.diagnostics.Warn,
-              [vim.diagnostic.severity.HINT] = icons.diagnostics.Hint,
-              [vim.diagnostic.severity.INFO] = icons.diagnostics.Info,
+            values = {
+              { name = "DiagnosticSignError", text = icons.diagnostics.Error },
+              { name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
+              { name = "DiagnosticSignHint", text = icons.diagnostics.Hint },
+              { name = "DiagnosticSignInfo", text = icons.diagnostics.Info },
             },
           },
         },
@@ -132,14 +132,14 @@ return {
 
           -- The following autocommand is used to refresh codelens on certain
           -- events, if the language server supports them.
-          if client and client.server_capabilities.codeLensProvider and vim.lsp.codelens then
-            vim.lsp.codelens.refresh()
-            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-              buffer = event.buf,
-              group = vim.api.nvim_create_augroup("dostinthemachine_lsp_codelens", { clear = true }),
-              callback = vim.lsp.codelens.refresh
-            })
-          end
+          -- if client and client.server_capabilities.codeLensProvider and vim.lsp.codelens then
+          --   vim.lsp.codelens.refresh()
+          --   vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+          --     buffer = event.buf,
+          --     group = vim.api.nvim_create_augroup("dostinthemachine_lsp_codelens", { clear = true }),
+          --     callback = vim.lsp.codelens.refresh
+          --   })
+          -- end
         end,
       })
 
