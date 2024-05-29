@@ -1,16 +1,20 @@
 return {
+
+  -- Comment.nvim
+  -- https://github.com/numToStr/Comment.nvim
+  -- Smart and powerful comment plugin for Neovim
   {
     "numToStr/Comment.nvim",
     event = "VeryLazy",
     dependencies = {
       { "nvim-tresitter/nvim-treesitter" },
-      { "JoosepAlviste/nvim-ts-context-commentstring", opts = { enable_autocmd = false, } },
+      { "JoosepAlviste/nvim-ts-context-commentstring", opts = { enable_autocmd = false } },
     },
-    opts = function ()
-      local tsintegration = require("ts_context_commentstring.integrations.comment_nvim")
+    opts = function()
+      local tsintegration = require "ts_context_commentstring.integrations.comment_nvim"
 
       return {
-        pre_hook = tsintegration.create_pre_hook()
+        pre_hook = tsintegration.create_pre_hook(),
       }
     end,
   },
@@ -21,7 +25,6 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     event = "VeryLazy",
-    -- TODO: use icons module
     opts = {
       signs = {
         add = { text = "▎" },
@@ -120,10 +123,10 @@ return {
         ["git.soma.salesforce.com"] = require("gitlinker.hosts").get_github_type_url,
       }
 
-      require("gitlinker").setup({
+      require("gitlinker").setup {
         opts = opts,
         callbacks = callbacks,
-      })
+      }
     end,
   },
 
@@ -144,10 +147,10 @@ return {
     },
     config = function()
       ---@diagnostic disable-next-line: missing-fields
-      require("git-conflict").setup({
+      require("git-conflict").setup {
         default_mappings = false,
         disable_diagnostics = true,
-      })
+      }
     end,
   },
 
@@ -191,7 +194,6 @@ return {
     },
   },
 
-
   -- trouble.nvim
   -- https://github.com/folke/trouble.nvim
   -- A pretty diagnostics, references, quickfix list
@@ -208,7 +210,7 @@ return {
         "[q",
         function()
           if require("trouble").is_open() then
-            require("trouble").previous({ skip_groups = true, jump = true })
+            require("trouble").previous { skip_groups = true, jump = true }
           else
             local ok, err = pcall(vim.cmd.cprev)
             if not ok then
@@ -222,7 +224,7 @@ return {
         "]q",
         function()
           if require("trouble").is_open() then
-            require("trouble").next({ skip_groups = true, jump = true })
+            require("trouble").next { skip_groups = true, jump = true }
           else
             local ok, err = pcall(vim.cmd.cnext)
             if not ok then
@@ -255,7 +257,7 @@ return {
         group = vim.api.nvim_create_augroup("dostinthemachine_SemanticHighlight", {}),
         callback = function()
           -- Only add style, inherit or link to the LSP's colors
-          vim.cmd([[
+          vim.cmd [[
             highlight! link semshiGlobal  @none
             highlight! link semshiImported @none
             highlight! link semshiParameter @lsp.type.parameter
@@ -266,7 +268,7 @@ return {
             highlight! link semshiFree @none
             highlight! link semshiAttribute @none
             highlight! link semshiParameterUnused @none
-            ]])
+            ]]
         end,
       })
     end,
@@ -288,7 +290,7 @@ return {
       },
     },
     config = function()
-      vim.cmd([[do FileType]])
+      vim.cmd [[do FileType]]
     end,
-  }
+  },
 }

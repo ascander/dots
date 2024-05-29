@@ -3,7 +3,7 @@ return {
   -- https://github.com/neovim/nvim-lspconfig
   -- Quickstart configs for Neovim LSP
   {
-    'neovim/nvim-lspconfig',
+    "neovim/nvim-lspconfig",
     event = { "BufReadPost", "BufWritePost", "BufNewFile" },
     dependencies = {
       { "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
@@ -11,8 +11,8 @@ return {
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",
     },
-    opts = function ()
-      local icons = require("dostinthemachine.icons")
+    opts = function()
+      local icons = require "dostinthemachine.icons"
       return {
         diagnostics = {
           underline = true,
@@ -68,18 +68,23 @@ return {
       require("neoconf").setup {}
 
       -- Setup LSP keymaps
-      vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('dostinthemachine_lsp_attach', { clear = true }),
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("dostinthemachine_lsp_attach", { clear = true }),
         callback = function(event)
-
           -- Sets a buffer-local keymap
           local map = function(mode, lhs, rhs, desc)
             vim.keymap.set(mode, lhs, rhs, { buffer = event.buf, desc = desc, noremap = true, silent = true })
           end
 
-          map("n", "gd", function() require("telescope.builtin").lsp_definitions({ reuse_win = true }) end, "Goto Definition")
-          map("n", "gI", function() require("telescope.builtin").lsp_implementations({ reuse_win = true }) end,"Goto Implementations")
-          map("n", "gy", function() require("telescope.builtin").lsp_type_definitions({ reuse_win = true }) end, "Goto Type Definition")
+          map("n", "gd", function()
+            require("telescope.builtin").lsp_definitions { reuse_win = true }
+          end, "Goto Definition")
+          map("n", "gI", function()
+            require("telescope.builtin").lsp_implementations { reuse_win = true }
+          end, "Goto Implementations")
+          map("n", "gy", function()
+            require("telescope.builtin").lsp_type_definitions { reuse_win = true }
+          end, "Goto Type Definition")
           map("n", "gr", "<cmd>Telescope lsp_references<cr>", "References")
           map("n", "gD", vim.lsp.buf.declaration, "Goto Declaration")
           map("n", "K", vim.lsp.buf.hover, "Hover")
@@ -100,24 +105,24 @@ return {
           -- When the LSP server detaches, the highlights will be cleared (the third autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
-            local highlight_augroup = vim.api.nvim_create_augroup('dostinthemachine_lsp_highlight', { clear = false })
-            vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+            local highlight_augroup = vim.api.nvim_create_augroup("dostinthemachine_lsp_highlight", { clear = false })
+            vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
               buffer = event.buf,
               group = highlight_augroup,
               callback = vim.lsp.buf.document_highlight,
             })
 
-            vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+            vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
               buffer = event.buf,
               group = highlight_augroup,
               callback = vim.lsp.buf.clear_references,
             })
 
-            vim.api.nvim_create_autocmd('LspDetach', {
-              group = vim.api.nvim_create_augroup('dostinthemachine_lsp_detach', { clear = true }),
+            vim.api.nvim_create_autocmd("LspDetach", {
+              group = vim.api.nvim_create_augroup("dostinthemachine_lsp_detach", { clear = true }),
               callback = function(event2)
                 vim.lsp.buf.clear_references()
-                vim.api.nvim_clear_autocmds { group = 'dostinthemachine_lsp_highlight', buffer = event2.buf }
+                vim.api.nvim_clear_autocmds { group = "dostinthemachine_lsp_highlight", buffer = event2.buf }
               end,
             })
           end
@@ -127,7 +132,9 @@ return {
           --
           -- This may be unwanted, since they displace some of your code
           if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
-            map("n", '<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({})) end, 'Toggle Inlay Hints')
+            map("n", "<leader>th", function()
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled {})
+            end, "Toggle Inlay Hints")
           end
 
           -- The following autocommand is used to refresh codelens on certain
@@ -156,7 +163,7 @@ return {
       --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
       --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+      capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
       -- Enable the language servers in `opts.servers` above.
       --
@@ -182,7 +189,7 @@ return {
       local have_mason, mlsp = pcall(require, "mason-lspconfig")
       local all_mlsp_servers = {}
       if have_mason then
-        all_mlsp_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package) 
+        all_mlsp_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
       end
 
       -- Filter servers to populate `ensure_installed` for mason-lspconfig
@@ -203,10 +210,10 @@ return {
       -- Setup mason-lspconfig
       -- TODO: have this load the configured opts (see LazyVim.opts)
       if have_mason then
-        mlsp.setup({
+        mlsp.setup {
           ensure_installed = vim.tbl_deep_extend("force", ensure_installed, {}),
           handlers = { setup },
-        })
+        }
       end
     end,
   },
@@ -228,14 +235,14 @@ return {
     ---@param opts MasonSettings | {ensure_installed: string[]}
     config = function(_, opts)
       require("mason").setup(opts)
-      local mr = require("mason-registry")
+      local mr = require "mason-registry"
       mr:on("package:install:success", function()
         vim.defer_fn(function()
           -- trigger FileType event to possibly load this newly installed LSP server
-          require("lazy.core.handler.event").trigger({
+          require("lazy.core.handler.event").trigger {
             event = "FileType",
             buf = vim.api.nvim_get_current_buf(),
-          })
+          }
         end, 100)
       end)
       local function ensure_installed()
@@ -287,5 +294,5 @@ return {
     keys = {
       { "<leader>cs", "<cmd>AerialToggle<cr>", desc = "Aerial (Symbols)" },
     },
-  }
+  },
 }
