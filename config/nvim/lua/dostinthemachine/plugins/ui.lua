@@ -152,6 +152,20 @@ return {
   -- Fancy icon support (requires a Nerd font)
   { "nvim-tree/nvim-web-devicons", lazy = true },
 
+  -- nvim-colorizer.lua
+  -- https://github.com/norcalli/nvim-colorizer.lua
+  -- High-performance color highlighter for Neovim
+  {
+    "norcalli/nvim-colorizer.lua",
+    event = "VeryLazy",
+    keys = {
+      { "<leader>to", "<cmd>ColorizerToggle<cr>", desc = "Toggle Colorizer"},
+    },
+    config = function ()
+      require("colorizer").setup()
+    end
+  },
+
   -- zen-mode.nvim
   -- https://github.com/folke/zen-mode.nvim
   -- Distraction-free writing mode
