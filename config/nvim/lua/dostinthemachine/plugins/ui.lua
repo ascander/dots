@@ -166,6 +166,11 @@ return {
     end
   },
 
+  -- nui.nvim
+  -- https://github.com/MunifTanjim/nui.nvim
+  -- UI component library for Neovim
+  { "MunifTanjim/nui.nvim", lazy = true },
+
   -- zen-mode.nvim
   -- https://github.com/folke/zen-mode.nvim
   -- Distraction-free writing mode
