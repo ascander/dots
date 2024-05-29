@@ -474,5 +474,16 @@ return {
       { "<leader>ql", function() require("persistence").load({ last = true }) end, desc = "Restore Last Session" },
       { "<leader>qd", function() require("persistence").stop() end, desc = "Don't Save Current Session" },
     },
+  },
+
+  -- vim-startuptime
+  -- https://github.com/dstein64/vim-startuptime
+  -- Profile Neovim startup time
+  {
+    "dstein64/vim-startuptime",
+    cmd = "StartupTime",
+    config = function()
+      vim.g.startuptime_tries = 10
+    end,
   }
 }
