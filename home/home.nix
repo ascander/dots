@@ -1,13 +1,14 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: let
+{ config
+, lib
+, pkgs
+, ...
+}:
+let
   inherit (config.lib.file) mkOutOfStoreSymlink;
 
   nixConfigDir = "/Users/adost/code/dots";
-in {
+in
+{
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
@@ -108,28 +109,28 @@ in {
     terminal = "tmux-256color";
     escapeTime = 10;
     plugins = with pkgs.unstable;
-    with tmuxPlugins; [
-      {
-        plugin = fingers;
-        extraConfig = "set -g @fingers-main-action 'pbcopy'";
-      }
-      {
-        plugin = power-theme;
-        extraConfig = "set -g @tmux_power_theme 'default'";
-      }
-      {
-        plugin = resurrect;
-        extraConfig = "set -g @resurrect-strategy-nvim 'session'";
-      }
-      # FIXME: troubleshoot weirdness around duplicate sessions
-      # {
-      #   plugin = continuum;
-      #   extraConfig = ''
-      #     set -g @continuum-restore 'on'
-      #     set -g @continuum-save-interval '60' # minutes
-      #   '';
-      # }
-    ];
+      with tmuxPlugins; [
+        {
+          plugin = fingers;
+          extraConfig = "set -g @fingers-main-action 'pbcopy'";
+        }
+        {
+          plugin = power-theme;
+          extraConfig = "set -g @tmux_power_theme 'default'";
+        }
+        {
+          plugin = resurrect;
+          extraConfig = "set -g @resurrect-strategy-nvim 'session'";
+        }
+        # FIXME: troubleshoot weirdness around duplicate sessions
+        # {
+        #   plugin = continuum;
+        #   extraConfig = ''
+        #     set -g @continuum-restore 'on'
+        #     set -g @continuum-save-interval '60' # minutes
+        #   '';
+        # }
+      ];
     extraConfig = builtins.readFile ../config/tmux/tmux.conf;
   };
 
