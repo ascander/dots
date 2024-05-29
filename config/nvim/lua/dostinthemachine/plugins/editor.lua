@@ -33,6 +33,12 @@ return {
             edge = "│",
             item = "│",
             none = " ",
+        view = {
+          relativenumber = true,
+          width = {
+            min = 30,
+            max = -1,
+            padding = 2,
           },
         },
         icons = {
