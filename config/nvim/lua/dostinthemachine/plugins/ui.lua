@@ -200,6 +200,26 @@ return {
     },
   },
 
+  -- dressing.nvim
+  -- https://github.com/stevearc/dressing.nvim
+  -- Better default `vim.ui` interfaces
+  {
+    "stevearc/dressing.nvim",
+    lazy = true,
+    init = function()
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.select = function(...)
+        require("lazy").load({ plugins = { "dressing.nvim" } })
+        return vim.ui.select(...)
+      end
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.input = function(...)
+        require("lazy").load({ plugins = { "dressing.nvim" } })
+        return vim.ui.input(...)
+      end
+    end,
+  },
+
   -- zen-mode.nvim
   -- https://github.com/folke/zen-mode.nvim
   -- Distraction-free writing mode
