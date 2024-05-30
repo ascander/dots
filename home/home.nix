@@ -102,7 +102,6 @@ in
   # See: https://gpanders.com/blog/the-definitive-guide-to-using-tmux-256color-on-macos/
   programs.tmux = {
     enable = true;
-    package = pkgs.unstable.tmux;
     clock24 = true;
     keyMode = "vi";
     mouse = true;
