@@ -205,12 +205,10 @@ in
 
   # Neovim
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.neovim.enable
-  # https://github.com/nix-community/neovim-nightly-overlay
   #
   # NOTE: plugin management is handled by `lazy.nvim` outside of Nix. Why be coy? 🤷
   programs.neovim = {
     enable = true;
-    package = pkgs.neovim-nightly;
     defaultEditor = true;
     withNodeJs = false;
     withPython3 = true;
