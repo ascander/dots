@@ -159,7 +159,7 @@ return {
     "norcalli/nvim-colorizer.lua",
     event = "VeryLazy",
     keys = {
-      { "<leader>to", "<cmd>ColorizerToggle<cr>", desc = "Toggle Colorizer" },
+      { "<leader>uo", "<cmd>ColorizerToggle<cr>", desc = "Toggle Colorizer" },
     },
     config = function()
       require("colorizer").setup()
