@@ -99,7 +99,7 @@ return {
     },
     keys = {
       {
-        "<leader>tt",
+        "<leader>ut",
         function()
           require("treesitter-context").toggle()
         end,
