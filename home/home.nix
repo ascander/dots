@@ -36,7 +36,9 @@ in
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.zsh.enable
   programs.zsh = {
     enable = true;
-    enableAutosuggestions = true;
+    autosuggestion = {
+      enable = true;
+    };
     enableCompletion = true;
     syntaxHighlighting = {
       enable = true;
@@ -71,7 +73,7 @@ in
       GPG_TTY = "$(tty)";
 
       XDG_CONFIG_HOME = "$HOME/.config";
-      TERMINFO_DIRS = "$HOME/.local/share/terminfo:${pkgs.unstable.alacritty.terminfo.outPath}/share/terminfo";
+      TERMINFO_DIRS = "$HOME/.local/share/terminfo:${pkgs.alacritty.terminfo.outPath}/share/terminfo";
     };
     initExtra = builtins.readFile ../config/zsh/.zshrc;
   };
@@ -80,7 +82,6 @@ in
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.starship.enable
   programs.starship = {
     enable = true;
-    package = pkgs.unstable.starship;
     settings = builtins.fromTOML (builtins.readFile ../config/starship/starship.toml);
   };
 
@@ -101,14 +102,13 @@ in
   # See: https://gpanders.com/blog/the-definitive-guide-to-using-tmux-256color-on-macos/
   programs.tmux = {
     enable = true;
-    package = pkgs.unstable.tmux;
     clock24 = true;
     keyMode = "vi";
     mouse = true;
     shortcut = "a";
     terminal = "tmux-256color";
     escapeTime = 10;
-    plugins = with pkgs.unstable;
+    plugins = with pkgs;
       with tmuxPlugins; [
         {
           plugin = fingers;
@@ -204,21 +204,20 @@ in
 
   # Neovim
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.neovim.enable
-  # https://github.com/nix-community/neovim-nightly-overlay
   #
   # NOTE: plugin management is handled by `lazy.nvim` outside of Nix. Why be coy? 🤷
   programs.neovim = {
     enable = true;
-    package = pkgs.neovim-nightly;
     defaultEditor = true;
     withNodeJs = false;
     withPython3 = true;
     withRuby = false;
-    extraPackages = with pkgs.unstable; [
+    extraPackages = with pkgs; [
       coursier
+      nixd
       nodejs_22
       python311Packages.pynvim
-      nixd # not available in the Mason registry
+      tree-sitter
       wget
     ];
   };
@@ -247,6 +246,7 @@ in
     bat
     coursier
     delta
+    eza
     fd
     fzf
     gawk
@@ -257,19 +257,15 @@ in
     gtop
     httpie
     jq
+    lazygit
     pstree
-    tree
-    unstable.eza
-    zoxide
-
-    # Neovim requirements
-    glow
     reattach-to-user-namespace
     ripgrep
-    tree-sitter
-    unstable.lazygit
+    tree
+    zoxide
 
     # Misc
+    pam-reattach # allows use of 'pam_tid' module in tmux
     pinentry_mac
   ];
 }
