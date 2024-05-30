@@ -1,18 +1,18 @@
 -- Sets a keymap using Neovim's API
 -- TODO: add logic to delete 'noremap' if 'remap = true' is passed
----@param mode
----@param lhs
----@param rhs
----@param opts
+---@param mode string|string[]
+---@param lhs string
+---@param rhs string|function
+---@param opts? vim.keymap.set.Opts
 local map = function(mode, lhs, rhs, opts)
-	local base_opts = { noremap = true, silent = true }
-	local keymap_opts = vim.tbl_deep_extend("force", base_opts, opts or {})
+  local base_opts = { noremap = true, silent = true }
+  local keymap_opts = vim.tbl_deep_extend("force", base_opts, opts or {})
 
-	vim.keymap.set(mode, lhs, rhs, keymap_opts)
+  vim.keymap.set(mode, lhs, rhs, keymap_opts)
 end
 
 -- Clear highlight on pressing <Esc> in normal mode
-map({ "i", "n" }, "<Esc>", "<cmd>nohlsearch<CR><Esc>", opts)
+map({ "i", "n" }, "<Esc>", "<cmd>nohlsearch<CR><Esc>")
 
 -- Better up/down
 map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
@@ -26,14 +26,6 @@ map("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
 map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
 map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
 
--- Move Lines
--- map("n", "<A-j>", "<cmd>m .+1<CR>==", { desc = "Move Down" })
--- map("n", "<A-k>", "<cmd>m .-2<CR>==", { desc = "Move Up" })
--- map("i", "<A-j>", "<esc><cmd>m .+1<CR>==gi", { desc = "Move Down" })
--- map("i", "<A-k>", "<esc><cmd>m .-2<CR>==gi", { desc = "Move Up" })
--- map("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move Down" })
--- map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move Up" })
-
 -- Buffers
 map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
 map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
@@ -46,10 +38,10 @@ map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Delete Buffer" })
 -- Clear search, diff update and redraw
 -- taken from runtime/lua/_editor.lua
 map(
-	"n",
-	"<leader>ur",
-	"<cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><cr>",
-	{ desc = "Redraw / Clear hlsearch / Diff Update" }
+  "n",
+  "<leader>ur",
+  "<cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><cr>",
+  { desc = "Redraw / Clear hlsearch / Diff Update" }
 )
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
@@ -83,11 +75,11 @@ map("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
 
 -- Diagnostics
 local diagnostic_goto = function(next, severity)
-	local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
-	severity = severity and vim.diagnostic.severity[severity] or nil
-	return function()
-		go({ severity = severity })
-	end
+  local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
+  severity = severity and vim.diagnostic.severity[severity] or nil
+  return function()
+    go { severity = severity }
+  end
 end
 
 map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
