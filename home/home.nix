@@ -265,6 +265,7 @@ in
     zoxide
 
     # Misc
+    pam-reattach # allows use of 'pam_tid' module in tmux
     pinentry_mac
   ];
 }
