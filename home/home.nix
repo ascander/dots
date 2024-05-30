@@ -110,28 +110,28 @@ in
     terminal = "tmux-256color";
     escapeTime = 10;
     plugins = with pkgs;
-    with tmuxPlugins; [
-      {
-        plugin = fingers;
-        extraConfig = "set -g @fingers-main-action 'pbcopy'";
-      }
-      {
-        plugin = power-theme;
-        extraConfig = "set -g @tmux_power_theme 'default'";
-      }
-      {
-        plugin = resurrect;
-        extraConfig = "set -g @resurrect-strategy-nvim 'session'";
-      }
-      # FIXME: troubleshoot weirdness around duplicate sessions
-      # {
-      #   plugin = continuum;
-      #   extraConfig = ''
-      #     set -g @continuum-restore 'on'
-      #     set -g @continuum-save-interval '60' # minutes
-      #   '';
-      # }
-    ];
+      with tmuxPlugins; [
+        {
+          plugin = fingers;
+          extraConfig = "set -g @fingers-main-action 'pbcopy'";
+        }
+        {
+          plugin = power-theme;
+          extraConfig = "set -g @tmux_power_theme 'default'";
+        }
+        {
+          plugin = resurrect;
+          extraConfig = "set -g @resurrect-strategy-nvim 'session'";
+        }
+        # FIXME: troubleshoot weirdness around duplicate sessions
+        # {
+        #   plugin = continuum;
+        #   extraConfig = ''
+        #     set -g @continuum-restore 'on'
+        #     set -g @continuum-save-interval '60' # minutes
+        #   '';
+        # }
+      ];
     extraConfig = builtins.readFile ../config/tmux/tmux.conf;
   };
 
@@ -215,15 +215,12 @@ in
     withNodeJs = false;
     withPython3 = true;
     withRuby = false;
-    # Plugins
-    plugins = with pkgs;
-    with vimPlugins; [
-      vim-tmux-navigator
-    ];
-    # Command line utilities, language servers, etc.
     extraPackages = with pkgs; [
-      ripgrep
-      tree-sitter
+      coursier
+      nodejs_22
+      python311Packages.pynvim
+      nixd
+      wget
     ];
   };
 
@@ -251,6 +248,7 @@ in
     bat
     coursier
     delta
+    eza
     fd
     fzf
     gawk
@@ -261,23 +259,11 @@ in
     gtop
     httpie
     jq
-    pstree
-    tree
-    eza
-    zoxide
-
-    # Neovim requirements
-    glow
-    reattach-to-user-namespace
-    stylua
     lazygit
-
-    # Language servers
-    nil
-    nodePackages.bash-language-server
-    nodePackages.yaml-language-server
-    pyright
-    lua-language-server
+    pstree
+    reattach-to-user-namespace
+    tree
+    zoxide
 
     # Misc
     pinentry_mac
