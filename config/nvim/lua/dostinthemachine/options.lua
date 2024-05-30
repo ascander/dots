@@ -23,9 +23,7 @@ opt.showmode = false
 opt.cursorline = true
 opt.signcolumn = "yes"
 opt.report = 0
--- TODO: set this in config for nvim-metals
--- opt.shortmess:remove({ "F" })
-opt.shortmess:append({ W = true, I = true, c = true, C = true })
+opt.shortmess:append { W = true, I = true, c = true, C = true }
 
 -- Tabs, spaces, indentation
 opt.smartindent = true
