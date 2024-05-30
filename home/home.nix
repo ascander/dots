@@ -214,9 +214,10 @@ in
     withRuby = false;
     extraPackages = with pkgs; [
       coursier
+      nixd
       nodejs_22
       python311Packages.pynvim
-      nixd
+      tree-sitter
       wget
     ];
   };
@@ -259,6 +260,7 @@ in
     lazygit
     pstree
     reattach-to-user-namespace
+    ripgrep
     tree
     zoxide
 
