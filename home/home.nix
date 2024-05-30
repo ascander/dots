@@ -1,13 +1,14 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: let
+{ config
+, lib
+, pkgs
+, ...
+}:
+let
   inherit (config.lib.file) mkOutOfStoreSymlink;
 
   nixConfigDir = "/Users/adost/code/dots";
-in {
+in
+{
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
@@ -15,7 +16,7 @@ in {
   # You can update Home Manager without changing this value. See the Home
   # Manager release notes for a list of state version changes in each release.
   #
-  # See https://nix-community.github.io/home-manager/release-notes.html
+  # See https://nix-community.github.io/home-manager/release-notes.xhtml
   home.stateVersion = "22.11";
 
   # Dotfiles (stable)
@@ -29,10 +30,10 @@ in {
   # Dotfiles (unstable)
   # This allows direct editing for testing, troubleshooting, etc.
   xdg.configFile.alacritty.source = mkOutOfStoreSymlink "${nixConfigDir}/config/alacritty";
-  # xdg.configFile.nvim.source = mkOutOfStoreSymlink "${nixConfigDir}/config/nvim";
+  xdg.configFile.nvim.source = mkOutOfStoreSymlink "${nixConfigDir}/config/nvim";
 
   # ZSH
-  # https://nix-community.github.io/home-manager/options.html#opt-programs.zsh.enable
+  # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.zsh.enable
   programs.zsh = {
     enable = true;
     enableAutosuggestions = true;
@@ -66,6 +67,7 @@ in {
       VISUAL = "nvim";
       PAGER = "less";
       MANPAGER = "sh -c 'col -bx | bat -l man -p'";
+      MANROFFOPT = "-c";
       GPG_TTY = "$(tty)";
 
       XDG_CONFIG_HOME = "$HOME/.config";
@@ -83,7 +85,7 @@ in {
   };
 
   # Tmux
-  # https://nix-community.github.io/home-manager/options.html#opt-programs.tmux.enable
+  # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.tmux.enable
   #
   # NOTE:
   # The 'tmux-256color' terminal is not available on macOS systems by default.
@@ -99,6 +101,7 @@ in {
   # See: https://gpanders.com/blog/the-definitive-guide-to-using-tmux-256color-on-macos/
   programs.tmux = {
     enable = true;
+    package = pkgs.unstable.tmux;
     clock24 = true;
     keyMode = "vi";
     mouse = true;
@@ -106,33 +109,33 @@ in {
     terminal = "tmux-256color";
     escapeTime = 10;
     plugins = with pkgs.unstable;
-    with tmuxPlugins; [
-      {
-        plugin = fingers;
-        extraConfig = "set -g @fingers-main-action 'pbcopy'";
-      }
-      {
-        plugin = power-theme;
-        extraConfig = "set -g @tmux_power_theme 'default'";
-      }
-      {
-        plugin = resurrect;
-        extraConfig = "set -g @resurrect-strategy-nvim 'session'";
-      }
-      # FIXME: troubleshoot weirdness around duplicate sessions
-      # {
-      #   plugin = continuum;
-      #   extraConfig = ''
-      #     set -g @continuum-restore 'on'
-      #     set -g @continuum-save-interval '60' # minutes
-      #   '';
-      # }
-    ];
+      with tmuxPlugins; [
+        {
+          plugin = fingers;
+          extraConfig = "set -g @fingers-main-action 'pbcopy'";
+        }
+        {
+          plugin = power-theme;
+          extraConfig = "set -g @tmux_power_theme 'default'";
+        }
+        {
+          plugin = resurrect;
+          extraConfig = "set -g @resurrect-strategy-nvim 'session'";
+        }
+        # FIXME: troubleshoot weirdness around duplicate sessions
+        # {
+        #   plugin = continuum;
+        #   extraConfig = ''
+        #     set -g @continuum-restore 'on'
+        #     set -g @continuum-save-interval '60' # minutes
+        #   '';
+        # }
+      ];
     extraConfig = builtins.readFile ../config/tmux/tmux.conf;
   };
 
   # Git
-  # https://nix-community.github.io/home-manager/options.html#opt-programs.git.enable
+  # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.git.enable
   programs.git = {
     enable = true;
     userName = "Ascander Dost";
@@ -200,28 +203,29 @@ in {
   };
 
   # Neovim
-  # https://nix-community.github.io/home-manager/options.html#opt-programs.neovim.enable
+  # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.neovim.enable
+  # https://github.com/nix-community/neovim-nightly-overlay
+  #
+  # NOTE: plugin management is handled by `lazy.nvim` outside of Nix. Why be coy? 🤷
   programs.neovim = {
     enable = true;
     package = pkgs.neovim-nightly;
     defaultEditor = true;
-    withNodeJs = true;
+    withNodeJs = false;
     withPython3 = true;
     withRuby = false;
-    # Plugins
-    plugins = with pkgs.unstable;
-    with vimPlugins; [
-      vim-tmux-navigator
-    ];
-    # Command line utilities, language servers, etc.
     extraPackages = with pkgs.unstable; [
-      ripgrep
+      coursier
+      nodejs_22
+      python311Packages.pynvim
+      nixd # not available in the Mason registry
+      wget
     ];
   };
 
   # Direnv
-  # https://nix-community.github.io/home-manager/options.html#opt-programs.direnv.enable
-  # https://nix-community.github.io/home-manager/options.html#opt-programs.direnv.nix-direnv.enable
+  # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.direnv.enable
+  # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.direnv.nix-direnv.enable
   programs.direnv.enable = true;
   programs.direnv.nix-direnv.enable = true;
 
@@ -261,19 +265,11 @@ in {
     # Neovim requirements
     glow
     reattach-to-user-namespace
-    stylua
+    ripgrep
     tree-sitter
     unstable.lazygit
 
-    # Language servers
-    nil
-    nodePackages.bash-language-server
-    nodePackages.yaml-language-server
-    pyright
-    unstable.lua-language-server
-
     # Misc
-    # openjdk8
     pinentry_mac
   ];
 }
