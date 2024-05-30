@@ -2,27 +2,15 @@
   description = "Ascander's darwin system";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-23.11-darwin";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
-    darwin.url = "github:lnl7/nix-darwin/master";
+    # Nix darwin
+    darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Use the `home-manager` branch corresponding to the 'nixpkgs' branch
-    #
-    # See: https://github.com/nix-community/home-manager/issues/3928
-    home-manager.url = "github:nix-community/home-manager/release-23.11";
+    # Home manager
+    home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Neovim nightly build
-    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    neovim-nightly-overlay.inputs.nixpkgs.follows = "nixpkgs-unstable";
-
-    # Neovim plugins
-    nvim-tree = {
-      url = "github:nvim-tree/nvim-tree.lua";
-      flake = false;
-    };
   };
   outputs =
     { self
@@ -33,25 +21,21 @@
     } @ inputs:
     let
       inherit (darwin.lib) darwinSystem;
-      inherit (inputs.nixpkgs.lib) attrValues optionalAttrs singleton;
+      inherit (inputs.nixpkgs.lib) attrValues;
 
       currentSystem = "x86_64-darwin";
 
       # Configuration for 'nixpkgs'
       nixpkgsConfig = {
         config = { allowUnfree = true; };
-        overlays =
-          attrValues self.overlays
-          ++ [
-            inputs.neovim-nightly-overlay.overlay
-          ];
+        overlays = attrValues self.overlays ++ [];
       };
     in
     {
       overlays = {
-        # # Adds access to (unstable) x86 packages through 'pkgs.x86' if running Apple Silicon
+        # # Adds access to x86 packages through 'pkgs.x86' if running Apple Silicon
         # apple-silicon = _: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-        #   x86 = import inputs.nixpkgs-unstable {
+        #   x86 = import inputs.nixpkgs {
         #     system = "x86_64-darwin";
         #     inherit (nixpkgsConfig) config;
         #   };
@@ -61,31 +45,6 @@
         # sub-x86 = final: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
         #   inherit (final.x86);
         # };
-
-        # Adds access to unstable packages through 'pkgs.unstable'
-        pkgs-unstable = _: prev: {
-          unstable = import inputs.nixpkgs-unstable {
-            inherit (prev.stdenv) system;
-            inherit (nixpkgsConfig) config;
-          };
-        };
-
-        # Adds Neovim plugins not in `nixpkgs`
-        nvim-plugins = final: prev:
-          let
-            nvim-tree = prev.vimUtils.buildVimPlugin rec {
-              name = "nvim-tree";
-              src = inputs.nvim-tree;
-              version = src.lastModifiedDate;
-            };
-          in
-          {
-            vimPlugins =
-              prev.vimPlugins
-              // {
-                inherit nvim-tree;
-              };
-          };
       };
 
       darwinModules = {
