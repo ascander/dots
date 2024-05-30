@@ -5,10 +5,10 @@
 ---@param rhs
 ---@param opts
 local map = function(mode, lhs, rhs, opts)
-  local base_opts = { noremap = true, silent = true }
-  local keymap_opts = vim.tbl_deep_extend("force", base_opts, opts or {})
+	local base_opts = { noremap = true, silent = true }
+	local keymap_opts = vim.tbl_deep_extend("force", base_opts, opts or {})
 
-  vim.keymap.set(mode, lhs, rhs, keymap_opts)
+	vim.keymap.set(mode, lhs, rhs, keymap_opts)
 end
 
 -- Clear highlight on pressing <Esc> in normal mode
@@ -46,10 +46,10 @@ map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Delete Buffer" })
 -- Clear search, diff update and redraw
 -- taken from runtime/lua/_editor.lua
 map(
-  "n",
-  "<leader>ur",
-  "<cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><cr>",
-  { desc = "Redraw / Clear hlsearch / Diff Update" }
+	"n",
+	"<leader>ur",
+	"<cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><cr>",
+	{ desc = "Redraw / Clear hlsearch / Diff Update" }
 )
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
@@ -83,11 +83,11 @@ map("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
 
 -- Diagnostics
 local diagnostic_goto = function(next, severity)
-  local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
-  severity = severity and vim.diagnostic.severity[severity] or nil
-  return function()
-    go { severity = severity }
-  end
+	local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
+	severity = severity and vim.diagnostic.severity[severity] or nil
+	return function()
+		go({ severity = severity })
+	end
 end
 
 map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
