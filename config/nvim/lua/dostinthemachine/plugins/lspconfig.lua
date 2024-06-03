@@ -84,15 +84,10 @@ return {
             vim.keymap.set(mode, lhs, rhs, { buffer = event.buf, desc = desc, noremap = true, silent = true })
           end
 
-          map("n", "gd", function()
-            require("telescope.builtin").lsp_definitions { reuse_win = true }
-          end, "Goto Definition")
-          map("n", "gI", function()
-            require("telescope.builtin").lsp_implementations { reuse_win = true }
-          end, "Goto Implementations")
-          map("n", "gy", function()
-            require("telescope.builtin").lsp_type_definitions { reuse_win = true }
-          end, "Goto Type Definition")
+          -- stylua: ignore start
+          map("n", "gd", function() require("telescope.builtin").lsp_definitions { reuse_win = true } end, "Goto Definition")
+          map("n", "gI", function() require("telescope.builtin").lsp_implementations { reuse_win = true } end, "Goto Implementations")
+          map("n", "gy", function() require("telescope.builtin").lsp_type_definitions { reuse_win = true } end, "Goto Type Definition")
           map("n", "gr", "<cmd>Telescope lsp_references<cr>", "References")
           map("n", "gD", vim.lsp.buf.declaration, "Goto Declaration")
           map("n", "K", vim.lsp.buf.hover, "Hover")
@@ -104,6 +99,7 @@ return {
           map({ "n", "v" }, "<leader>cc", vim.lsp.codelens.run, "Run Codelens")
           map("n", "<leader>cC", vim.lsp.codelens.refresh, "Refresh & Display Codelens")
           map("n", "<leader>cr", vim.lsp.buf.rename, "Rename")
+          -- stylua: ignore end
 
           -- The following autocommand is used to enable inlay hints in your
           -- code, if the language server you are using supports them
