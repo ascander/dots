@@ -30,3 +30,5 @@ Update the flake input `{input}` by running:
 ```shell
 nix flake lock --update-input {input}
 ```
+
+where `{input}` is a flake input defined in `flake.nix`.
