@@ -105,43 +105,12 @@ return {
           map("n", "<leader>cC", vim.lsp.codelens.refresh, "Refresh & Display Codelens")
           map("n", "<leader>cr", vim.lsp.buf.rename, "Rename")
 
-          -- The following three autocommands are used to highlight references of the
-          -- word under your cursor when your cursor rests there for a little while.
-          --    See `:help CursorHold` for information about when this is executed
-          --
-          -- When you move your cursor, the highlights will be cleared (the second autocommand).
-          -- When the LSP server detaches, the highlights will be cleared (the third autocommand).
-          local client = vim.lsp.get_client_by_id(event.data.client_id)
-          if client and client.server_capabilities.documentHighlightProvider then
-            local highlight_augroup = vim.api.nvim_create_augroup("dostinthemachine_lsp_highlight", { clear = false })
-            vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-              buffer = event.buf,
-              group = highlight_augroup,
-              callback = vim.lsp.buf.document_highlight,
-            })
-
-            vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-              buffer = event.buf,
-              group = highlight_augroup,
-              callback = vim.lsp.buf.clear_references,
-            })
-
-            vim.api.nvim_create_autocmd("LspDetach", {
-              group = vim.api.nvim_create_augroup("dostinthemachine_lsp_detach", { clear = true }),
-              callback = function(event2)
-                vim.lsp.buf.clear_references()
-                vim.api.nvim_clear_autocmds {
-                  group = "dostinthemachine_lsp_highlight",
-                  buffer = event2.buf,
-                }
-              end,
-            })
-          end
-
           -- The following autocommand is used to enable inlay hints in your
           -- code, if the language server you are using supports them
           --
           -- This may be unwanted, since they displace some of your code
+          -- TODO: confirm this works as implemented
+          local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
             map("n", "<leader>uh", function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled {})
@@ -150,6 +119,7 @@ return {
 
           -- The following autocommand is used to refresh codelens on certain
           -- events, if the language server supports them.
+          -- TODO: troubleshoot and fix if necessary
           -- if client and client.server_capabilities.codeLensProvider and vim.lsp.codelens then
           --   vim.lsp.codelens.refresh()
           --   vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
