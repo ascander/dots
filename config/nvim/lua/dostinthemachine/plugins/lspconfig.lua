@@ -2,6 +2,12 @@ return {
   -- nvim-lspconfig
   -- https://github.com/neovim/nvim-lspconfig
   -- Quickstart configs for Neovim LSP
+  --
+  -- Dependencies:
+  --   neoconf.nvim         (global/project specific settings)
+  --   neodev.nvim          (enhanced support for LSP in Neovim config)
+  --   mason.nvim           (package manager for LSP)
+  --   mason-lspconfig.nvim (mason/lspconfig integration)
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPost", "BufWritePost", "BufNewFile" },
@@ -196,145 +202,5 @@ return {
         }
       end
     end,
-  },
-
-  -- mason.nvim
-  -- https://github.com/williamboman/mason.nvim
-  -- Package manager for language servers, linters, formatters, etc.
-  {
-    "williamboman/mason.nvim",
-    cmd = "Mason",
-    keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
-    build = ":MasonUpdate",
-    opts = {
-      ensure_installed = {
-        "stylua",
-        "shfmt",
-      },
-    },
-    ---@param opts MasonSettings | {ensure_installed: string[]}
-    config = function(_, opts)
-      require("mason").setup(opts)
-      local mr = require "mason-registry"
-      mr:on("package:install:success", function()
-        vim.defer_fn(function()
-          -- trigger FileType event to possibly load this newly installed LSP server
-          require("lazy.core.handler.event").trigger {
-            event = "FileType",
-            buf = vim.api.nvim_get_current_buf(),
-          }
-        end, 100)
-      end)
-      local function ensure_installed()
-        for _, tool in ipairs(opts.ensure_installed) do
-          local p = mr.get_package(tool)
-          if not p:is_installed() then
-            p:install()
-          end
-        end
-      end
-      if mr.refresh then
-        mr.refresh(ensure_installed)
-      else
-        ensure_installed()
-      end
-    end,
-  },
-
-  -- nvim-metals
-  -- https://github.com/scalameta/nvim-metals
-  -- A Metals plugin for Neovim
-  {
-    "scalameta/nvim-metals",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "mfussenegger/nvim-dap",
-    },
-    ft = { "scala", "sbt", "java" },
-    keys = {
-      {
-        "<leader>cM",
-        function()
-          require("telescope").extensions.metals.commands()
-        end,
-        desc = "Metals commands",
-      },
-    },
-    opts = function()
-      local metals_config = require("metals").bare_config()
-
-      metals_config.settings = {
-        fallbackScalaVersion = "2.12.15",
-        showImplicitArguments = true,
-        showImplicitConversionsAndClasses = true,
-        showInferredType = true,
-        excludedPackages = {
-          "akka.actor.typed.javadsl",
-          "com.github.swagger.akka.javadsl",
-          "akka.stream.javadsl",
-          "akka.http.javadsl",
-        },
-      }
-
-      metals_config.init_options.statusBarProvider = "on"
-      metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-      metals_config.on_attach = function()
-        require("metals").setup_dap()
-      end
-
-      return metals_config
-    end,
-    config = function(self, opts)
-      local nvim_metals_group = vim.api.nvim_create_augroup("dostinthemachine_nvim_metals", { clear = true })
-
-      -- Start Metals when opening a Scala/SBT/Java file
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = self.ft,
-        callback = function()
-          require("metals").initialize_or_attach(opts)
-        end,
-        group = nvim_metals_group,
-      })
-    end,
-  },
-
-  -- aerial.nvim
-  -- https://github.com/stevearc/aerial.nvim
-  -- LSP powered code outline window
-  {
-    "stevearc/aerial.nvim",
-    cmd = "AerialToggle",
-    opts = function()
-      local icons = require("dostinthemachine.icons").kind
-
-      local opts = {
-        attach_mode = "global",
-        backends = { "lsp", "treesitter", "markdown", "man" },
-        show_guides = true,
-        layout = {
-          default_direction = "prefer_left",
-          resize_to_content = false,
-          win_opts = {
-            winhl = "Normal:NormalFloat,FloatBorder:NormalFloat,SignColumn:SignColumnSB",
-            signcolumn = "yes",
-            statuscolumn = " ",
-          },
-        },
-        icons = icons,
-        -- stylua: ignore
-        guides = {
-          mid_item   = "├╴",
-          last_item  = "└╴",
-          nested_top = "│ ",
-          whitespace = "  ",
-        },
-      }
-
-      return opts
-    end,
-    keys = {
-      { "<leader>cs", "<cmd>AerialToggle<cr>", desc = "Aerial (Symbols)" },
-    },
   },
 }

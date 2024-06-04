@@ -1,3 +1,4 @@
+---Helper function to get args for debug run
 ---@param config {args?:string[]|fun():string[]?}
 local function get_args(config)
   local args = type(config.args) == "function" and (config.args() or {}) or config.args or {}
@@ -11,10 +12,17 @@ local function get_args(config)
 end
 
 return {
-
   -- nvim-dap
   -- https://github.com/mfussenegger/nvim-dap
   -- Debug Adapter Protocol client for Neovim
+  --
+  -- Dependencies:
+  --   nvim-dap-ui           (UI for nvim-dap)
+  --   nvim-nio              (UI component library)
+  --   nvim-dap-virtual-text (virtual text for nvim-dap)
+  --   which-key.nvim        (keymap support)
+  --   mason-nvim-dap.nvim   (mason/nvim-dap integration)
+  --   neoconf.nvim          (global/project configuration)
   {
     "mfussenegger/nvim-dap",
     dependencies = {
@@ -136,6 +144,7 @@ return {
         ["pwa-node"] = { "javascriptreact", "typescriptreact", "typescript", "javascript" },
       })
       local json = require "plenary.json"
+      ---@diagnostic disable-next-line: duplicate-set-field
       vscode.json_decode = function(str)
         return vim.json.decode(json.json_strip_comments(str, {}))
       end
