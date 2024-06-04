@@ -28,7 +28,7 @@
       # Configuration for 'nixpkgs'
       nixpkgsConfig = {
         config = { allowUnfree = true; };
-        overlays = attrValues self.overlays ++ [];
+        overlays = attrValues self.overlays ++ [ ];
       };
     in
     {
