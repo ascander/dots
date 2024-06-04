@@ -2,6 +2,12 @@ return {
   -- telescope.nvim
   -- https://github.com/nvim-telescope/telescope.nvim
   -- Fuzzy finder (files, LSP, etc.)
+  --
+  -- Dependencies:
+  --   plenary.nvim              (Lua function library)
+  --   telescope-fzf-native.nvim (FZF sorter for telescope)
+  --   telescope-ui-select.nvim  (use telescope for vim.ui.select)
+  --   nvim-web-devicons         (fancy icons)
   {
     "nvim-telescope/telescope.nvim",
     cmd = "Telescope",
@@ -50,8 +56,7 @@ return {
       { "<leader>so", "<cmd>Telescope vim_options<cr>", desc = "Options" },
       { "<leader>sR", "<cmd>Telescope resume<cr>", desc = "Resume" },
       { "<leader>sq", "<cmd>Telescope quickfix<cr>", desc = "Quickfix List" },
-      -- { "<leader>sw", LazyVim.telescope("grep_string", { word_match = "-w" }), desc = "Word (Root Dir)" },
-      -- { "<leader>sW", LazyVim.telescope("grep_string", { cwd = false, word_match = "-w" }), desc = "Word (cwd)" },
+      { "<leader>sw", "<cmd>Telescope grep_string word_match=-w<cr>", desc = "Grep Word" },
       { "<leader>uC", "<cmd>Telescope colorscheme enable_preview=true<cr>", desc = "Colorscheme with Preview" },
       {
         "<leader>ss",

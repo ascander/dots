@@ -56,6 +56,9 @@ return {
   -- nvim-treesitter-textobjects
   -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects/tree/master
   -- Syntax-aware text objects
+  --
+  -- Dependencies:
+  --   nvim-treesitter (syntax-aware support for coding)
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
     event = "VeryLazy",
@@ -106,14 +109,5 @@ return {
         desc = "Toggle Treesitter Context",
       },
     },
-  },
-
-  -- nvim-ts-autotag
-  -- https://github.com/windwp/nvim-ts-autotag
-  -- Auto-close and rename HTML tags, powered by Treesitter
-  {
-    "windwp/nvim-ts-autotag",
-    event = "VeryLazy",
-    opts = {},
   },
 }

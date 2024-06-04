@@ -1,5 +1,4 @@
 return {
-
   -- nvim-lint
   -- https://github.com/mfussenegger/nvim-lint
   -- Asynchronous linter plugin for Neovim

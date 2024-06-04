@@ -3,23 +3,24 @@ return {
   -- nvim-cmp
   -- https://github.com/hrsh7th/nvim-cmp
   -- Autocompletion engine for Neovim
+  --
+  -- Dependencies:
+  --   LuaSnip           (snippet engine)
+  --   friendly-snippets (snippet collection)
+  --   cmp_luasnip       (completion sources for luasnip)
+  --   cmp-nvim-lsp      (completion sources for LSP)
+  --   cmp-nvim-lua      (completion sources for Lua)
+  --   cmp-buffer        (buffer completion)
+  --   cmp-path          (filepath completion)
+  --   cmp-emoji         (emoji completion)
   {
     "hrsh7th/nvim-cmp",
     version = false,
     event = "InsertEnter",
     dependencies = {
-      -- Snippet Engine & its associated nvim-cmp source
       {
         "L3MON4D3/LuaSnip",
-        build = (function()
-          -- Build Step is needed for regex support in snippets.
-          -- This step is not supported in many windows environments.
-          -- Remove the below condition to re-enable on windows.
-          if vim.fn.has "win32" == 1 or vim.fn.executable "make" == 0 then
-            return
-          end
-          return "make install_jsregexp"
-        end)(),
+        build = "make install_jsregexp",
         dependencies = {
           {
             "rafamadriz/friendly-snippets",
