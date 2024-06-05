@@ -32,3 +32,19 @@ nix flake lock --update-input {input}
 ```
 
 where `{input}` is a flake input defined in `flake.nix`.
+
+### Garbage collection
+
+Delete old generations by running:
+
+```shell
+nix-garbage-collect -d
+```
+
+After running `nix-garbage-collect` above, run:
+
+```shell
+sudo ./result/sw/bin/nix-collect-garbage -d 
+```
+
+Both are required due to strange behavior associated with multi-user Nix installations. See https://github.com/LnL7/nix-darwin/issues/237 for details.
