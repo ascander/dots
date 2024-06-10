@@ -20,6 +20,7 @@ in
   home.stateVersion = "22.11";
 
   # Dotfiles (stable)
+  xdg.configFile."amethyst/amethyst.yml".source = ../config/amethyst/amethyst.yml;
   xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
   xdg.configFile."fd/ignore".source = ../config/fd/ignore;
   xdg.configFile."direnv/direnvrc".source = ../config/direnv/direnvrc;
@@ -258,6 +259,7 @@ in
     httpie
     jq
     lazygit
+    nix-tree
     pstree
     reattach-to-user-namespace
     ripgrep
