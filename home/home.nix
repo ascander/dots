@@ -74,7 +74,6 @@ in
       GPG_TTY = "$(tty)";
 
       XDG_CONFIG_HOME = "$HOME/.config";
-      TERMINFO_DIRS = "${pkgs.alacritty.terminfo.outPath}/share/terminfo";
     };
     initExtra = builtins.readFile ../config/zsh/.zshrc;
   };
