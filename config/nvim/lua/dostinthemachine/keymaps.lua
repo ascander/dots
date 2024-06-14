@@ -11,6 +11,9 @@ local map = function(mode, lhs, rhs, opts)
   vim.keymap.set(mode, lhs, rhs, keymap_opts)
 end
 
+-- lazy.nvim
+map("n", "<leader>l", "<cmd>Lazy<cr>", { desc = "Lazy" })
+
 -- Clear highlight on pressing <Esc> in normal mode
 map({ "i", "n" }, "<Esc>", "<cmd>nohlsearch<CR><Esc>")
 
