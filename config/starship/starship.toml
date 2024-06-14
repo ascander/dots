@@ -27,7 +27,7 @@ truncation_symbol = "…/"
 
 [git_branch]
 symbol = ""
-format = "[$branch]($style)"
+format = "[$symbol$branch]($style)"
 style = "bright-black"
 
 [git_state]
@@ -35,14 +35,16 @@ format = '\([$state( $progress_current/$progress_total)]($style)\) '
 style = "bright-black"
 
 [character]
-success_symbol = "[❯](blue)[❯](green)[❯](white)"
+success_symbol = "[❯](bold blue)[❯](bold cyan)[❯](bold white)"
 error_symbol = "[❯](red)[❯](red)[❯](red)"
-vimcmd_symbol = "[❮](green)"
+vimcmd_symbol = "[❮](bold green)"
 
 [nix_shell]
 symbol = " "
-format = '[$symbol(\($name\)) ](bold blue)'
+format = '[$symbol(\($name\)) ]($style)'
+style = "bold blue"
 
 [python]
 symbol = " "
-format = '[$symbol(\($virtualenv\)) ](bold yellow)'
+format = '[$symbol(\($virtualenv\)) ]($style)'
+style = "bold yellow"
