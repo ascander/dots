@@ -230,6 +230,7 @@ in
     zsh-vi-mode
 
     # Command line utilities
+    _1password
     bat
     coursier
     delta
@@ -245,6 +246,7 @@ in
     httpie
     jq
     lazygit
+    neofetch
     nix-tree
     pstree
     reattach-to-user-namespace
