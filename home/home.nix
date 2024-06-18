@@ -37,14 +37,9 @@ in
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.zsh.enable
   programs.zsh = {
     enable = true;
-    autosuggestion = {
-      enable = true;
-    };
     enableCompletion = true;
-    syntaxHighlighting = {
-      enable = true;
-    };
-    autocd = true;
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
     history = {
       expireDuplicatesFirst = true;
       extended = true;
@@ -54,17 +49,6 @@ in
       size = 10000;
       save = 10000;
     };
-    plugins = [
-      {
-        name = "zsh-vi-mode";
-        src = pkgs.fetchFromGitHub {
-          owner = "jeffreytse";
-          repo = "zsh-vi-mode";
-          rev = "v0.10.0";
-          sha256 = "13ifm0667my9izsl2zwidf33vg6byjw5dnyrm27lcprn0g1rjkj0";
-        };
-      }
-    ];
     sessionVariables = {
       EDITOR = "nvim";
       VISUAL = "nvim";
@@ -72,10 +56,94 @@ in
       MANPAGER = "sh -c 'col -bx | bat -l man -p'";
       MANROFFOPT = "-c";
       GPG_TTY = "$(tty)";
+      LESS = "-g -i -M -R -S -W -x4 -z-4";
 
       XDG_CONFIG_HOME = "$HOME/.config";
     };
-    initExtra = builtins.readFile ../config/zsh/.zshrc;
+    shellAliases = with pkgs; {
+      # Tmux
+      tm = "${tmux}/bin/tmux";
+      tl = "tm list-sessions";
+      ts = "tm new-session -s";
+      ta = "tm attach -t";
+      tk = "tm kill-session -t";
+
+      # Git
+      gg = "${lazygit}/bin/lazygit";
+      ga = "${git}/bin/git add";
+      gc = "${git}/bin/git commit";
+      gca = "${git}/bin/git commit -a";
+      gco = "${git}/bin/git checkout";
+      gcb = "${git}/bin/git checkout -b";
+      gb = "${git}/bin/git branch";
+      gs = "${git}/bin/git status -sb";
+      gl = "${git}/bin/git log";
+      gll = "${git}/bin/git ll";
+      gd = "${git}/bin/git diff";
+      gp = "${git}/bin/git push";
+      gpd = "${git}/bin/git push --dry-run";
+      gpsup = "${git}/bin/git push --set-upstream";
+      gup = "${git}/bin/git pull --rebase";
+      grv = "${git}/bin/git remote -v";
+
+      # Nix
+      nb = "nix build";
+      nd = "nix develop";
+      nf = "nix flake";
+      ns = "nix shell";
+      nr = "nix run";
+
+      # ls
+      ls = "${eza}/bin/eza --color=auto --group-directories-first";
+      ll = "ls --long --header --git";
+      la = "ll -a";
+      lm = "ll --sort=modified";
+      lt = "ll --tree";
+      l = "ll";
+
+      # Other
+      bat = "${bat}/bin/bat --theme=TwoDark";
+      cat = "bat";
+      f = "cat";
+      rm = "rm -i";
+      mv = "mv -i";
+      cp = "cp -i";
+      c = "clear";
+      mkdir = "mkdir -p";
+      du = "du -h";
+    };
+    # TODO: add ZSH options
+    initExtra = ''
+      # Preferred Tmux arrangement
+      ide () {
+        tmux split-window -v -p 38 # 100 - 100 / 1.618
+        tmux split-window -h -p 50
+        tmux select-pane -t 0
+      }
+
+      # Calculator
+      calc () {
+        local in="$(echo " $*" | sed -e 's/\[/(/g' -e 's/\]/)/g')";
+        gawk -v PREC=201 'BEGIN {printf("%.60g\n", '"$in-0"')}' < /dev/null
+      }
+
+      # Initialize zoxide
+      eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
+
+      # Initialize zsh-vi-mode
+      source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+
+      # Fixes FZF shell integration
+      # see https://github.com/jeffreytse/zsh-vi-mode/issues/24#issuecomment-783981662
+      zvm_after_init() {
+        source <(${pkgs.fzf}/bin/fzf --zsh)
+      }
+
+      # Source local zshrc if present
+      if [[ -s "$HOME/.zshrc.local" ]]; then
+        source "$HOME/.zshrc.local"
+      fi
+    '';
   };
 
   # Starship prompt

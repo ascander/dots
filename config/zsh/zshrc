@@ -67,6 +67,12 @@ alias grups='git fetch --prune && git branch -r | awk "{print \$1}" | egrep -v -
 alias gup='git pull --rebase'
 alias grv='git remote -v'
 
+# Initialize FZF
+# https://github.com/junegunn/fzf?tab=readme-ov-file#setting-up-shell-integration
+if (( $+commands[fzf] )); then
+  source <(fzf --zsh)
+fi
+
 # Initialize Zoxide
 # https://github.com/ajeetdsouza/zoxide#installation
 if (( $+commands[zoxide] )); then
