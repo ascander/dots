@@ -110,10 +110,13 @@ in
       cp = "cp -i";
       c = "clear";
       mkdir = "mkdir -p";
-      du = "du -h";
+      du = "${du-dust}/bin/dust";
     };
     # TODO: add ZSH options
     initExtra = ''
+      # History expansion
+      bindkey " " magic-space
+
       # Preferred Tmux arrangement
       ide () {
         tmux split-window -v -p 38 # 100 - 100 / 1.618
@@ -302,6 +305,7 @@ in
     bat
     coursier
     delta
+    du-dust
     eza
     fd
     fzf
