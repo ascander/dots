@@ -1,7 +1,15 @@
 return {
   -- tokyonight.nvim
   -- https://github.com/folke/tokyonight.nvim
-  { "folke/tokyonight.nvim", lazy = true },
+  {
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {},
+    config = function()
+      vim.cmd "colorscheme tokyonight-moon"
+    end,
+  },
 
   -- rose-pine/neovim
   -- https://github.com/rose-pine/neovim
@@ -17,10 +25,6 @@ return {
   -- See https://github.com/folke/lazy.nvim?tab=readme-ov-file#examples
   {
     "EdenEast/nightfox.nvim",
-    lazy = false,
-    priority = 1000,
-    config = function()
-      vim.cmd "colorscheme nordfox"
-    end,
+    lazy = true,
   },
 }
