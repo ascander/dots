@@ -13,7 +13,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local opts = {
-	install = { colorscheme = { "nordfox" } },
+	install = { colorscheme = { "tokyonight-moon" } },
 	change_detection = { notify = false },
 	performance = {
 		rtp = {
