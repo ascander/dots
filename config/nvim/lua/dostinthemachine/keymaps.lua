@@ -102,6 +102,7 @@ map("n", "<leader>ui", vim.show_pos, { desc = "Inspect Pos" })
 -- Windows
 map("n", "<leader>ww", "<C-W>p", { desc = "Other Window", remap = true })
 map("n", "<leader>wd", "<C-W>c", { desc = "Delete Window", remap = true })
+map("n", "<leader>wo", "<C-W>o", { desc = "Only Window", remap = true })
 map("n", "<leader>w-", "<C-W>s", { desc = "Split Window Below", remap = true })
 map("n", "<leader>w|", "<C-W>v", { desc = "Split Window Right", remap = true })
 map("n", "<leader>-", "<C-W>s", { desc = "Split Window Below", remap = true })
