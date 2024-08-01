@@ -21,11 +21,11 @@ in
 
   # Dotfiles (stable)
   xdg.configFile."amethyst/amethyst.yml".source = ../config/amethyst/amethyst.yml;
-  xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
-  xdg.configFile."fd/ignore".source = ../config/fd/ignore;
   xdg.configFile."direnv/direnvrc".source = ../config/direnv/direnvrc;
+  xdg.configFile."fd/ignore".source = ../config/fd/ignore;
   xdg.configFile."gh/config.yml".source = ../config/gh/config.yml;
   xdg.configFile."gh/hosts.yml".source = ../config/gh/hosts.yml;
+  xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
   xdg.configFile."lazygit/config.yml".source = ../config/lazygit/config.yml;
 
   # Dotfiles (unstable)
@@ -101,16 +101,23 @@ in
       lt = "ll --tree";
       l = "ll";
 
-      # Other
+      # cat
       bat = "${bat}/bin/bat --theme=TwoDark";
       cat = "bat";
       f = "cat";
+
+      # cd
+      ".." = "cd ../.";
+      "..." = "cd ../../.";
+      "...." = "cd ../../../.";
+
+      # Other
+      du = "${du-dust}/bin/dust";
       rm = "rm -i";
       mv = "mv -i";
       cp = "cp -i";
       c = "clear";
       mkdir = "mkdir -p";
-      du = "${du-dust}/bin/dust";
     };
     # TODO: add ZSH options
     initExtra = ''
@@ -303,6 +310,7 @@ in
     # Command line utilities
     _1password
     bat
+    bottom
     coursier
     delta
     du-dust
@@ -314,9 +322,9 @@ in
     gh-dash
     gnugrep
     gnupg
-    gtop
     httpie
     jq
+    yq
     lazygit
     neofetch
     nix-tree
