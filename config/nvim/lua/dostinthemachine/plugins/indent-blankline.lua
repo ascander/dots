@@ -19,6 +19,7 @@ return {
           "Trouble",
           "trouble",
           "lazy",
+          "markdown",
           "mason",
           "notify",
           "toggleterm",
