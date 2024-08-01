@@ -1,5 +1,5 @@
 import = [
-  "~/.config/alacritty/themes/nordfox.toml"
+  "~/.config/alacritty/themes/tokyonight_moon.toml"
 ]
 
 [colors]
@@ -21,7 +21,7 @@ style = "Italic"
 style = "Italic"
 
 [font.normal]
-family = "FiraCode Nerd Font Mono"
+family = "FiraMono Nerd Font Mono"
 style = "Regular"
 
 [bell]
