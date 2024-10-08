@@ -124,6 +124,7 @@ return {
       { "<leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Widgets" },
     },
 
+    -- FIXME: import icons instead of calling 'lazyvim.config' module
     config = function()
       local Config = require "lazyvim.config"
       vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "Visual" })
