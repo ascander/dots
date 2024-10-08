@@ -39,6 +39,8 @@ in {
     "alacritty"
     "amethyst"
     "arc"
+    "brave-browser"
+    "docker"
     "karabiner-elements"
     "obsidian"
     "signal"
