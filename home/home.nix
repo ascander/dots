@@ -26,6 +26,7 @@ in
   xdg.configFile."gh/config.yml".source = ../config/gh/config.yml;
   xdg.configFile."gh/hosts.yml".source = ../config/gh/hosts.yml;
   xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
+  xdg.configFile."karabiner/karabiner.json".force = true;
   xdg.configFile."lazygit/config.yml".source = ../config/lazygit/config.yml;
 
   # Dotfiles (unstable)
@@ -206,7 +207,7 @@ in
     userName = "Ascander Dost";
     userEmail = "1815984+ascander@users.noreply.github.com";
     signing = {
-      key = "84ACF2EE";
+      key = "DD9F34B4";
       signByDefault = true;
     };
     aliases = {
