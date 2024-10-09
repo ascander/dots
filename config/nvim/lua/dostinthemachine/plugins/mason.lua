@@ -9,8 +9,17 @@ return {
     build = ":MasonUpdate",
     opts = {
       ensure_installed = {
-        "stylua",
+        "basedpyright",
+        "bash-language-server",
+        "black",
+        "json-lsp",
+        "lua-language-server",
+        "markdownlint",
+        "prettierd",
+        "selene",
         "shfmt",
+        "stylua",
+        "yaml-language-server",
       },
     },
     config = function(_, opts)
