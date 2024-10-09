@@ -21,9 +21,9 @@
     } @ inputs:
     let
       inherit (darwin.lib) darwinSystem;
-      inherit (inputs.nixpkgs.lib) attrValues;
+      inherit (inputs.nixpkgs.lib) attrValues optionalAttrs;
 
-      currentSystem = "x86_64-darwin";
+      currentSystem = "aarch64-darwin";
 
       # Configuration for 'nixpkgs'
       nixpkgsConfig = {
@@ -33,18 +33,18 @@
     in
     {
       overlays = {
-        # # Adds access to x86 packages through 'pkgs.x86' if running Apple Silicon
-        # apple-silicon = _: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-        #   x86 = import inputs.nixpkgs {
-        #     system = "x86_64-darwin";
-        #     inherit (nixpkgsConfig) config;
-        #   };
-        # };
+        # Adds access to x86 packages through 'pkgs.x86' if running Apple Silicon
+        apple-silicon = _: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
+          x86 = import inputs.nixpkgs {
+            system = "x86_64-darwin";
+            inherit (nixpkgsConfig) config;
+          };
+        };
 
-        # # Substitute x86 versions of packages that don't build on Apple Silicon yet
-        # sub-x86 = final: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-        #   inherit (final.x86);
-        # };
+        # Substitute x86 versions of packages that don't build on Apple Silicon yet
+        sub-x86 = final: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
+          inherit (final.x86);
+        };
       };
 
       darwinModules = {
@@ -55,6 +55,23 @@
       };
 
       darwinConfigurations = {
+        adost-ltmvznn = darwinSystem {
+          system = "aarch64-darwin";
+          modules =
+            attrValues self.darwinModules
+            ++ [
+              home-manager.darwinModules.home-manager
+              {
+                nixpkgs = nixpkgsConfig;
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.backupFileExtension = "home-manager-backup";
+
+                home-manager.users.adost = import ./home/home.nix;
+                users.users.adost.home = "/Users/adost";
+              }
+            ];
+        };
         adost-ltm = darwinSystem {
           system = "x86_64-darwin";
           modules =
