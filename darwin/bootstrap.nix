@@ -23,7 +23,8 @@
   };
 
   # Enable configuration for `nixbld` group and users
-  nix.configureBuildUsers = true;
+  # TODO: figure out GID/UID warnings when this is enabled
+  # nix.configureBuildUsers = true;
 
   # Auto upgrade nix package and the daemon service
   services.nix-daemon.enable = true;
