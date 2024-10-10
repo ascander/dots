@@ -33,18 +33,18 @@
     in
     {
       overlays = {
-        # Adds access to x86 packages through 'pkgs.x86' if running Apple Silicon
-        apple-silicon = _: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-          x86 = import inputs.nixpkgs {
-            system = "x86_64-darwin";
-            inherit (nixpkgsConfig) config;
-          };
-        };
-
-        # Substitute x86 versions of packages that don't build on Apple Silicon yet
-        sub-x86 = final: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-          inherit (final.x86);
-        };
+        # # Adds access to x86 packages through 'pkgs.x86' if running Apple Silicon
+        # apple-silicon = _: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
+        #   x86 = import inputs.nixpkgs {
+        #     system = "x86_64-darwin";
+        #     inherit (nixpkgsConfig) config;
+        #   };
+        # };
+        #
+        # # Substitute x86 versions of packages that don't build on Apple Silicon yet
+        # sub-x86 = final: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
+        #   inherit (final.x86);
+        # };
       };
 
       darwinModules = {
