@@ -20,13 +20,13 @@ in
   home.stateVersion = "22.11";
 
   # Dotfiles (stable)
+  # Updating these files requires regenerating the user environment
   xdg.configFile."amethyst/amethyst.yml".source = ../config/amethyst/amethyst.yml;
   xdg.configFile."direnv/direnvrc".source = ../config/direnv/direnvrc;
   xdg.configFile."fd/ignore".source = ../config/fd/ignore;
   xdg.configFile."gh/config.yml".source = ../config/gh/config.yml;
   xdg.configFile."gh/hosts.yml".source = ../config/gh/hosts.yml;
   xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
-  xdg.configFile."karabiner/karabiner.json".force = true;
   xdg.configFile."lazygit/config.yml".source = ../config/lazygit/config.yml;
 
   # Dotfiles (unstable)
