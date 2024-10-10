@@ -138,6 +138,11 @@ in
         gawk -v PREC=201 'BEGIN {printf("%.60g\n", '"$in-0"')}' < /dev/null
       }
 
+      # Initialize homebrew
+      if [[ -d "/opt/homebrew" ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+      fi
+
       # Initialize zoxide
       eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
 
