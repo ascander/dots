@@ -32,7 +32,6 @@ in
   # Dotfiles (unstable)
   # This allows direct editing for testing, troubleshooting, etc.
   xdg.configFile.alacritty.source = mkOutOfStoreSymlink "${nixConfigDir}/config/alacritty";
-  xdg.configFile.nvim.source = mkOutOfStoreSymlink "${nixConfigDir}/config/nvim";
 
   # ZSH
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.zsh.enable
