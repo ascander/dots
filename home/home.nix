@@ -3,11 +3,6 @@
 , pkgs
 , ...
 }:
-let
-  inherit (config.lib.file) mkOutOfStoreSymlink;
-
-  nixConfigDir = "/Users/adost/code/dots";
-in
 {
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -19,8 +14,11 @@ in
   # See https://nix-community.github.io/home-manager/release-notes.xhtml
   home.stateVersion = "22.11";
 
-  # Dotfiles (stable)
-  # Updating these files requires regenerating the user environment
+  # Dotfiles
+  xdg.configFile.alacritty = {
+    source = ../config/alacritty;
+    recursive = true;
+  };
   xdg.configFile."amethyst/amethyst.yml".source = ../config/amethyst/amethyst.yml;
   xdg.configFile."direnv/direnvrc".source = ../config/direnv/direnvrc;
   xdg.configFile."fd/ignore".source = ../config/fd/ignore;
@@ -28,10 +26,6 @@ in
   xdg.configFile."gh/hosts.yml".source = ../config/gh/hosts.yml;
   xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
   xdg.configFile."lazygit/config.yml".source = ../config/lazygit/config.yml;
-
-  # Dotfiles (unstable)
-  # This allows direct editing for testing, troubleshooting, etc.
-  xdg.configFile.alacritty.source = mkOutOfStoreSymlink "${nixConfigDir}/config/alacritty";
 
   # ZSH
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.zsh.enable
