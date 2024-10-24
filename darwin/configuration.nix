@@ -1,8 +1,15 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   # Fonts
   fonts.packages = with pkgs; [
     cooper-hewitt
-    (nerdfonts.override { fonts = [ "FiraMono" "FiraCode" "IBMPlexMono" ]; })
+    (nerdfonts.override {
+      fonts = [
+        "FiraMono"
+        "FiraCode"
+        "IBMPlexMono"
+      ];
+    })
     source-sans
     source-serif
   ];

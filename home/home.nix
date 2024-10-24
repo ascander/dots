@@ -1,7 +1,8 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 {
   # This value determines the Home Manager release that your configuration is
@@ -172,8 +173,10 @@
     shortcut = "a";
     terminal = "tmux-256color";
     escapeTime = 10;
-    plugins = with pkgs;
-      with tmuxPlugins; [
+    plugins =
+      with pkgs;
+      with tmuxPlugins;
+      [
         {
           plugin = fingers;
           extraConfig = "set -g @fingers-main-action 'pbcopy'";

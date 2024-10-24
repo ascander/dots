@@ -13,12 +13,13 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs =
-    { self
-    , nixpkgs
-    , darwin
-    , home-manager
-    , ...
-    } @ inputs:
+    {
+      self,
+      nixpkgs,
+      darwin,
+      home-manager,
+      ...
+    }@inputs:
     let
       inherit (darwin.lib) darwinSystem;
       inherit (inputs.nixpkgs.lib) attrValues optionalAttrs;
@@ -27,7 +28,9 @@
 
       # Configuration for 'nixpkgs'
       nixpkgsConfig = {
-        config = { allowUnfree = true; };
+        config = {
+          allowUnfree = true;
+        };
         overlays = attrValues self.overlays ++ [ ];
       };
     in
@@ -57,39 +60,33 @@
       darwinConfigurations = {
         adost-ltmvznn = darwinSystem {
           system = "aarch64-darwin";
-          modules =
-            attrValues self.darwinModules
-            ++ [
-              home-manager.darwinModules.home-manager
-              {
-                nixpkgs = nixpkgsConfig;
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.backupFileExtension = "home-manager-backup";
+          modules = attrValues self.darwinModules ++ [
+            home-manager.darwinModules.home-manager
+            {
+              nixpkgs = nixpkgsConfig;
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "home-manager-backup";
 
-                home-manager.users.adost = import ./home/home.nix;
-                users.users.adost.home = "/Users/adost";
-              }
-            ];
+              home-manager.users.adost = import ./home/home.nix;
+              users.users.adost.home = "/Users/adost";
+            }
+          ];
         };
         adost-ltm = darwinSystem {
           system = "x86_64-darwin";
-          modules =
-            attrValues self.darwinModules
-            ++ [
-              home-manager.darwinModules.home-manager
-              {
-                nixpkgs = nixpkgsConfig;
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
+          modules = attrValues self.darwinModules ++ [
+            home-manager.darwinModules.home-manager
+            {
+              nixpkgs = nixpkgsConfig;
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
 
-                home-manager.users.adost = import ./home/home.nix;
-                users.users.adost.home = "/Users/adost";
-              }
-            ];
+              home-manager.users.adost = import ./home/home.nix;
+              users.users.adost.home = "/Users/adost";
+            }
+          ];
         };
       };
-
-      formatter.${currentSystem} = nixpkgs.legacyPackages.${currentSystem}.alejandra;
     };
 }

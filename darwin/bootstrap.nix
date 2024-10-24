@@ -1,11 +1,8 @@
+{ lib, pkgs, ... }:
 {
-  lib,
-  pkgs,
-  ...
-}: {
   # Nix configuration
   nix.settings = {
-    trusted-users = ["@admin"];
+    trusted-users = [ "@admin" ];
 
     experimental-features = [
       "nix-command"
