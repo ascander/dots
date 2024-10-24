@@ -24,8 +24,6 @@
       inherit (darwin.lib) darwinSystem;
       inherit (inputs.nixpkgs.lib) attrValues optionalAttrs;
 
-      currentSystem = "aarch64-darwin";
-
       # Configuration for 'nixpkgs'
       nixpkgsConfig = {
         config = {
