@@ -285,6 +285,7 @@ in
     extraPackages = with pkgs; [
       coursier
       nixd
+      nixfmt-rfc-style
       nodejs_22
       python311Packages.pynvim
       tree-sitter
