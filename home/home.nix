@@ -299,7 +299,7 @@
     stdlib = ''
       # See https://github.com/direnv/direnv/wiki/Python/#poetry
       layout_poetry() {
-          PYPROJECT_TOML="''${PYPROJECT_TOML: -pyproject.toml}"
+          PYPROJECT_TOML="''${PYPROJECT_TOML:-pyproject.toml}"
           if [[ ! -f "$PYPROJECT_TOML" ]]; then
               log_status "No pyproject.toml found. Executing \`poetry init\` to create a \`$PYPROJECT_TOML\` first."
               poetry init --python "^$(python --version 2>/dev/null | cut -d' ' -f2 | cut -d. -f1-2)"
