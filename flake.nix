@@ -71,20 +71,6 @@
             }
           ];
         };
-        adost-ltm = darwinSystem {
-          system = "x86_64-darwin";
-          modules = attrValues self.darwinModules ++ [
-            home-manager.darwinModules.home-manager
-            {
-              nixpkgs = nixpkgsConfig;
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-
-              home-manager.users.adost = import ./home/home.nix;
-              users.users.adost.home = "/Users/adost";
-            }
-          ];
-        };
       };
     };
 }
