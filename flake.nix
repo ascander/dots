@@ -2,13 +2,17 @@
   description = "Ascander's darwin system";
 
   inputs = {
+    # Nixpkgs
+    # https://github.com/NixOS/nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     # Nix darwin
+    # https://github.com/LnL7/nix-darwin
     darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     # Home manager
+    # https://github.com/nix-community/home-manager
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
