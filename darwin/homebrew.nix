@@ -33,10 +33,8 @@ in
   # Note: apps installed via Homebrew are Spotlight-indexed, whereas those
   # installed via nix-darwin or home-manager are not, by default.
   homebrew.casks = [
-    # "1password"
     "amethyst"
     "arc"
-    "brave-browser"
     "docker"
     "karabiner-elements"
     "obsidian"
