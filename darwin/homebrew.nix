@@ -34,7 +34,6 @@ in
   # installed via nix-darwin or home-manager are not, by default.
   homebrew.casks = [
     # "1password"
-    "alacritty"
     "amethyst"
     "arc"
     "brave-browser"

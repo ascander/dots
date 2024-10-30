@@ -16,16 +16,47 @@
   home.stateVersion = "22.11";
 
   # Dotfiles
-  xdg.configFile.alacritty = {
-    source = ../config/alacritty;
-    recursive = true;
-  };
   xdg.configFile."amethyst/amethyst.yml".source = ../config/amethyst/amethyst.yml;
   xdg.configFile."fd/ignore".source = ../config/fd/ignore;
   xdg.configFile."gh/config.yml".source = ../config/gh/config.yml;
   xdg.configFile."gh/hosts.yml".source = ../config/gh/hosts.yml;
   xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
   xdg.configFile."lazygit/config.yml".source = ../config/lazygit/config.yml;
+
+  # Alacritty
+  # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.alacritty.enable
+  programs.alacritty = {
+    enable = true;
+    settings = {
+      import = [ pkgs.alacritty-theme.nightfox ];
+      colors = {
+        draw_bold_text_with_bright_colors = true;
+      };
+      env = {
+        TERM = "alacritty";
+      };
+      font = {
+        size = 11;
+        normal = {
+          family = "FiraMono Nerd Font Mono";
+          style = "Regular";
+        };
+        bold.style = "Regular";
+        italic.style = "Italic";
+        bold_italic.style = "Italic";
+      };
+      bell = {
+        color = "#cdcecf";
+        animation = "EaseOut";
+        duration = 100;
+      };
+      window = {
+        decorations = "None";
+        padding = { x = 2; y = 1; };
+        dynamic_padding = true;
+      };
+    };
+  };
 
   # ZSH
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.zsh.enable
