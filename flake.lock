@@ -25,11 +25,11 @@
     "alacritty-theme_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1727478331,
-        "narHash": "sha256-Uav3hn2HxwtpOWdGt8WDCqTR0erxXWF6Wxkcltru1Yw=",
-        "owner": "alacritty",
+        "lastModified": 1730394332,
+        "narHash": "sha256-bM6HPN51xC9g3suYasGLIcWrBupDnmKtFwDNsF2pB6I=",
+        "owner": "ascander",
         "repo": "alacritty-theme",
-        "rev": "90a8406beb095fdb1617135a98c38df1ef08859c",
+        "rev": "057902412b3bc273862179254fb8e231cb08e39c",
         "type": "github"
       },
       "original": {

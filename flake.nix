@@ -18,9 +18,10 @@
 
     # Alacritty themes
     # https://github.com/alexghr/alacritty-theme.nix
-    # TODO: configure inputs.alacritty-theme to use my fork and submit a PR for the nightfox themes
     alacritty-theme.url = "github:alexghr/alacritty-theme.nix";
     alacritty-theme.inputs.nixpkgs.follows = "nixpkgs";
+    # TODO: submit this as a PR
+    alacritty-theme.inputs.alacritty-theme.url = "github:ascander/alacritty-theme/nightfox-updates";
   };
   outputs =
     {
