@@ -20,7 +20,7 @@
     # https://github.com/alexghr/alacritty-theme.nix
     alacritty-theme.url = "github:alexghr/alacritty-theme.nix";
     alacritty-theme.inputs.nixpkgs.follows = "nixpkgs";
-    # TODO: submit this as a PR
+    # TODO: remove once https://github.com/alacritty/alacritty-theme/pull/125 is merged
     alacritty-theme.inputs.alacritty-theme.url = "github:ascander/alacritty-theme/nightfox-updates";
   };
   outputs =

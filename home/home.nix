@@ -28,7 +28,7 @@
   programs.alacritty = {
     enable = true;
     settings = {
-      import = [ pkgs.alacritty-theme.nightfox ];
+      import = [ pkgs.alacritty-theme.duskfox ];
       colors = {
         draw_bold_text_with_bright_colors = true;
       };
