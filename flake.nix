@@ -65,6 +65,7 @@
         defaults = import ./darwin/defaults.nix;
         configuration = import ./darwin/configuration.nix;
         homebrew = import ./darwin/homebrew.nix;
+        pam = import ./modules/darwin/pam.nix;
       };
 
       darwinConfigurations = {
