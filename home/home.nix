@@ -235,6 +235,7 @@
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.git.enable
   programs.git = {
     enable = true;
+    lfs.enable = true;
     userName = "Ascander Dost";
     userEmail = "1815984+ascander@users.noreply.github.com";
     signing = {
