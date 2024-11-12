@@ -27,7 +27,7 @@
   programs.alacritty = {
     enable = true;
     settings = {
-      general.import = [ pkgs.alacritty-theme.nordfox ];
+      import = [ pkgs.alacritty-theme.nordfox ];
       colors = {
         draw_bold_text_with_bright_colors = true;
       };
