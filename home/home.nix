@@ -307,17 +307,17 @@
   programs.neovim = {
     enable = true;
     defaultEditor = true;
-    withNodeJs = false;
+    withNodeJs = true;
     withPython3 = true;
     withRuby = false;
     extraPackages = with pkgs; [
-      coursier
-      nixd
-      nixfmt-rfc-style
-      nodejs_22
-      python311Packages.pynvim
-      tree-sitter
-      wget
+      coursier # to download the Metals language server via nvim-metals
+      nixd # Nix language server (not available via Mason.nvim)
+      nixfmt-rfc-style # Nix formatter (not available via Mason.nvim)
+      # nodejs_22
+      python311Packages.pynvim # Required for Python remote plugins
+      tree-sitter # Required for tree-sitter grammar support
+      wget # required by Mason.nvim
     ];
   };
 
@@ -389,7 +389,7 @@
     zsh-vi-mode
 
     # Command line utilities
-    _1password
+    _1password-cli
     bat
     bottom
     coursier
