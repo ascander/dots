@@ -21,7 +21,6 @@
   xdg.configFile."gh/config.yml".source = ../config/gh/config.yml;
   xdg.configFile."gh/hosts.yml".source = ../config/gh/hosts.yml;
   xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
-  xdg.configFile."lazygit/config.yml".source = ../config/lazygit/config.yml;
 
   # Alacritty
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.alacritty.enable
