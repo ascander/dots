@@ -306,14 +306,13 @@
   programs.neovim = {
     enable = true;
     defaultEditor = true;
-    withNodeJs = false;
+    withNodeJs = true;
     withPython3 = true;
     withRuby = false;
     extraPackages = with pkgs; [
       coursier
       nixd
       nixfmt-rfc-style
-      nodejs_22
       python311Packages.pynvim
       tree-sitter
       wget
