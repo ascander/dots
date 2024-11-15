@@ -1,11 +1,9 @@
-{
-  config,
-  lib,
-  ...
-}: let
+{ config, lib, ... }:
+let
   inherit (lib) mkIf;
   brewEnabled = config.homebrew.enable;
-in {
+in
+{
   homebrew.enable = true;
   homebrew.global.brewfile = true;
   homebrew.onActivation.cleanup = "zap";
@@ -35,11 +33,8 @@ in {
   # Note: apps installed via Homebrew are Spotlight-indexed, whereas those
   # installed via nix-darwin or home-manager are not, by default.
   homebrew.casks = [
-    "1password"
-    "alacritty"
     "amethyst"
     "arc"
-    "brave-browser"
     "docker"
     "karabiner-elements"
     "obsidian"

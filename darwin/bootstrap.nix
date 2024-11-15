@@ -1,11 +1,8 @@
+{ lib, pkgs, ... }:
 {
-  lib,
-  pkgs,
-  ...
-}: {
   # Nix configuration
   nix.settings = {
-    trusted-users = ["@admin"];
+    trusted-users = [ "@admin" ];
 
     experimental-features = [
       "nix-command"
@@ -24,6 +21,7 @@
 
   # Enable configuration for `nixbld` group and users
   nix.configureBuildUsers = true;
+  ids.uids.nixbld = lib.mkForce 350; # see https://github.com/LnL7/nix-darwin/issues/970#issuecomment-2165141121
 
   # Auto upgrade nix package and the daemon service
   services.nix-daemon.enable = true;

@@ -1,13 +1,9 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
-let
-  inherit (config.lib.file) mkOutOfStoreSymlink;
-
-  nixConfigDir = "/Users/adost/code/dots";
-in
 {
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -19,19 +15,47 @@ in
   # See https://nix-community.github.io/home-manager/release-notes.xhtml
   home.stateVersion = "22.11";
 
-  # Dotfiles (stable)
+  # Dotfiles
   xdg.configFile."amethyst/amethyst.yml".source = ../config/amethyst/amethyst.yml;
-  xdg.configFile."direnv/direnvrc".source = ../config/direnv/direnvrc;
   xdg.configFile."fd/ignore".source = ../config/fd/ignore;
   xdg.configFile."gh/config.yml".source = ../config/gh/config.yml;
   xdg.configFile."gh/hosts.yml".source = ../config/gh/hosts.yml;
   xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
-  xdg.configFile."lazygit/config.yml".source = ../config/lazygit/config.yml;
 
-  # Dotfiles (unstable)
-  # This allows direct editing for testing, troubleshooting, etc.
-  xdg.configFile.alacritty.source = mkOutOfStoreSymlink "${nixConfigDir}/config/alacritty";
-  xdg.configFile.nvim.source = mkOutOfStoreSymlink "${nixConfigDir}/config/nvim";
+  # Alacritty
+  # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.alacritty.enable
+  programs.alacritty = {
+    enable = true;
+    settings = {
+      import = [ pkgs.alacritty-theme.nordfox ];
+      colors = {
+        draw_bold_text_with_bright_colors = true;
+      };
+      env = {
+        TERM = "alacritty";
+      };
+      font = {
+        size = 11;
+        normal = {
+          family = "FiraMono Nerd Font Mono";
+          style = "Regular";
+        };
+        bold.style = "Regular";
+        italic.style = "Italic";
+        bold_italic.style = "Italic";
+      };
+      bell = {
+        color = "#cdcecf";
+        animation = "EaseOut";
+        duration = 100;
+      };
+      window = {
+        decorations = "None";
+        padding = { x = 2; y = 1; };
+        dynamic_padding = true;
+      };
+    };
+  };
 
   # ZSH
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.zsh.enable
@@ -137,6 +161,11 @@ in
         gawk -v PREC=201 'BEGIN {printf("%.60g\n", '"$in-0"')}' < /dev/null
       }
 
+      # Initialize homebrew
+      if [[ -d "/opt/homebrew" ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+      fi
+
       # Initialize zoxide
       eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
 
@@ -173,8 +202,10 @@ in
     shortcut = "a";
     terminal = "tmux-256color";
     escapeTime = 10;
-    plugins = with pkgs;
-      with tmuxPlugins; [
+    plugins =
+      with pkgs;
+      with tmuxPlugins;
+      [
         {
           plugin = fingers;
           extraConfig = "set -g @fingers-main-action 'pbcopy'";
@@ -203,10 +234,11 @@ in
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.git.enable
   programs.git = {
     enable = true;
+    lfs.enable = true;
     userName = "Ascander Dost";
     userEmail = "1815984+ascander@users.noreply.github.com";
     signing = {
-      key = "84ACF2EE";
+      key = "DD9F34B4";
       signByDefault = true;
     };
     aliases = {
@@ -274,13 +306,13 @@ in
   programs.neovim = {
     enable = true;
     defaultEditor = true;
-    withNodeJs = false;
+    withNodeJs = true;
     withPython3 = true;
     withRuby = false;
     extraPackages = with pkgs; [
       coursier
       nixd
-      nodejs_22
+      nixfmt-rfc-style
       python311Packages.pynvim
       tree-sitter
       wget
@@ -290,8 +322,55 @@ in
   # Direnv
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.direnv.enable
   # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.direnv.nix-direnv.enable
-  programs.direnv.enable = true;
-  programs.direnv.nix-direnv.enable = true;
+  #
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    stdlib = ''
+      # See https://github.com/direnv/direnv/wiki/Python/#poetry
+      layout_poetry() {
+          PYPROJECT_TOML="''${PYPROJECT_TOML:-pyproject.toml}"
+          if [[ ! -f "$PYPROJECT_TOML" ]]; then
+              log_status "No pyproject.toml found. Executing \`poetry init\` to create a \`$PYPROJECT_TOML\` first."
+              poetry init --python "^$(python --version 2>/dev/null | cut -d' ' -f2 | cut -d. -f1-2)"
+          fi
+
+          if [[ -d ".venv" ]]; then
+              VIRTUAL_ENV="$(pwd)/.venv"
+          else
+              VIRTUAL_ENV=$(poetry env info --path 2>/dev/null ; true)
+          fi
+
+          if [[ -z $VIRTUAL_ENV || ! -d $VIRTUAL_ENV ]]; then
+              log_status "No virtual environment exists. Executing \`poetry install\` to create one."
+              poetry install
+              VIRTUAL_ENV=$(poetry env info --path)
+          fi
+
+          PATH_add "$VIRTUAL_ENV/bin"
+          export POETRY_ACTIVE=1
+          export VIRTUAL_ENV
+      }
+
+      # See https://github.com/direnv/direnv/issues/73#issuecomment-1192448475
+      export_alias() {
+        local name=$1
+        shift
+        local alias_dir=$PWD/.direnv/aliases
+        local target="$alias_dir/$name"
+        local oldpath="$PATH"
+        mkdir -p "$alias_dir"
+        if ! [[ ":$PATH:" == *":$alias_dir:"* ]]; then
+          PATH_add "$alias_dir"
+        fi
+
+        echo "#!/usr/bin/env bash" > "$target"
+        echo "PATH=$oldpath" >> "$target"
+        echo "$@" >> "$target"
+        chmod +x "$target"
+      }
+    '';
+  };
 
   # Packages
   home.packages = with pkgs; [
