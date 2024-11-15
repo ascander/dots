@@ -387,7 +387,7 @@
     zsh-vi-mode
 
     # Command line utilities
-    _1password
+    _1password-cli
     bat
     bottom
     coursier
