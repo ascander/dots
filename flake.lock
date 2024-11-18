@@ -9,11 +9,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1728290952,
-        "narHash": "sha256-HI5wHlJblisJuCBBMg5+Zxi/rIGqefa631yCSL1W0HE=",
+        "lastModified": 1731594381,
+        "narHash": "sha256-zuJsVvFvlrl0/yWtzC0xG1TJpLWjjE4/xRqxrYSI3ig=",
         "owner": "alexghr",
         "repo": "alacritty-theme.nix",
-        "rev": "b31e4f6a3ee355eef6239d5918b2d27b40c75030",
+        "rev": "320a093afde159e30da2c0ebbfd009a5718d1fa9",
         "type": "github"
       },
       "original": {
@@ -25,15 +25,15 @@
     "alacritty-theme_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1730502735,
-        "narHash": "sha256-zyMVGcQ8+0GqOmdTp/1d6JMr9YXkvutZtoiTMw/KDTA=",
-        "owner": "ascander",
+        "lastModified": 1731178378,
+        "narHash": "sha256-V8j0szctuiTTZKfkdudPFloKhHCIjLUYrcABCXgSjqE=",
+        "owner": "alacritty",
         "repo": "alacritty-theme",
-        "rev": "09c3fb391ff40fedb3f167b3256cbe9255af131e",
+        "rev": "88b5fac1522f8b52feb429b452114202cf7379e8",
         "type": "github"
       },
       "original": {
-        "owner": "ascander",
+        "owner": "alacritty",
         "repo": "alacritty-theme",
         "type": "github"
       }
