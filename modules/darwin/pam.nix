@@ -39,9 +39,12 @@ let
       fi
     }
     ensure_include() {
-      local f="$1"
-      local inc="$2"
-      local found=""
+      local f
+      local inc
+      local found
+      f="$1"
+      inc="$2"
+      found=""
       if [[ -e $f ]]; then
         found=$(${pkgs.gawk}/bin/awk -v inc="$inc" '!/^[[:space:]]*#/ && NF {
           if ($1 == "auth" && $2 == "include" && $3 == inc) {
@@ -55,8 +58,10 @@ let
       fi
     }
     add_at_top() {
-      local f="$1"
-      local s="$2"
+      local f
+      local s
+      f="$1"
+      s="$2"
       if [[ -s $f ]]; then
         ${pkgs.gawk}/bin/awk -i inplace -v s="$s" '
           BEGINFILE { print s }
@@ -67,8 +72,10 @@ let
       fi
     }
     ensure_content() {
-      local f="$1"
-      local content="$(cat)"
+      local f
+      local content
+      f="$1"
+      content="$(cat)"
       if [[ ! -e $f ]] || [[ "$(< "$f")" != "$content" ]]; then
         echo "$content" >"$f"
       fi
@@ -76,8 +83,8 @@ let
 
     # sudo settings
     del_tid "$sudo_file" "$sudo_local_file"
-    ensure_include "$sudo_file" $(basename "$sudo_local_file")
-    ensure_include "$sudo_local_file" $(basename "$tid_file")
+    ensure_include "$sudo_file" "$(basename \"$sudo_local_file\")"
+    ensure_include "$sudo_local_file" "$(basename \"$tid_file\")"
     ensure_content "$tid_file" <<'EOF'
     ${optionalString (cfg.touchIdAuth.enable && cfg.touchIdAuth.reattach.enable) (
       "auth       optional       ${pkgs.pam-reattach}/lib/pam/pam_reattach.so"
