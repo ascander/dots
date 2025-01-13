@@ -15,11 +15,6 @@
     # https://github.com/nix-community/home-manager
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Alacritty themes
-    # https://github.com/alexghr/alacritty-theme.nix
-    alacritty-theme.url = "github:alexghr/alacritty-theme.nix";
-    alacritty-theme.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs =
     {
@@ -27,7 +22,6 @@
       nixpkgs,
       darwin,
       home-manager,
-      alacritty-theme,
       ...
     }@inputs:
     let
@@ -39,7 +33,7 @@
         config = {
           allowUnfree = true;
         };
-        overlays = attrValues self.overlays ++ [ alacritty-theme.overlays.default ];
+        overlays = attrValues self.overlays ++ [ ];
       };
     in
     {
