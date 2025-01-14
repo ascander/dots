@@ -281,6 +281,7 @@
     withRuby = false;
     extraPackages = with pkgs; [
       coursier
+      luajitPackages.luarocks
       nixd
       nixfmt-rfc-style
       python311Packages.pynvim
@@ -361,6 +362,7 @@
     bat
     bottom
     coursier
+    chafa
     delta
     du-dust
     eza
