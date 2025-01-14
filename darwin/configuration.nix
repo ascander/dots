@@ -3,13 +3,9 @@
   # Fonts
   fonts.packages = with pkgs; [
     cooper-hewitt
-    (nerdfonts.override {
-      fonts = [
-        "FiraMono"
-        "FiraCode"
-        "IBMPlexMono"
-      ];
-    })
+    nerd-fonts.blex-mono
+    nerd-fonts.fira-code
+    nerd-fonts.fira-mono
     source-sans
     source-serif
   ];
