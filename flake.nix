@@ -15,6 +15,11 @@
     # https://github.com/nix-community/home-manager
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Neovim nightly overlay
+    # https://github.com/nix-community/neovim-nightly-overlay
+    neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
+    neovim-nightly.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs =
     {
@@ -22,6 +27,7 @@
       nixpkgs,
       darwin,
       home-manager,
+      neovim-nightly,
       ...
     }@inputs:
     let
@@ -33,7 +39,7 @@
         config = {
           allowUnfree = true;
         };
-        overlays = attrValues self.overlays ++ [ ];
+        overlays = attrValues self.overlays ++ [ neovim-nightly.overlays.default ];
       };
     in
     {

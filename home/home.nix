@@ -275,6 +275,7 @@
   # NOTE: plugin management is handled by `lazy.nvim` outside of Nix. Why be coy? 🤷
   programs.neovim = {
     enable = true;
+    package = pkgs.neovim;
     defaultEditor = true;
     withNodeJs = true;
     withPython3 = true;
