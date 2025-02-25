@@ -235,6 +235,7 @@
       init.defaultBranch = "main";
       interactive.diffFilter = "delta --color-only --features=interactive";
       merge.conflictstyle = "diff3";
+      pull.rebase = true;
       push.default = "simple";
       rerere.enabled = true;
       color = {
