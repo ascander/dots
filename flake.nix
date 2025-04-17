@@ -32,7 +32,7 @@
     }@inputs:
     let
       inherit (darwin.lib) darwinSystem;
-      inherit (inputs.nixpkgs.lib) attrValues optionalAttrs;
+      inherit (inputs.nixpkgs.lib) attrValues;
 
       # Configuration for 'nixpkgs'
       nixpkgsConfig = {
