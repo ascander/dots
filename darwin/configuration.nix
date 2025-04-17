@@ -10,11 +10,11 @@
     source-serif
   ];
 
-  # Enable (tmux-aware) sudo authentication with Touch ID
-  # see 'modules/darwin/pam.nix'
-  security.pam.touchIdAuth = {
+  # Manage '/etc/pam.d/sudo_local' with nix-darwin
+  security.pam.services.sudo_local = {
     enable = true;
-    reattach.enable = true;
-    reattach.ignoreSSH = true;
+    reattach = true;
+    touchIdAuth = true;
   };
+
 }
