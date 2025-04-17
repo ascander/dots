@@ -1,5 +1,5 @@
 [general]
-import = ["~/.config/alacritty/themes/catppuccin-frappe.toml"]
+import = ["~/.config/alacritty/themes/nordfox.toml"]
 
 [colors]
 draw_bold_text_with_bright_colors = true
@@ -8,7 +8,7 @@ draw_bold_text_with_bright_colors = true
 TERM = "alacritty"
 
 [font]
-size = 11
+size = 12
 
 [font.bold]
 style = "Regular"
