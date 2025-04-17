@@ -19,12 +19,8 @@
     keep-outputs = true;
   };
 
-  # Enable configuration for `nixbld` group and users
-  nix.configureBuildUsers = true;
+  # Set `nixbld` group value
   ids.gids.nixbld = 350;
-
-  # Auto upgrade nix package and the daemon service
-  services.nix-daemon.enable = true;
 
   # Add shells installed by nix to `/etc/shells`
   environment.shells = with pkgs; [
