@@ -211,11 +211,7 @@
     enable = true;
     lfs.enable = true;
     userName = "Ascander Dost";
-    userEmail = "1815984+ascander@users.noreply.github.com";
-    signing = {
-      key = "DD9F34B4";
-      signByDefault = true;
-    };
+    signing.signByDefault = true;
     aliases = {
       a = "add";
       c = "commit";
@@ -272,6 +268,24 @@
       "project/project"
       "project/metals.sbt"
       "project/.bloop"
+    ];
+    includes = [
+      {
+        path = "~/.gitconfig.soma";
+        condition = "gitdir:~/code/soma/";
+      }
+      {
+        path = "~/.gitconfig.github";
+        condition = "gitdir:~/code/work/";
+      }
+      {
+        path = "~/.gitconfig.github";
+        condition = "gitdir:~/code/personal/";
+      }
+      {
+        path = "~/.gitconfig.github";
+        condition = "gitdir:~/.config/nvim/";
+      }
     ];
   };
 
