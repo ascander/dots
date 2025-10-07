@@ -402,8 +402,8 @@
     _1password-cli
     bat
     bottom
-    coursier
     chafa
+    coursier
     delta
     du-dust
     eza
@@ -416,7 +416,6 @@
     gnupg
     httpie
     jq
-    yq
     lazygit
     neofetch
     nix-tree
@@ -424,6 +423,7 @@
     reattach-to-user-namespace
     ripgrep
     tree
+    yq
     zoxide
 
     # Misc
