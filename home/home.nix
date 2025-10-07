@@ -427,6 +427,8 @@
     zoxide
 
     # Misc
+    nodejs
+    openjdk11
     pam-reattach # allows use of 'pam_tid' module in tmux
     pinentry_mac
   ];
