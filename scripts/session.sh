@@ -78,7 +78,7 @@ create_session() {
   fi
 
   # Pane 2: Claude-code
-  tmux split-window -h -p 30 -t "$session_name":0 -c "$dir"
+  tmux split-window -h -p 20 -t "$session_name":0 -c "$dir"
   tmux send-keys -t "$session_name":0.1 'claude .' C-m
 
   # Pane 3: Shell / REPL
