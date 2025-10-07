@@ -36,4 +36,8 @@
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
+
+  # Define primary user to apply system settings (eg. system.defaults) for.
+  # See https://nix-darwin.github.io/nix-darwin/manual/#opt-system.primaryUser
+  system.primaryUser = "adost";
 }
