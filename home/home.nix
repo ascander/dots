@@ -113,45 +113,50 @@
       c = "clear";
       mkdir = "mkdir -p";
     };
-    # TODO: add ZSH options
-    initExtra = ''
-      # History expansion
-      bindkey " " magic-space
+    initContent = lib.mkOrder 1500 ''
+        # History expansion
+        bindkey " " magic-space
 
-      # Preferred Tmux arrangement
-      ide () {
-        tmux split-window -v -p 38 # 100 - 100 / 1.618
-        tmux split-window -h -p 50
-        tmux select-pane -t 0
-      }
+        # Calculator
+        calc () {
+          local in="$(echo " $*" | sed -e 's/\[/(/g' -e 's/\]/)/g')";
+          gawk -v PREC=201 'BEGIN {printf("%.60g\n", '"$in-0"')}' < /dev/null
+        }
 
-      # Calculator
-      calc () {
-        local in="$(echo " $*" | sed -e 's/\[/(/g' -e 's/\]/)/g')";
-        gawk -v PREC=201 'BEGIN {printf("%.60g\n", '"$in-0"')}' < /dev/null
-      }
+        # Initialize homebrew
+        if [[ -d "/opt/homebrew" ]]; then
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+        fi
 
-      # Initialize homebrew
-      if [[ -d "/opt/homebrew" ]]; then
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-      fi
+        # Initialize zoxide
+        eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
 
-      # Initialize zoxide
-      eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
+        # Initialize zsh-vi-mode
+        source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 
-      # Initialize zsh-vi-mode
-      source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+        # Fixes FZF shell integration and sets custom keybindings after zsh-vi-mode loads
+        # see https://github.com/jeffreytse/zsh-vi-mode/issues/24#issuecomment-783981662
+        zvm_after_init() {
+          source <(${pkgs.fzf}/bin/fzf --zsh)
 
-      # Fixes FZF shell integration
-      # see https://github.com/jeffreytse/zsh-vi-mode/issues/24#issuecomment-783981662
-      zvm_after_init() {
-        source <(${pkgs.fzf}/bin/fzf --zsh)
-      }
+          # Disable software flow control (free up Ctrl-S / Ctrl-Q)
+          stty -ixon
 
-      # Source local zshrc if present
-      if [[ -s "$HOME/.zshrc.local" ]]; then
-        source "$HOME/.zshrc.local"
-      fi
+          # Vim-style history navigation
+          bindkey '^J' down-line-or-history
+          bindkey '^K' up-line-or-history
+
+          # Custom tmux sessionizer shortcuts; see 'scripts/session.sh'
+          bindkey -s '^s' 'session\r'             # Fuzzy picker
+          bindkey -s '^d' 'session dotfiles\r'    # Dotfiles session
+          bindkey -s '^n' 'session neovim\r'      # Neovim config
+          bindkey -s '^p' 'session active\r'      # Active (main) project
+        }
+
+        # Source local zshrc if present
+        if [[ -s "$HOME/.zshrc.local" ]]; then
+          source "$HOME/.zshrc.local"
+        fi
     '';
   };
 
@@ -347,6 +352,9 @@
 
   # Packages
   home.packages = with pkgs; [
+    # Custom scripts
+    (writeShellScriptBin "session" (builtins.readFile ../scripts/session.sh))
+
     # Nix stuff
     nix-zsh-completions
     nixpkgs-fmt
