@@ -194,13 +194,13 @@
           extraConfig = "set -g @resurrect-strategy-nvim 'session'";
         }
         # FIXME: troubleshoot weirdness around duplicate sessions
-        # {
-        #   plugin = continuum;
-        #   extraConfig = ''
-        #     set -g @continuum-restore 'on'
-        #     set -g @continuum-save-interval '60' # minutes
-        #   '';
-        # }
+        {
+          plugin = continuum;
+          extraConfig = ''
+            set -g @continuum-restore 'on'
+            set -g @continuum-save-interval '60' # minutes
+          '';
+        }
       ];
     extraConfig = builtins.readFile ../config/tmux/tmux.conf;
   };
