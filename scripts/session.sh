@@ -68,7 +68,9 @@ create_session() {
   local session_name=$1
   local dir=$2
 
-  tmux new-session -ds "$session_name" -c "$dir"
+  # Explicitly set the size of the terminal
+  # see https://unix.stackexchange.com/a/569731
+  tmux new-session -c "$dir" -s "$session_name" -d -x $(tput cols) -y $(( $(tput lines) - 1 ))
 
   # Pane 1: Neovim (auto-restore session if available)
   if [[ -f "$dir/Session.vim" ]]; then
@@ -78,11 +80,11 @@ create_session() {
   fi
 
   # Pane 2: Claude-code
-  tmux split-window -h -p 20 -t "$session_name":0 -c "$dir"
+  tmux split-window -h -l 38% -t "$session_name":0 -c "$dir"
   tmux send-keys -t "$session_name":0.1 'claude .' C-m
 
   # Pane 3: Shell / REPL
-  tmux split-window -v -t "$session_name":0.1 -c "$dir"
+  tmux split-window -v -l 38% -t "$session_name":0.1 -c "$dir"
 
   # Label panes for clarity
   tmux select-pane -t "$session_name":0.0 -T "nvim"
