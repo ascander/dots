@@ -20,7 +20,7 @@ style = "Italic"
 style = "Italic"
 
 [font.normal]
-family = "FiraMono Nerd Font Mono"
+family = "FiraCode Nerd Font Mono"
 style = "Regular"
 
 [bell]
