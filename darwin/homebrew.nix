@@ -1,8 +1,4 @@
 { config, lib, ... }:
-let
-  inherit (lib) mkIf;
-  brewEnabled = config.homebrew.enable;
-in
 {
   homebrew.enable = true;
   homebrew.global.brewfile = true;
@@ -18,7 +14,6 @@ in
   homebrew.onActivation.upgrade = true;
 
   homebrew.taps = [
-    "homebrew/bundle"
     "nrlquaker/createzap"
   ];
 
@@ -36,7 +31,9 @@ in
     "alacritty"
     "amethyst"
     "arc"
-    "docker"
+    "docker-desktop"
+    "font-monaspace"
+    "ghostty"
     "karabiner-elements"
     "obsidian"
     "signal"
@@ -45,7 +42,7 @@ in
 
   # A last resort; for packages that aren't available (or broken) in `nixpkgs`
   homebrew.brews = [
-    "poetry"
-    "pyenv"
+    # "poetry"
+    # "pyenv"
   ];
 }
