@@ -9,7 +9,7 @@
 # DESCRIPTION
 #     Creates and manages tmux sessions for development projects. Each session
 #     contains three panes: nvim (editor), claude-code (AI assistant), and a
-#     shell/REPL. If a session already exists, switches to it instead of
+#     shell. If a session already exists, switches to it instead of
 #     creating a new one.
 #
 #     The script searches predefined directories for projects and allows
@@ -18,7 +18,6 @@
 #
 #     Session features:
 #       - Automatically restores vim sessions (Session.vim) if available
-#       - Detects project type and starts appropriate REPL (sbt, python, etc.)
 #       - Labels panes for easy identification
 #       - Uses project directory basename as session name
 #
@@ -81,9 +80,11 @@ create_session() {
 
   # Pane 2: Claude-code
   tmux split-window -h -l 38% -t "$session_name":0 -c "$dir"
-  tmux send-keys -t "$session_name":0.1 'claude .' C-m
+  if command -v claude &>/dev/null; then
+    tmux send-keys -t "$session_name":0.1 'claude' C-m
+  fi
 
-  # Pane 3: Shell / REPL
+  # Pane 3: Shell
   tmux split-window -v -l 38% -t "$session_name":0.1 -c "$dir"
 
   # Label panes for clarity
@@ -91,12 +92,8 @@ create_session() {
   tmux select-pane -t "$session_name":0.1 -T "claude"
   tmux select-pane -t "$session_name":0.2 -T "shell"
 
-  # Detect and start useful tools
-  if [[ -f "$dir/build.sbt" ]] && command -v sbt &>/dev/null; then
-    tmux send-keys -t "$session_name":0.2 'sbt' C-m
-  elif [[ -f "$dir/pyproject.toml" ]]; then
-    tmux send-keys -t "$session_name":0.2 'uv sync' C-m
-  fi
+  # Focus on neovim pane
+  tmux select-pane -t "$session_name":0.0
 
   tmux display-message "Created new tmux session: $session_name"
 }
