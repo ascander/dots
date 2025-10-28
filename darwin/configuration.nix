@@ -7,7 +7,6 @@
     nerd-fonts.blex-mono
     nerd-fonts.fira-code
     nerd-fonts.fira-mono
-    nerd-fonts.iosevka
     source-sans
     source-serif
   ];
