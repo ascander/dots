@@ -28,7 +28,6 @@
   # Note: apps installed via Homebrew are Spotlight-indexed, whereas those
   # installed via nix-darwin or home-manager are not, by default.
   homebrew.casks = [
-    "alacritty"
     "amethyst"
     "arc"
     "docker-desktop"
@@ -41,8 +40,5 @@
   ];
 
   # A last resort; for packages that aren't available (or broken) in `nixpkgs`
-  homebrew.brews = [
-    # "poetry"
-    # "pyenv"
-  ];
+  homebrew.brews = [];
 }

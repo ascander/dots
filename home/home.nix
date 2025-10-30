@@ -16,8 +16,8 @@
   home.stateVersion = "22.11";
 
   # Dotfiles
-  xdg.configFile.alacritty = {
-    source = ../config/alacritty;
+  xdg.configFile.ghostty = {
+    source = ../config/ghostty;
     recursive = true;
   };
 
@@ -395,10 +395,10 @@
     bat
     bottom
     chafa
-    coursier
     delta
     du-dust
     eza
+    fastfetch
     fd
     fzf
     gawk
@@ -407,9 +407,9 @@
     gnugrep
     gnupg
     httpie
+    imagemagick
     jq
     lazygit
-    neofetch
     nix-tree
     pstree
     reattach-to-user-namespace
