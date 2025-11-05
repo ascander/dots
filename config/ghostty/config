@@ -24,7 +24,7 @@ font-style-italic = Italic
 font-style-bold-italic = Italic
 
 # Set color theme
-theme = nordfox
+theme = Nightfox
 
 # Bind Shift+Enter for Claude Code
 keybind = shift+enter=text:\x1b\r
