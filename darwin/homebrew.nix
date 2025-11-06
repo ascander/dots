@@ -31,6 +31,8 @@
     "amethyst"
     "arc"
     "docker-desktop"
+    "font-inter"
+    "font-literata"
     "font-monaspace"
     "ghostty"
     "karabiner-elements"
