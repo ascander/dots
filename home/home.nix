@@ -298,6 +298,7 @@
       nixd
       nixfmt-rfc-style
       python311Packages.pynvim
+      python312Packages.jupytext
       tree-sitter
       wget
     ];
