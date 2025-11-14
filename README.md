@@ -1,4 +1,4 @@
-<!-- markdownlint-disable MD013 -->
+<!-- markdownlint-disable MD013 MD034 -->
 # Dots
 
 These are my Nix configurations for macOS. The repository name is an anagram of my surname. That's the joke.
