@@ -114,6 +114,11 @@
       mkdir = "mkdir -p";
     };
     initContent = lib.mkOrder 1500 ''
+      # GitHub token for Nix flake operations
+      if command -v gh &>/dev/null && gh auth status &>/dev/null 2>&1; then
+        export GITHUB_TOKEN="$(gh auth token)"
+      fi
+
       # History expansion
       bindkey " " magic-space
 
