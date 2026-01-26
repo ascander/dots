@@ -24,7 +24,6 @@
   xdg.configFile."amethyst/amethyst.yml".source = ../config/amethyst/amethyst.yml;
   xdg.configFile."fd/ignore".source = ../config/fd/ignore;
   xdg.configFile."gh/config.yml".source = ../config/gh/config.yml;
-  xdg.configFile."gh/hosts.yml".source = ../config/gh/hosts.yml;
   xdg.configFile."karabiner/karabiner.json".source = ../config/karabiner/karabiner.json;
 
   # ZSH
@@ -106,6 +105,7 @@
       "...." = "cd ../../../.";
 
       # Other
+      da = "${direnv}/bin/direnv allow";
       du = "${du-dust}/bin/dust";
       rm = "rm -i";
       mv = "mv -i";
@@ -203,7 +203,10 @@
     enable = true;
     lfs.enable = true;
     userName = "Ascander Dost";
-    signing.signByDefault = true;
+    signing = {
+      key = "3A7929CA0DEE2AD3";
+      signByDefault = true;
+    };
     aliases = {
       a = "add";
       c = "commit";
@@ -261,24 +264,28 @@
       "project/metals.sbt"
       "project/.bloop"
     ];
+    # Personal GitHub identity (remote-URL-based, works regardless of clone location)
+    # Work identities are added by dashes when available
+    userEmail = "1245407+ascander@users.noreply.github.com";
     includes = [
       {
-        path = "~/.gitconfig.soma";
-        condition = "gitdir:~/code/soma/";
-      }
-      {
-        path = "~/.gitconfig.github";
-        condition = "gitdir:~/code/work/";
-      }
-      {
-        path = "~/.gitconfig.github";
-        condition = "gitdir:~/code/personal/";
-      }
-      {
-        path = "~/.gitconfig.github";
-        condition = "gitdir:~/.config/nvim/";
+        # Match repos with github.com:ascander/* remotes
+        condition = "hasconfig:remote.*.url:git@github.com:ascander/**";
+        contents.user.email = "1245407+ascander@users.noreply.github.com";
       }
     ];
+  };
+
+  # SSH
+  # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.ssh.enable
+  programs.ssh = {
+    enable = true;
+    matchBlocks = {
+      "github.com" = {
+        user = "git";
+        identityFile = "~/.ssh/id_ed25519";
+      };
+    };
   };
 
   # Neovim
@@ -421,7 +428,7 @@
 
     # Misc
     nodejs
-    openjdk11
+    # openjdk11
     pam-reattach # allows use of 'pam_tid' module in tmux
     pinentry_mac
   ];

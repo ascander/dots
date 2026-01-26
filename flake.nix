@@ -58,12 +58,16 @@
         # };
       };
 
+      # Reusable nix-darwin modules
       darwinModules = {
         bootstrap = import ./darwin/bootstrap.nix;
         defaults = import ./darwin/defaults.nix;
         configuration = import ./darwin/configuration.nix;
         homebrew = import ./darwin/homebrew.nix;
       };
+
+      # Reusable home-manager modules
+      homeModules.default = import ./home/home.nix;
 
       darwinConfigurations = {
         adost-ltmvznn = darwinSystem {
@@ -75,6 +79,7 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "home-manager-backup";
+              home-manager.extraSpecialArgs = { inherit inputs; };
 
               home-manager.users.adost = import ./home/home.nix;
               users.users.adost.home = "/Users/adost";

@@ -21,6 +21,7 @@
   homebrew.masApps = {
     Slack = 803453959;
     "Things 4" = 904280696;
+    "WhatsApp Messenger" = 310633997;
   };
 
   # Use Homebrew Casks for applications not available in the Mac App Store
