@@ -78,16 +78,18 @@ create_session() {
     tmux send-keys -t "$session_name":0.0 'nvim' C-m
   fi
 
-  # Pane 2: Shell (below neovim)
-  tmux split-window -v -l 30% -t "$session_name":0 -c "$dir"
+  # Pane 2: Split right of neovim (claude if git project, else shell)
+  tmux split-window -h -l 32% -t "$session_name":0 -c "$dir"
+  if git -C "$dir" rev-parse --is-inside-work-tree &>/dev/null; then
+    tmux send-keys -t "$session_name":0.1 'claude' C-m
+  fi
 
   # Label panes for clarity
   tmux select-pane -t "$session_name":0.0 -T "nvim"
   tmux select-pane -t "$session_name":0.1 -T "shell"
 
-  # Focus on neovim pane and maximize it
+  # Focus on neovim pane
   tmux select-pane -t "$session_name":0.0
-  tmux resize-pane -Z -t "$session_name":0.0
 
   tmux display-message "Created new tmux session: $session_name"
 }
