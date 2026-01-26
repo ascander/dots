@@ -115,8 +115,8 @@
     };
     initContent = lib.mkOrder 1500 ''
       # GitHub token for Nix flake operations
-      if command -v gh &>/dev/null && gh auth status &>/dev/null 2>&1; then
-        export GITHUB_TOKEN="$(gh auth token)"
+      if command -v gh &>/dev/null && gh auth status --hostname github.com &>/dev/null 2>&1; then
+        export GITHUB_TOKEN="$(gh auth token --hostname github.com)"
       fi
 
       # History expansion
