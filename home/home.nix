@@ -153,9 +153,9 @@
         bindkey -s '^p' 'session active\r'      # Active (main) project
       }
 
-      # Source local zshrc if present
-      if [[ -s "$HOME/.zshrc.local" ]]; then
-        source "$HOME/.zshrc.local"
+      # Source secret zshrc if present
+      if [[ -s "$HOME/.zshrc.secrets" ]]; then
+        source "$HOME/.zshrc.secrets"
       fi
     '';
   };
