@@ -7,44 +7,76 @@ These are my Nix configurations for macOS. The repository name is an anagram of 
 
 - A recent (read: flake-enabled) [Nix](https://nixos.org/download.html) installation
 
-## Using
+## Commands
 
-Build and switch to the configuration for `{hostname}` by running:
+### Building and Switching
+
+Build the configuration for `{hostname}`:
 
 ```sh
-nix build .#darwinConfigurations.{hostname}.system && ./result/sw/bin/darwin-rebuild switch --flake .
+nix build .#darwinConfigurations.{hostname}.system
 ```
 
-where `{hostname}` is a Darwin configuration in `flake.nix`.
+Apply the configuration (requires admin privileges):
 
-### Updating
+```sh
+sudo ./result/sw/bin/darwin-rebuild switch --flake .
+```
 
-Update all flake inputs by running:
+Preview changes without applying (dry-run):
 
-```shell
+```sh
+darwin-rebuild build --flake . --dry-run
+```
+
+### Updating Inputs
+
+Update all flake inputs:
+
+```sh
 nix flake update
 ```
 
-Update the flake input `{input}` by running:
+Update a specific input:
 
-```shell
-nix flake lock --update-input {input}
+```sh
+nix flake update {input}
 ```
 
-where `{input}` is a flake input defined in `flake.nix`.
+Show available flake outputs:
 
-### Garbage collection
-
-Delete old generations by running:
-
-```shell
-nix-garbage-collect -d
+```sh
+nix flake show
 ```
 
-After running `nix-garbage-collect` above, run:
+### Generations
 
-```shell
-sudo ./result/sw/bin/nix-collect-garbage -d 
+List past generations:
+
+```sh
+darwin-rebuild --list-generations
 ```
 
-Both are required due to strange behavior associated with multi-user Nix installations. See https://github.com/LnL7/nix-darwin/issues/237 for details.
+Roll back to the previous generation:
+
+```sh
+darwin-rebuild --rollback switch --flake .
+```
+
+Switch to a specific generation:
+
+```sh
+darwin-rebuild -G {generation} switch --flake .
+```
+
+### Garbage Collection
+
+Delete old generations (both commands required for multi-user Nix):
+
+```sh
+nix-collect-garbage -d
+sudo ./result/sw/bin/nix-collect-garbage -d
+```
+
+> [!NOTE]
+  See https://github.com/LnL7/nix-darwin/issues/237 for details on why both are needed.
