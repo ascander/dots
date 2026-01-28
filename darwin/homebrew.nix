@@ -17,11 +17,12 @@
     "nrlquaker/createzap"
   ];
 
-  # Prefer applications from the Mac App Store
+  # Mac App Store apps (via mas)
+  #
+  # Note: mas is flaky under sudo, which nix-darwin requires for activation.
+  # Prefer casks when available. Only use masApps for apps without cask equivalents.
   homebrew.masApps = {
-    Slack = 803453959;
     "Things 4" = 904280696;
-    "WhatsApp Messenger" = 310633997;
   };
 
   # Use Homebrew Casks for applications not available in the Mac App Store
@@ -39,7 +40,9 @@
     "karabiner-elements"
     "obsidian"
     "signal"
+    "slack"
     "spotify"
+    "whatsapp"
   ];
 
   # A last resort; for packages that aren't available (or broken) in `nixpkgs`
