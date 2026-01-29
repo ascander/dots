@@ -409,8 +409,10 @@
     (writeShellScriptBin "session" (builtins.readFile ../scripts/session.sh))
 
     # Nix stuff
+    alejandra
+    comma
+    nix-index
     nix-zsh-completions
-    nixpkgs-fmt
 
     # ZSH plugins
     zsh-autocomplete
@@ -431,26 +433,28 @@
     fastfetch
     fd
     fzf
-    gawk
     gh
     gh-dash
-    gnugrep
     gnupg
     httpie
+    hyperfine
     imagemagick
     jq
+    just
     lazygit
     nix-tree
     pstree
-    reattach-to-user-namespace
+    # reattach-to-user-namespace
     ripgrep
+    tealdeer
+    terminal-notifier
     tree
+    watchexec
     yq
     zoxide
 
     # Misc
     nodejs
-    # openjdk11
     pam-reattach # allows use of 'pam_tid' module in tmux
     pinentry_mac
   ];
