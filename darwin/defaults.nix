@@ -8,8 +8,8 @@
     show-process-indicators = true;
     showhidden = true;
     show-recents = false;
-    persistent-apps = [ ];
-    persistent-others = [ ];
+    persistent-apps = [];
+    persistent-others = [];
     static-only = true;
   };
 

@@ -3,8 +3,7 @@
   lib,
   pkgs,
   ...
-}:
-{
+}: {
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
@@ -182,23 +181,21 @@
     shortcut = "a";
     terminal = "tmux-256color";
     escapeTime = 10;
-    plugins =
-      with pkgs;
-      with tmuxPlugins;
-      [
-        {
-          plugin = fingers;
-          extraConfig = "set -g @fingers-main-action 'pbcopy'";
-        }
-        {
-          plugin = power-theme;
-          extraConfig = "set -g @tmux_power_theme 'default'";
-        }
-        {
-          plugin = resurrect;
-          extraConfig = "set -g @resurrect-strategy-nvim 'session'";
-        }
-      ];
+    plugins = with pkgs;
+    with tmuxPlugins; [
+      {
+        plugin = fingers;
+        extraConfig = "set -g @fingers-main-action 'pbcopy'";
+      }
+      {
+        plugin = power-theme;
+        extraConfig = "set -g @tmux_power_theme 'default'";
+      }
+      {
+        plugin = resurrect;
+        extraConfig = "set -g @resurrect-strategy-nvim 'session'";
+      }
+    ];
     extraConfig = builtins.readFile ../config/tmux/tmux.conf;
   };
 

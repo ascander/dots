@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   # Fonts
   # https://nix-darwin.github.io/nix-darwin/manual/#opt-fonts.packages
   fonts.packages = with pkgs; [
@@ -17,5 +16,4 @@
     reattach = true;
     touchIdAuth = true;
   };
-
 }
