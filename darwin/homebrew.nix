@@ -1,5 +1,8 @@
-{ config, lib, ... }:
 {
+  config,
+  lib,
+  ...
+}: {
   homebrew.enable = true;
   homebrew.global.brewfile = true;
   homebrew.onActivation.cleanup = "zap";

@@ -1,8 +1,11 @@
-{ lib, pkgs, ... }:
 {
+  lib,
+  pkgs,
+  ...
+}: {
   # Nix configuration
   nix.settings = {
-    trusted-users = [ "@admin" ];
+    trusted-users = ["@admin"];
 
     experimental-features = [
       "nix-command"
@@ -31,7 +34,7 @@
   # Install and setup ZSH to work with nix(-darwin)
   programs.zsh.enable = true;
   environment.variables.SHELL = "${pkgs.zsh}/bin/zsh";
-  environment.pathsToLink = [ "/share/zsh" ];
+  environment.pathsToLink = ["/share/zsh"];
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
