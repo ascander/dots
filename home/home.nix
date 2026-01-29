@@ -322,7 +322,7 @@
       coursier
       luajitPackages.luarocks
       nixd
-      nixfmt-rfc-style
+      nixfmt
       python311Packages.pynvim
       python312Packages.jupytext
       tree-sitter
