@@ -106,7 +106,7 @@
 
       # Other
       da = "${direnv}/bin/direnv allow";
-      du = "${du-dust}/bin/dust";
+      du = "${dust}/bin/dust";
       rm = "rm -i";
       mv = "mv -i";
       cp = "cp -i";
@@ -207,27 +207,30 @@
   programs.git = {
     enable = true;
     lfs.enable = true;
-    userName = "Ascander Dost";
     signing = {
       key = "3A7929CA0DEE2AD3";
       signByDefault = true;
     };
-    aliases = {
-      a = "add";
-      c = "commit";
-      ca = "commit -a";
-      co = "checkout";
-      cb = "checkout -b";
-      p = "push";
-      psup = "push --set-upstream";
-      up = "pull --rebase";
-      ll = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative";
-      unstage = "reset HEAD --";
-      uncommit = "reset HEAD~";
-      last = "log -1 HEAD";
-      lasttag = "describe --abbrev=0";
-    };
-    extraConfig = {
+    settings = {
+      user = {
+        name = "Ascander Dost";
+        email = "1245407+ascander@users.noreply.github.com";
+      };
+      aliases = {
+        a = "add";
+        c = "commit";
+        ca = "commit -a";
+        co = "checkout";
+        cb = "checkout -b";
+        p = "push";
+        psup = "push --set-upstream";
+        up = "pull --rebase";
+        ll = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative";
+        unstage = "reset HEAD --";
+        uncommit = "reset HEAD~";
+        last = "log -1 HEAD";
+        lasttag = "describe --abbrev=0";
+      };
       add.interactive.useBuiltin = false;
       commit.verbose = true;
       core.pager = "delta --minus-style=\"normal #43242B\" --minus-emph-style=\"normal #C34043\" --plus-style=\"normal #2B3328\" --plus-emph-style=\"syntax #76946A\" --syntax-theme=\"TwoDark\"";
@@ -269,9 +272,6 @@
       "project/metals.sbt"
       "project/.bloop"
     ];
-    # Personal GitHub identity (remote-URL-based, works regardless of clone location)
-    # Work identities are added by dashes when available
-    userEmail = "1245407+ascander@users.noreply.github.com";
     includes = [
       {
         # Match repos with github.com:ascander/* remotes
@@ -428,7 +428,7 @@
     bottom
     chafa
     delta
-    du-dust
+    dust
     eza
     fastfetch
     fd
