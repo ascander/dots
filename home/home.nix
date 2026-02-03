@@ -408,7 +408,6 @@
     # Nix stuff
     alejandra
     comma
-    nix-index
     nix-zsh-completions
 
     # ZSH plugins
