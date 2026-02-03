@@ -20,11 +20,6 @@
     # https://github.com/nix-community/neovim-nightly-overlay
     neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
     neovim-nightly.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Weekly updated nix-index database
-    # https://github.com/nix-community/nix-index-database
-    nix-index-database.url = "github:nix-community/nix-index-database";
-    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = {
     self,
@@ -32,7 +27,6 @@
     darwin,
     home-manager,
     neovim-nightly,
-    nix-index-database,
     ...
   } @ inputs: let
     inherit (darwin.lib) darwinSystem;
@@ -78,7 +72,6 @@
         modules =
           attrValues self.darwinModules
           ++ [
-            nix-index-database.darwinModules.nix-index
             home-manager.darwinModules.home-manager
             {
               nixpkgs = nixpkgsConfig;

@@ -407,7 +407,6 @@
 
     # Nix stuff
     alejandra
-    comma
     nix-zsh-completions
 
     # ZSH plugins
