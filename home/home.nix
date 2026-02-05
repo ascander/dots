@@ -211,7 +211,7 @@
     settings = {
       user = {
         name = "Ascander Dost";
-        email = "1245407+ascander@users.noreply.github.com";
+        email = "1815984+ascander@users.noreply.github.com";
       };
       aliases = {
         a = "add";
@@ -273,7 +273,7 @@
       {
         # Match repos with github.com:ascander/* remotes
         condition = "hasconfig:remote.*.url:git@github.com:ascander/**";
-        contents.user.email = "1245407+ascander@users.noreply.github.com";
+        contents.user.email = "1815984+ascander@users.noreply.github.com";
       }
     ];
   };
