@@ -53,13 +53,6 @@
       XDG_CONFIG_HOME = "$HOME/.config";
     };
     shellAliases = with pkgs; {
-      # Tmux
-      tm = "${tmux}/bin/tmux";
-      tl = "tm list-sessions";
-      ts = "tm new-session -s";
-      ta = "tm attach -t";
-      tk = "tm kill-session -t";
-
       # Git
       gg = "${lazygit}/bin/lazygit";
       ga = "${git}/bin/git add";
@@ -126,6 +119,13 @@
         local in="$(echo " $*" | sed -e 's/\[/(/g' -e 's/\]/)/g')";
         gawk -v PREC=201 'BEGIN {printf("%.60g\n", '"$in-0"')}' < /dev/null
       }
+
+      # Tmux shortcuts
+      tm() { command tmux "$@"; }
+      tl() { tm list-sessions; }
+      ts() { tm new-session -s "$1"; }
+      ta() { tm attach -t "$1"; }
+      tk() { tm kill-session -t "$1"; }
 
       # Initialize homebrew
       if [[ -d "/opt/homebrew" ]]; then
